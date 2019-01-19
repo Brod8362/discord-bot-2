@@ -35,14 +35,17 @@ public class Help implements Command {
     }
 
     @Override
+    public boolean needsBotOwner() {
+        return false;
+    }
+
+    @Override
     public void run(Message message, List<String> args) {
         EmbedBuilder embed = new EmbedBuilder();
 
         try {
-            args.get(0);
+            args.get(0); //TODO make this less retarded
         } catch (IndexOutOfBoundsException ignored) {
-
-
             // iterate over commands and get their help
             Map<String, Command> commands = cmdhelp.getCommands();
             for (String name : commands.keySet()) {

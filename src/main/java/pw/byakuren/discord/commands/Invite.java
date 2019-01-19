@@ -23,6 +23,11 @@ public class Invite implements Command {
     }
 
     @Override
+    public boolean needsBotOwner() {
+        return false;
+    }
+
+    @Override
     public void run(Message message, List<String> args) {
         JDA jda = message.getJDA();
         String url = "https://discordapp.com/oauth2/authorize?&client_id="+jda.getSelfUser().getId()+"&scope=bot&permissions=0";

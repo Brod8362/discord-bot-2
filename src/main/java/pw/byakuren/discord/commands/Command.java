@@ -11,6 +11,8 @@ public interface Command {
 
     String getHelp();
 
+    boolean needsBotOwner();
+
     void run(Message message, List<String> args);
 
 

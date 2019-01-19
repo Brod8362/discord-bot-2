@@ -23,6 +23,11 @@ public class ServerInfo implements Command {
     }
 
     @Override
+    public boolean needsBotOwner() {
+        return false;
+    }
+
+    @Override
     public void run(Message message, List<String> args) {
         Guild s = message.getGuild();
         EmbedBuilder embed = new EmbedBuilder();

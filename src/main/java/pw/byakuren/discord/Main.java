@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.exceptions.RateLimitedException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import pw.byakuren.discord.commands.*;
 import pw.byakuren.discord.modules.Module;
@@ -24,6 +25,7 @@ public class Main extends ListenerAdapter {
 
     private CommandHelper cmdhelp = new CommandHelper();
     private ModuleHelper mdhelp = new ModuleHelper();
+    private User owner;
 
     public static void main(String[] args) {
         String token = getToken();
@@ -78,10 +80,19 @@ public class Main extends ListenerAdapter {
         System.out.println(String.format("Loaded %s modules.", mdhelp.getModules().size()));
     }
 
+    public boolean isBotOwner(User u) {
+      return u.equals(owner);
+    }
+
     @Override
     public void onReady(ReadyEvent event) {
         loadCommands();
         loadModules(event.getJDA());
+        try {
+            owner = event.getJDA().getApplicationInfo().complete(true).getOwner();
+        } catch (RateLimitedException e) {
+            e.printStackTrace();
+        }
         for (Module md: mdhelp.getModules().keySet()) {
             if (md.isExtension()) {
                 md.run(cmdhelp);
@@ -89,10 +100,9 @@ public class Main extends ListenerAdapter {
         }
     }
 
-
-
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
+        JDA jda = event.getJDA();
         User author = event.getAuthor(); //get message author
         Message message = event.getMessage(); //get message object
         String msg = message.getContentDisplay(); //get message content
@@ -119,6 +129,15 @@ public class Main extends ListenerAdapter {
                         Scanner parse = new Scanner(msg.substring(prefix.length() + cmd.getName().length())); //remove command
                         while (parse.hasNext()) {
                             args.add(parse.next()); //put all args into list
+                        }
+                        /* For commands that require the user to be the bot hoster */
+                        if (cmd.needsBotOwner()) {
+                            if (isBotOwner(message.getAuthor())) {
+                                cmd.run(message, args);
+                            } else {
+                                message.addReaction("❌").queue();
+                                return;
+                            }
                         }
                         cmd.run(message, args); //run given command w/ args
                 }

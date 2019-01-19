@@ -16,12 +16,14 @@ public class Test implements Command {
         return null;
     }
 
-
-
-
     @Override
     public String getHelp() {
         return "Testing command.";
+    }
+
+    @Override
+    public boolean needsBotOwner() {
+        return false;
     }
 
     @Override

@@ -23,6 +23,11 @@ public class UserInfo implements Command {
     }
 
     @Override
+    public boolean needsBotOwner() {
+        return false;
+    }
+
+    @Override
     public void run(Message message, List<String> args) {
         Member u;
         if (message.getMentionedMembers().size() == 0) {

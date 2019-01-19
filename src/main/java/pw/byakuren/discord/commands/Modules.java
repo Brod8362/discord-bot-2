@@ -31,6 +31,11 @@ public class Modules implements Command {
     }
 
     @Override
+    public boolean needsBotOwner() {
+        return false;
+    }
+
+    @Override
     public void run(Message message, List<String> args) {
         if (args.size() == 0) return;
         switch (args.get(0)) {
