@@ -32,6 +32,7 @@ public class Modules implements Command {
 
     @Override
     public void run(Message message, List<String> args) {
+        if (args.size() == 0) return;
         switch (args.get(0)) {
             case "disable":
                 mdhelp.disable(mdhelp.getModule(args.get(1)));
@@ -46,8 +47,10 @@ public class Modules implements Command {
                 for (Module md: mdhelp.getModules().keySet()) {
                     embed.addField(md.getInfo().getName(), String.valueOf(mdhelp.isEnabled(md)), false);
                 }
+                if (mdhelp.getModules().keySet().size() == 0) {
+                    embed.addField("No modules found.", "", false);
+                }
                 message.getChannel().sendMessage(embed.build()).queue();
-                break;
         }
     }
 }
