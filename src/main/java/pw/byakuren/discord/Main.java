@@ -68,7 +68,7 @@ public class Main extends ListenerAdapter {
         cmdhelp.registerCommand(new Invite());
         cmdhelp.registerCommand(new Modules(mdhelp));
         cmdhelp.registerCommand(new Help(cmdhelp));
-
+        cmdhelp.registerCommand(new UserInfo());
 
         System.out.println(String.format("Loaded %s commands.", cmdhelp.getCommands().size()));
     }
