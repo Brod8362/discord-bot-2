@@ -7,7 +7,7 @@ import java.util.List;
 
 public class RegexKeys implements Command {
 
-    DatabaseManager dbmg = null;
+    private DatabaseManager dbmg = null;
 
     public RegexKeys(DatabaseManager dbmg) {
         this.dbmg = dbmg;
