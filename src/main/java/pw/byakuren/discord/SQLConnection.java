@@ -33,6 +33,13 @@ public class SQLConnection {
 
     private PreparedStatement addWatchedUser;
     private PreparedStatement removeWatchedUser;
+    private PreparedStatement checkWatchedUser;
+    private PreparedStatement getWatchedUsers;
+
+    private PreparedStatement addWatchedRole;
+    private PreparedStatement removeWatchedRole;
+    private PreparedStatement checkWatchedRole;
+    private PreparedStatement getWatchedRoles;
 
     private PreparedStatement modifyServerSetting;
 
@@ -71,6 +78,16 @@ public class SQLConnection {
         removeSubscription = connection.prepareStatement("DELETE FROM moderator_subscriptions WHERE server=? AND moderator=? AND user=?");
         getSubscriptions = connection.prepareStatement("SELECT * FROM moderator_subscriptions WHERE server=? AND moderator=?");
         checkSubscribed = connection.prepareStatement("SELECT 1 FROM moderator_subscriptions WHERE server=? AND moderator=? AND user=?");
+
+        addWatchedUser = connection.prepareStatement("INSERT INTO watched_users VALUES (?, ?, ?)");
+        removeWatchedUser = connection.prepareStatement("DELETE FROM watched_users WHERE server=? AND user=?");
+        getWatchedUsers = connection.prepareStatement("SELECT * FROM watched_users WHERE server=?");
+        checkWatchedUser = connection.prepareStatement("SELECT 1 FROM watched_users WHERE server=? AND user=?");
+
+        addWatchedRole = connection.prepareStatement("INSERT INTO watched_roles VALUES (?, ?, ?)");
+        removeWatchedRole = connection.prepareStatement("DELETE FROM watched_roles WHERE server=? AND role=?");
+        getWatchedRoles = connection.prepareStatement("SELECT * FROM watched_roles WHERE server=?");
+        checkWatchedRole = connection.prepareStatement("SELECT 1 FROM watched_roles WHERE server=? AND role=?");
     }
 
 
@@ -231,5 +248,68 @@ public class SQLConnection {
         checkSubscribed.setLong(3, user);
         return checkSubscribed.executeQuery().next();
     }
+
+    public void executeAddWatchedUser(long server, long user) throws SQLException {
+        addWatchedUser.setLong(1, server);
+        addWatchedUser.setLong(2, user);
+        addWatchedUser.executeUpdate();
+        addWatchedUser.clearParameters();
+    }
+
+    public void executeRemoveWatchedUser(long server, long user) throws SQLException {
+        removeWatchedUser.setLong(1, server);
+        removeWatchedUser.setLong(2, user);
+        removeWatchedUser.executeUpdate();
+        removeWatchedUser.clearParameters();
+    }
+
+    public List<Long> getWatchedUsers(long server) throws SQLException {
+        getWatchedUsers.setLong(1, server);
+        ResultSet set = getWatchedUsers.executeQuery();
+        getWatchedUsers.clearParameters();
+        ArrayList<Long> list = new ArrayList<>();
+        while (set.next()) {
+            list.add(set.getLong("user"));
+        }
+        return list;
+    }
+
+    public boolean checkWatchedUser(long server, long user) throws SQLException {
+        checkWatchedUser.setLong(1, server);
+        checkWatchedUser.setLong(2, user);
+        return checkWatchedUser.executeQuery().next();
+    }
+
+    public void executeAddWatchedRole(long server, long role) throws SQLException {
+        addWatchedRole.setLong(1, server);
+        addWatchedRole.setLong(2, role);
+        addWatchedRole.executeUpdate();
+        addWatchedRole.clearParameters();
+    }
+
+    public void executeRemoveWatchedRole(long server, long role) throws SQLException {
+        removeWatchedRole.setLong(1, server);
+        removeWatchedRole.setLong(2, role);
+        removeWatchedRole.executeUpdate();
+        removeWatchedRole.clearParameters();
+    }
+
+    public List<Long> getWatchedRoles(long server) throws SQLException {
+        getWatchedRoles.setLong(1, server);
+        ResultSet set = getWatchedRoles.executeQuery();
+        getWatchedRoles.clearParameters();
+        ArrayList<Long> list = new ArrayList<>();
+        while (set.next()) {
+            list.add(set.getLong("role"));
+        }
+        return list;
+    }
+
+    public boolean checkWatchedRole(long server, long role) throws SQLException {
+        checkWatchedRole.setLong(1, server);
+        checkWatchedRole.setLong(2, role);
+        return checkWatchedRole.executeQuery().next();
+    }
+
 
 }
