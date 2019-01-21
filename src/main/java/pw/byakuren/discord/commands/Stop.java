@@ -2,11 +2,17 @@ package pw.byakuren.discord.commands;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
+import pw.byakuren.discord.DatabaseManager;
 
 import java.util.List;
 
 public class Stop implements Command {
 
+    DatabaseManager dbmg = null;
+
+    public Stop(DatabaseManager dbmg) {
+        this.dbmg = dbmg;
+    }
 
     @Override
     public String getName() {
@@ -33,6 +39,7 @@ public class Stop implements Command {
     public void run(Message message, List<String> args) {
         JDA jda = message.getJDA();
         message.addReaction("😢").queue();
+        dbmg.getSQL().disconnect();
         jda.shutdown();
     }
 }

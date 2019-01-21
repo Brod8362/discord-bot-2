@@ -15,6 +15,7 @@ import pw.byakuren.discord.modules.ModuleHelper;
 import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -25,6 +26,7 @@ public class Main extends ListenerAdapter {
 
     private CommandHelper cmdhelp = new CommandHelper();
     private ModuleHelper mdhelp = new ModuleHelper();
+    private DatabaseManager dbmg;
     private User owner;
 
     public static void main(String[] args) {
@@ -64,14 +66,27 @@ public class Main extends ListenerAdapter {
         return next;
     }
 
+    private void connectToDatabase() {
+        String dir = System.getProperty("user.dir");
+        try {
+            Scanner s = new Scanner(new File(dir+"/sqldata"));
+            dbmg = new DatabaseManager(new SQLConnection(s.next(), s.next(), s.next()));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("SQL data file not found");
+        }
+    }
+
     private void loadCommands() {
-        cmdhelp.registerCommand(new Stop());
+        cmdhelp.registerCommand(new Stop(dbmg));
         cmdhelp.registerCommand(new Test());
         cmdhelp.registerCommand(new Invite());
         cmdhelp.registerCommand(new Modules(mdhelp));
         cmdhelp.registerCommand(new Help(cmdhelp));
         cmdhelp.registerCommand(new UserInfo());
         cmdhelp.registerCommand(new ServerInfo());
+        cmdhelp.registerCommand(new SQL(dbmg));
 
         System.out.println(String.format("Loaded %s commands.", cmdhelp.getCommands().size()));
     }
@@ -86,6 +101,7 @@ public class Main extends ListenerAdapter {
 
     @Override
     public void onReady(ReadyEvent event) {
+        connectToDatabase();
         loadCommands();
         loadModules(event.getJDA());
         try {
@@ -111,6 +127,8 @@ public class Main extends ListenerAdapter {
             return;
         } //i dont like bots
 
+        dbmg.updateLastMessage(event.getMessage());
+
         for (Module md: mdhelp.getModules().keySet()) {
             if (!md.isExtension() && mdhelp.isEnabled(md)) {
                 md.run(message);
@@ -125,21 +143,21 @@ public class Main extends ListenerAdapter {
             for (String key : cmdhelp.getCommands().keySet()) { //check all commands
                 Command cmd = cmdhelp.getCommands().get(key);
                 if (arg.startsWith(cmd.getName())) { //check to see if called command matches a registered one
-                        List<String> args = new ArrayList<>(); //instantiate list for args
-                        Scanner parse = new Scanner(msg.substring(prefix.length() + cmd.getName().length())); //remove command
-                        while (parse.hasNext()) {
-                            args.add(parse.next()); //put all args into list
+                    List<String> args = new ArrayList<>(); //instantiate list for args
+                    Scanner parse = new Scanner(msg.substring(prefix.length() + cmd.getName().length())); //remove command
+                    while (parse.hasNext()) {
+                        args.add(parse.next()); //put all args into list
+                    }
+                    /* For commands that require the user to be the bot hoster */
+                    if (cmd.needsBotOwner()) {
+                        if (isBotOwner(message.getAuthor())) {
+                            cmd.run(message, args);
+                        } else {
+                            message.addReaction("❌").queue();
+                            return;
                         }
-                        /* For commands that require the user to be the bot hoster */
-                        if (cmd.needsBotOwner()) {
-                            if (isBotOwner(message.getAuthor())) {
-                                cmd.run(message, args);
-                            } else {
-                                message.addReaction("❌").queue();
-                                return;
-                            }
-                        }
-                        cmd.run(message, args); //run given command w/ args
+                    }
+                    cmd.run(message, args); //run given command w/ args
                 }
             }
         }

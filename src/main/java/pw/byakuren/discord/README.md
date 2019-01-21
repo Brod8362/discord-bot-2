@@ -9,8 +9,13 @@ Setup
 ====
 TBD
 
+SQL Setup
+---------
+You must have an SQL server running on localhost. The name of the database, username, and password are up to your discretion,
+and can be configured in the "sqldata" configuration file, in the respective order above.
+
 Bugs
-----
+====
 Please report any bugs you find, and feel free to fix them with a pull request.
 
 
