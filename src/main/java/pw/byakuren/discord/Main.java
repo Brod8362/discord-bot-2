@@ -87,6 +87,7 @@ public class Main extends ListenerAdapter {
         cmdhelp.registerCommand(new UserInfo());
         cmdhelp.registerCommand(new ServerInfo());
         cmdhelp.registerCommand(new SQL(dbmg));
+        cmdhelp.registerCommand(new RegexKeys(dbmg));
 
         System.out.println(String.format("Loaded %s commands.", cmdhelp.getCommands().size()));
     }

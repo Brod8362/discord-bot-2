@@ -5,6 +5,7 @@ import pw.byakuren.discord.objects.ServerSettings;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DatabaseManager {
@@ -119,7 +120,11 @@ public class DatabaseManager {
     }
 
     public void addRegexKey(long serverid, String key) {
-
+        try {
+            sql.executeAddRegexKey(serverid, key);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
     
     public void removeRegexKey(Guild server, String key) {
@@ -127,15 +132,24 @@ public class DatabaseManager {
     }
 
     public void removeRegexKey(long serverid, String key) {
-
+        try {
+            sql.executeRemoveRegexKey(serverid, key);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    public String[] getRegexKeys(Guild server) {
+    public List<String> getRegexKeys(Guild server) {
         return getRegexKeys(server.getIdLong());
     }
 
-    public String[] getRegexKeys(long serverid) {
-        return new String[0];
+    public List<String> getRegexKeys(long serverid) {
+        try {
+            return sql.executeGetRegexKeys(serverid);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
     
     /* Miscellaneous methods. */
@@ -147,7 +161,7 @@ public class DatabaseManager {
             e.printStackTrace();
         }
     }
-    
+
     public void updateLastMessage(Message message) {
         try {
             sql.executeUpdateLastMessage(message.getGuild().getIdLong(), message.getMember().getUser().getIdLong(), message.getContentDisplay());

@@ -2,6 +2,7 @@ package pw.byakuren.discord;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class SQLConnection {
 
@@ -17,10 +18,11 @@ public class SQLConnection {
     private PreparedStatement createDatapoint;
 
     private PreparedStatement addSubscription;
-    private PreparedStatement deleteSubscription;
+    private PreparedStatement removeSubscription;
 
     private PreparedStatement addRegexKey;
-    private PreparedStatement deleteRegexKey;
+    private PreparedStatement removeRegexKey;
+    private PreparedStatement getRegexKeys;
 
     private PreparedStatement addExcludedChannel;
     private PreparedStatement removeExcludedChannel;
@@ -51,6 +53,10 @@ public class SQLConnection {
         createDatapoint = connection.prepareStatement("INSERT INTO user_chat_data VALUES (?, ?, ?, 1)");
 
         updateLastMessage = connection.prepareStatement("REPLACE INTO last_messages (server, user, content, date_sent) VALUES (?, ?, ?, ?)");
+
+        addRegexKey = connection.prepareStatement("INSERT INTO server_regex_keys VALUES (?, ?)");
+        removeRegexKey = connection.prepareStatement("DELETE FROM server_regex_keys WHERE server=? AND regex_key=?");
+        getRegexKeys = connection.prepareStatement("SELECT * FROM server_regex_keys WHERE server=?");
     }
 
 
@@ -116,7 +122,32 @@ public class SQLConnection {
         updateLastMessage.setLong(2, user);
         updateLastMessage.setString(3, message);
         updateLastMessage.setDate(4, new Date(System.currentTimeMillis()));
-        updateLastMessage.executeQuery();
+        updateLastMessage.executeUpdate();
         updateLastMessage.clearParameters();
+    }
+
+    public void executeAddRegexKey(long server, String regex) throws SQLException {
+        addRegexKey.setLong(1, server);
+        addRegexKey.setString(2, regex);
+        addRegexKey.executeUpdate();
+        addRegexKey.clearParameters();
+    }
+
+    public void executeRemoveRegexKey(long server, String regex) throws SQLException {
+        removeRegexKey.setLong(1, server);
+        removeRegexKey.setString(2, regex);
+        removeRegexKey.executeUpdate();
+        removeRegexKey.clearParameters();
+    }
+
+    public List<String> executeGetRegexKeys(long server) throws SQLException {
+        getRegexKeys.setLong(1, server);
+        ResultSet set =  getRegexKeys.executeQuery();
+        getRegexKeys.clearParameters();
+        ArrayList<String> list = new ArrayList<>();
+        while (set.next()) {
+            list.add(set.getString("regex_key"));
+        }
+        return list;
     }
 }
