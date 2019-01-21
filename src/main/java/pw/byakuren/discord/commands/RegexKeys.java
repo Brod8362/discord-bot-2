@@ -44,6 +44,7 @@ public class RegexKeys implements Command {
                     s.append(args.get(i)).append(" ");
                 }
                 dbmg.addRegexKey(message.getGuild(), s.toString());
+                message.addReaction("\uD83D\uDC4D").queue();
                 break;
             case "remove":
                 if (args.size() == 1) return;
@@ -51,6 +52,7 @@ public class RegexKeys implements Command {
                     s.append(args.get(i)).append(" ");
                 }
                 dbmg.removeRegexKey(message.getGuild(), s.toString());
+                message.addReaction("\uD83D\uDC4D").queue();
                 break;
             case "list":
                 List<String> list = dbmg.getRegexKeys(message.getGuild());
