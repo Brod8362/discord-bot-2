@@ -91,6 +91,7 @@ public class Main extends ListenerAdapter {
         cmdhelp.registerCommand(new ExcludedChannels(dbmg));
         cmdhelp.registerCommand(new Subscribe(dbmg));
         cmdhelp.registerCommand(new WatchUser(dbmg));
+        cmdhelp.registerCommand(new WatchRole(dbmg));
 
         System.out.println(String.format("Loaded %s commands.", cmdhelp.getCommands().size()));
     }
