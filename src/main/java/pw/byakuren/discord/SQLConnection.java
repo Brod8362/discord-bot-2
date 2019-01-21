@@ -252,6 +252,7 @@ public class SQLConnection {
     public void executeAddWatchedUser(long server, long user) throws SQLException {
         addWatchedUser.setLong(1, server);
         addWatchedUser.setLong(2, user);
+        addWatchedUser.setDate(3, new Date(System.currentTimeMillis()));
         addWatchedUser.executeUpdate();
         addWatchedUser.clearParameters();
     }
@@ -283,6 +284,7 @@ public class SQLConnection {
     public void executeAddWatchedRole(long server, long role) throws SQLException {
         addWatchedRole.setLong(1, server);
         addWatchedRole.setLong(2, role);
+        addWatchedRole.setDate(3, new Date(System.currentTimeMillis()));
         addWatchedRole.executeUpdate();
         addWatchedRole.clearParameters();
     }

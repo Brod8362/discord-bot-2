@@ -121,19 +121,105 @@ public class DatabaseManager {
     /* Methods for modyfing watched roles. */
 
     public void addWatchedRole(Role role) {
+        addWatchedRole(role.getGuild().getIdLong(), role.getIdLong());
+    }
 
+    public void addWatchedRole(long server, long role) {
+        try {
+            sql.executeAddWatchedRole(server, role);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void removeWatchedRole(Role role) {
+        removeWatchedRole(role.getGuild().getIdLong(), role.getIdLong());
+    }
 
+    public void removeWatchedRole(long server, long role) {
+        try {
+            sql.executeRemoveWatchedRole(server, role);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
     
-    public Role[] getWatchedRoles(Guild server) {
+    public List<Long> getWatchedRoles(Guild server) {
         return getWatchedRoles(server.getIdLong());
     }
     
-    public Role[] getWatchedRoles(long serverid) {
-        return new Role[0];
+    public List<Long> getWatchedRoles(long serverid) {
+        try {
+            return sql.getWatchedRoles(serverid);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean checkWatchedRole(Role role) {
+        return checkWatchedRole(role.getGuild().getIdLong(), role.getIdLong());
+    }
+
+    public boolean checkWatchedRole(long server, long role) {
+        try {
+            return sql.checkWatchedRole(server, role);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /* Methods for handling watched users */
+
+    public void addWatchedUser(Member user) {
+        addWatchedUser(user.getGuild().getIdLong(), user.getUser().getIdLong());
+    }
+
+    public void addWatchedUser(long server, long user) {
+        try {
+            sql.executeAddWatchedUser(server, user);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void removeWatchedUser(Member user) {
+        removeWatchedUser(user.getGuild().getIdLong(), user.getUser().getIdLong());
+    }
+
+    public void removeWatchedUser(long server, long user) {
+        try {
+            sql.executeRemoveWatchedUser(server, user);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<Long> getWatchedUsers(Guild server) {
+        return getWatchedUsers(server.getIdLong());
+    }
+
+    public List<Long> getWatchedUsers(long serverid) {
+        try {
+            return sql.getWatchedUsers(serverid);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean checkWatchedUser(Member user) {
+        return checkWatchedUser(user.getGuild().getIdLong(), user.getUser().getIdLong());
+    }
+
+    public boolean checkWatchedUser(long server, long user) {
+        try {
+            return sql.checkWatchedUser(server, user);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     /* Methods for handling excluded channels */ 
