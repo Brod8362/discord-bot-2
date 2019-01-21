@@ -26,6 +26,8 @@ public class SQLConnection {
 
     private PreparedStatement addExcludedChannel;
     private PreparedStatement removeExcludedChannel;
+    private PreparedStatement getExcludedChannels;
+    private PreparedStatement checkExcludedChannel;
 
     private PreparedStatement addWatchedUser;
     private PreparedStatement removeWatchedUser;
@@ -57,6 +59,11 @@ public class SQLConnection {
         addRegexKey = connection.prepareStatement("INSERT INTO server_regex_keys VALUES (?, ?)");
         removeRegexKey = connection.prepareStatement("DELETE FROM server_regex_keys WHERE server=? AND regex_key=?");
         getRegexKeys = connection.prepareStatement("SELECT * FROM server_regex_keys WHERE server=?");
+
+        addExcludedChannel = connection.prepareStatement("INSERT INTO excluded_channels VALUES (?, ?)");
+        removeExcludedChannel = connection.prepareStatement("DELETE FROM excluded_channels WHERE server=? AND channel=?");
+        getExcludedChannels = connection.prepareStatement("SELECT * FROM excluded_channels WHERE server=?");
+        checkExcludedChannel = connection.prepareStatement("SELECT 1 FROM excluded_channels WHERE server=? AND channel=?");
     }
 
 
@@ -147,6 +154,38 @@ public class SQLConnection {
         ArrayList<String> list = new ArrayList<>();
         while (set.next()) {
             list.add(set.getString("regex_key"));
+        }
+        return list;
+    }
+
+    public void executeAddExcludedChannel(long server, long channel) throws SQLException {
+        addExcludedChannel.setLong(1, server);
+        addExcludedChannel.setLong(2, channel);
+        addExcludedChannel.executeUpdate();
+        addExcludedChannel.clearParameters();
+    }
+
+    public void executeRemoveExcludedChannel(long server, long channel) throws SQLException {
+        removeExcludedChannel.setLong(1, server);
+        removeExcludedChannel.setLong(2, channel);
+        removeExcludedChannel.executeUpdate();
+        removeExcludedChannel.clearParameters();
+    }
+
+    public boolean executeCheckExcludedChannel(long server, long channel) throws SQLException {
+        checkExcludedChannel.setLong(1, server);
+        checkExcludedChannel.setLong(2, channel);
+        ResultSet set = checkExcludedChannel.executeQuery();
+        return set.next();
+    }
+
+    public List<Long> executeGetExcludedChannels(long server) throws SQLException {
+        getExcludedChannels.setLong(1, server);
+        ResultSet set = getExcludedChannels.executeQuery();
+        getExcludedChannels.clearParameters();
+        ArrayList<Long> list = new ArrayList<>();
+        while (set.next()) {
+            list.add(set.getLong("channel"));
         }
         return list;
     }

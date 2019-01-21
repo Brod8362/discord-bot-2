@@ -98,19 +98,45 @@ public class DatabaseManager {
     /* Methods for handling excluded channels */ 
     
     public void addExcludedChannel(TextChannel channel) {
-        
+        try {
+            sql.executeAddExcludedChannel(channel.getGuild().getIdLong(), channel.getIdLong());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
-    
+
     public void removeExcludedChannel(TextChannel channel) {
-        
+        try {
+            sql.executeRemoveExcludedChannel(channel.getGuild().getIdLong(), channel.getIdLong());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
     
-    public TextChannel[] getExcludedChannels(Guild server) {
+    public List<Long> getExcludedChannels(Guild server) {
         return getExcludedChannels(server.getIdLong());
     }
     
-    public TextChannel[] getExcludedChannels(long serverid) {
-        return new TextChannel[0];
+    public List<Long> getExcludedChannels(long serverid) {
+        try {
+            return sql.executeGetExcludedChannels(serverid);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean checkExcludedChannel(TextChannel channel) {
+        return checkExcludedChannel(channel.getGuild().getIdLong(), channel.getIdLong());
+    }
+
+    public boolean checkExcludedChannel(long serverid, long channel) {
+        try {
+            return sql.executeCheckExcludedChannel(serverid, channel);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     /* Methods for handling server regex keys */

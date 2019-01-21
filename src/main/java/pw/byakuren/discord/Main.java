@@ -88,6 +88,7 @@ public class Main extends ListenerAdapter {
         cmdhelp.registerCommand(new ServerInfo());
         cmdhelp.registerCommand(new SQL(dbmg));
         cmdhelp.registerCommand(new RegexKeys(dbmg));
+        cmdhelp.registerCommand(new ExcludedChannels(dbmg));
 
         System.out.println(String.format("Loaded %s commands.", cmdhelp.getCommands().size()));
     }
@@ -96,7 +97,7 @@ public class Main extends ListenerAdapter {
         System.out.println(String.format("Loaded %s modules.", mdhelp.getModules().size()));
     }
 
-    public boolean isBotOwner(User u) {
+    private boolean isBotOwner(User u) {
       return u.equals(owner);
     }
 
