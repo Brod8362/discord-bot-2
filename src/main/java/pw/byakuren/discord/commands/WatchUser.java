@@ -6,11 +6,11 @@ import pw.byakuren.discord.DatabaseManager;
 
 import java.util.List;
 
-public class WatchRole implements Command {
+public class WatchUser implements Command {
 
     private DatabaseManager dbmg;
 
-    public WatchRole(DatabaseManager dbmg) {
+    public WatchUser(DatabaseManager dbmg) {
         this.dbmg = dbmg;
     }
 
