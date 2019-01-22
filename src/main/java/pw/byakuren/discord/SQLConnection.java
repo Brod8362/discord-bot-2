@@ -126,11 +126,11 @@ public class SQLConnection {
 
     public void createTables() throws RuntimeException {
         String[] tables = new String[]{
-                "CREATE TABLE last_messages (server BIGINT NOT NULL, user BIGINT NOT NULL, content TEXT NOT NULL, date_sent DATETIME NOT NULL, INDEX(server), PRIMARY KEY(server, user))",
-                "CREATE TABLE moderator_subscriptions (server BIGINT NOT NULL, moderator BIGINT NOT NULL, user BIGINT NOT NULL, date_added DATETIME NOT NULL, INDEX(server))",
+                "CREATE TABLE last_messages (server BIGINT NOT NULL, user BIGINT NOT NULL, content TEXT NOT NULL, date_sent TIMESTAMP NOT NULL, INDEX(server), PRIMARY KEY(server, user))",
+                "CREATE TABLE moderator_subscriptions (server BIGINT NOT NULL, moderator BIGINT NOT NULL, user BIGINT NOT NULL, date_added TIMESTAMP NOT NULL, INDEX(server))",
                 "CREATE TABLE excluded_channels (server BIGINT NOT NULL, channel BIGINT NOT NULL, INDEX(server))",
-                "CREATE TABLE watched_users (server BIGINT NOT NULL, user BIGINT NOT NULL, date_added DATETIME NOT NULL, INDEX(server))",
-                "CREATE TABLE watched_roles (server BIGINT NOT NULL, role BIGINT NOT NULL, date_added DATETIME NOT NULL, INDEX(server))",
+                "CREATE TABLE watched_users (server BIGINT NOT NULL, user BIGINT NOT NULL, date_added TIMESTAMP NOT NULL, INDEX(server), PRIMARY KEY(server,user))",
+                "CREATE TABLE watched_roles (server BIGINT NOT NULL, role BIGINT NOT NULL, date_added TIMESTAMP NOT NULL, INDEX(server), PRIMARY KEY(server,role))",
                 "CREATE TABLE server_regex_keys (server BIGINT NOT NULL, regex_key TEXT NOT NULL, INDEX(server))",
                 "CREATE TABLE user_chat_data (server BIGINT NOT NULL, user BIGINT NOT NULL, datapoint VARCHAR(50) NOT NULL, count INT NOT NULL, INDEX(server), PRIMARY KEY(server, user, datapoint))",
                 "CREATE TABLE server_settings (server BIGINT NOT NULL, setting VARCHAR(50) NOT NULL, value BIGINT NOT NULL, INDEX(server))"
