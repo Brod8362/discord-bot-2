@@ -67,14 +67,10 @@ public class Main extends ListenerAdapter {
     }
 
     private void connectToDatabase() {
-        String dir = System.getProperty("user.dir");
         try {
-            Scanner s = new Scanner(new File(dir+"/sqldata"));
-            dbmg = new DatabaseManager(new SQLConnection(s.next(), s.next(), s.next()));
+            dbmg = new DatabaseManager(new SQLConnection());
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("SQL data file not found");
         }
     }
 

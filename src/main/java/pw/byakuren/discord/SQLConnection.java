@@ -6,11 +6,6 @@ import java.util.List;
 
 public class SQLConnection {
 
-    private String dbname;
-    private String dbuser;
-    private String dbpassword;
-
-
     private Connection connection = null;
     private Statement statement = null;
 
@@ -46,20 +41,16 @@ public class SQLConnection {
     private PreparedStatement updateLastMessage;
 
 
-
-
-
-    public SQLConnection(String db, String user, String password) {
-        dbname=db;
-        dbuser=user;
-        dbpassword=password;
-    }
-
     public void initialize() throws SQLException {
+        String dir = System.getProperty("user.dir");
         // intialize DB connection
-        connection = DriverManager.getConnection(String.format("jdbc:mysql://localhost/%s?user=%s&password=%s", dbname, dbuser, dbpassword));
+        connection = DriverManager.getConnection("jdbc:sqlite:"+dir+"/database.db");
         statement = connection.createStatement();
-        System.out.println("Connected to SQL server.");
+        System.out.println("Connected to SQL");
+        if (!verifyTables()) {
+            System.out.println("Tables need to be created.");
+            createTables();
+        }
         updateDatapoint = connection.prepareStatement("UPDATE user_chat_data SET count=count+1 WHERE server=? AND user=? AND datapoint=?");
         createDatapoint = connection.prepareStatement("INSERT INTO user_chat_data VALUES (?, ?, ?, 1)");
 
@@ -90,6 +81,10 @@ public class SQLConnection {
         checkWatchedRole = connection.prepareStatement("SELECT 1 FROM watched_roles WHERE server=? AND role=?");
     }
 
+    private boolean verifyTables() {
+        return (getTables().size() == 8);
+    }
+
 
     public ResultSet runQuery(String query)  {
         try {
@@ -102,10 +97,10 @@ public class SQLConnection {
 
     public ArrayList<String> getTables() {
         try {
-            ResultSet results = statement.executeQuery("SHOW TABLES;");
+            ResultSet results = statement.executeQuery("SELECT name FROM sqlite_master WHERE type='table'");
             ArrayList<String> list = new ArrayList<>();
             while (results.next()) {
-                list.add(results.getString("Tables_in_"+dbname));
+                list.add(results.getString("name"));
             }
             return list;
         } catch (SQLException e) {
@@ -125,20 +120,29 @@ public class SQLConnection {
     }
 
     public void createTables() throws RuntimeException {
-        String[] tables = new String[]{
-                "CREATE TABLE last_messages (server BIGINT NOT NULL, user BIGINT NOT NULL, content TEXT NOT NULL, date_sent TIMESTAMP NOT NULL, INDEX(server), PRIMARY KEY(server, user))",
-                "CREATE TABLE moderator_subscriptions (server BIGINT NOT NULL, moderator BIGINT NOT NULL, user BIGINT NOT NULL, date_added TIMESTAMP NOT NULL, INDEX(server))",
-                "CREATE TABLE excluded_channels (server BIGINT NOT NULL, channel BIGINT NOT NULL, INDEX(server))",
-                "CREATE TABLE watched_users (server BIGINT NOT NULL, user BIGINT NOT NULL, date_added TIMESTAMP NOT NULL, INDEX(server), PRIMARY KEY(server,user))",
-                "CREATE TABLE watched_roles (server BIGINT NOT NULL, role BIGINT NOT NULL, date_added TIMESTAMP NOT NULL, INDEX(server), PRIMARY KEY(server,role))",
-                "CREATE TABLE server_regex_keys (server BIGINT NOT NULL, regex_key TEXT NOT NULL, INDEX(server))",
-                "CREATE TABLE user_chat_data (server BIGINT NOT NULL, user BIGINT NOT NULL, datapoint VARCHAR(50) NOT NULL, count INT NOT NULL, INDEX(server), PRIMARY KEY(server, user, datapoint))",
-                "CREATE TABLE server_settings (server BIGINT NOT NULL, setting VARCHAR(50) NOT NULL, value BIGINT NOT NULL, INDEX(server))"
+        String[] queries = new String[]{
+                "CREATE TABLE last_messages (server INTEGER NOT NULL, user INTEGER NOT NULL, content TEXT NOT NULL, date_sent TIMESTAMP NOT NULL, PRIMARY KEY(server, user))",
+                "CREATE INDEX msg_idx ON last_messages(server)",
+                "CREATE TABLE moderator_subscriptions (server INTEGER NOT NULL, moderator INTEGER NOT NULL, user INTEGER NOT NULL, date_added TIMESTAMP NOT NULL)",
+                "CREATE INDEX mod_idx ON moderator_subscriptions(server)",
+                "CREATE TABLE excluded_channels (server INTEGER NOT NULL, channel INTEGER NOT NULL)",
+                "CREATE INDEX exclude_idx ON excluded_channels(server)",
+                "CREATE TABLE watched_users (server INTEGER NOT NULL, user INTEGER NOT NULL, date_added TIMESTAMP NOT NULL, PRIMARY KEY(server,user))",
+                "CREATE INDEX watched_users_idx ON watched_users(server)",
+                "CREATE TABLE watched_roles (server INTEGER NOT NULL, role INTEGER NOT NULL, date_added TIMESTAMP NOT NULL, PRIMARY KEY(server,role))",
+                "CREATE INDEX watched_roles_idx ON watched_roles(server)",
+                "CREATE TABLE server_regex_keys (server INTEGER NOT NULL, regex_key TEXT NOT NULL)",
+                "CREATE INDEX server_regex_idx ON server_regex_keys(server)",
+                "CREATE TABLE user_chat_data (server INTEGER NOT NULL, user INTEGER NOT NULL, datapoint VARCHAR(50) NOT NULL, count INT NOT NULL, PRIMARY KEY(server, user, datapoint))",
+                "CREATE INDEX chat_idx ON user_chat_data(server)",
+                "CREATE TABLE server_settings (server INTEGER NOT NULL, setting VARCHAR(50) NOT NULL, value INTEGER NOT NULL)",
+                "CREATE INDEX settings_idx ON server_settings(server)"
         };
-        for (String s: tables) {
+        for (String s: queries) {
             try {
                 statement.execute(s);
             } catch (SQLException e) {
+                e.printStackTrace();
                 throw new RuntimeException("Table already exists or invalid syntax.");
             }
         }
