@@ -2,10 +2,7 @@ package pw.byakuren.discord;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
-import pw.byakuren.discord.objects.cache.datatypes.RegexKey;
-import pw.byakuren.discord.objects.cache.datatypes.ServerSettings;
-import pw.byakuren.discord.objects.cache.datatypes.Subscription;
-import pw.byakuren.discord.objects.cache.datatypes.UserStats;
+import pw.byakuren.discord.objects.cache.datatypes.*;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -339,12 +336,38 @@ public class DatabaseManager {
         }
     }
 
-    public void updateLastMessage(Message message) {
+    public void updateLastMessage(Message m) {
         try {
-            sql.executeUpdateLastMessage(message.getGuild().getIdLong(), message.getMember().getUser().getIdLong(), message.getContentDisplay());
+            sql.executeUpdateLastMessage(m.getGuild().getIdLong(), m.getMember().getUser().getIdLong(),
+                    m.getContentDisplay(), m.getIdLong());
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
+    public LastMessage getLastMessage(Member m) {
+        return getLastMessage(m.getGuild().getIdLong(), m.getUser().getIdLong());
+    }
+
+    public LastMessage getLastMessage(long serverid, long memberid) {
+        try {
+            return sql.executeGetLastMessage(serverid, memberid);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<LastMessage> getLastMessages(Guild g) {
+        return getLastMessages(g.getIdLong());
+    }
+
+    public List<LastMessage> getLastMessages(long serverid) {
+        try {
+            return sql.executeGetLastMessages(serverid);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

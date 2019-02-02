@@ -1,5 +1,7 @@
 package pw.byakuren.discord;
 
+import pw.byakuren.discord.objects.cache.datatypes.LastMessage;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +41,8 @@ public class SQLConnection {
     private PreparedStatement modifyServerSetting;
 
     private PreparedStatement updateLastMessage;
-
+    private PreparedStatement getLastMessage;
+    private PreparedStatement getLastMessages;
 
     public void initialize() throws SQLException {
         String dir = System.getProperty("user.dir");
@@ -54,7 +57,9 @@ public class SQLConnection {
         updateDatapoint = connection.prepareStatement("UPDATE user_chat_data SET count=count+1 WHERE server=? AND user=? AND datapoint=?");
         createDatapoint = connection.prepareStatement("INSERT INTO user_chat_data VALUES (?, ?, ?, 1)");
 
-        updateLastMessage = connection.prepareStatement("REPLACE INTO last_messages (server, user, content, date_sent) VALUES (?, ?, ?, ?)");
+        updateLastMessage = connection.prepareStatement("REPLACE INTO last_messages (server, user, content, id, date_sent) VALUES (?, ?, ?, ?)");
+        getLastMessage = connection.prepareStatement("SELECT 1 FROM last_messages WHERE server=? AND user=?");
+        getLastMessages = connection.prepareStatement("SELECT * FROM last_messages WHERE server=?");
 
         addRegexKey = connection.prepareStatement("INSERT INTO server_regex_keys VALUES (?, ?)");
         removeRegexKey = connection.prepareStatement("DELETE FROM server_regex_keys WHERE server=? AND regex_key=?");
@@ -121,7 +126,7 @@ public class SQLConnection {
 
     public void createTables() throws RuntimeException {
         String[] queries = new String[]{
-                "CREATE TABLE last_messages (server INTEGER NOT NULL, user INTEGER NOT NULL, content TEXT NOT NULL, date_sent TIMESTAMP NOT NULL, PRIMARY KEY(server, user))",
+                "CREATE TABLE last_messages (server INTEGER NOT NULL, user INTEGER NOT NULL, content TEXT NOT NULL, id INTEGER NOT NULL, date_sent TIMESTAMP NOT NULL, PRIMARY KEY(server, user))",
                 "CREATE INDEX msg_idx ON last_messages(server)",
                 "CREATE TABLE moderator_subscriptions (server INTEGER NOT NULL, moderator INTEGER NOT NULL, user INTEGER NOT NULL, date_added TIMESTAMP NOT NULL)",
                 "CREATE INDEX mod_idx ON moderator_subscriptions(server)",
@@ -152,13 +157,49 @@ public class SQLConnection {
         statement.execute("DROP TABLE "+s);
     }
 
-    public void executeUpdateLastMessage(long server, long user, String message) throws SQLException {
+    public void executeUpdateLastMessage(long server, long user, String message, long messageid) throws SQLException {
         updateLastMessage.setLong(1, server);
         updateLastMessage.setLong(2, user);
         updateLastMessage.setString(3, message);
-        updateLastMessage.setDate(4, new Date(System.currentTimeMillis()));
+        updateLastMessage.setLong(4, messageid);
+        updateLastMessage.setDate(5, new Date(System.currentTimeMillis()));
         updateLastMessage.executeUpdate();
         updateLastMessage.clearParameters();
+    }
+
+    public long executeGetLastMessageId(long server, long user) throws SQLException {
+        getLastMessage.setLong(1, server);
+        getLastMessage.setLong(2, user);
+        ResultSet set = getLastMessage.executeQuery();
+        getLastMessage.clearParameters();
+        return set.getLong("id");
+    }
+
+    public LastMessage executeGetLastMessage(long server, long user) throws SQLException {
+        getLastMessage.setLong(1, server);
+        getLastMessage.setLong(2, user);
+        ResultSet set = getLastMessage.executeQuery();
+        getLastMessage.clearParameters();
+        return setToLastMessage(set);
+    }
+
+    public List<LastMessage> executeGetLastMessages(long server) throws SQLException {
+        getLastMessages.setLong(1, server);
+        ResultSet set = getLastMessages.executeQuery();
+        List<LastMessage> l = new ArrayList<>();
+        while (set.next()) {
+            l.add(setToLastMessage(set));
+        }
+        return l;
+    }
+
+    private LastMessage setToLastMessage(ResultSet set) throws SQLException {
+        long serverid = set.getLong(1);
+        long userid =set.getLong(2);
+        long messageid = set.getLong(3);
+        String content = set.getString(4);
+        Date date = set.getDate(5);
+        return new LastMessage(serverid, userid, messageid, content, date);
     }
 
     public void executeAddRegexKey(long server, String regex) throws SQLException {
