@@ -1,100 +1,58 @@
 package pw.byakuren.discord.objects.cache;
 
-import net.dv8tion.jda.api.entities.Message;
 import pw.byakuren.discord.DatabaseManager;
-import pw.byakuren.discord.objects.cache.datatypes.RegexKey;
-import pw.byakuren.discord.objects.cache.datatypes.ServerSettings;
-import pw.byakuren.discord.objects.cache.datatypes.Subscription;
-import pw.byakuren.discord.objects.cache.datatypes.UserStats;
-
-import java.util.List;
-import java.util.Map;
+import pw.byakuren.discord.objects.cache.datatypes.*;
 
 public class ServerCache {
 
     private final long id;
 
-    private DatabaseManager dbmg;
-
     private CacheObject<UserStats> userdata;
-    private ServerSettings settings;
-    private List<RegexKey> regex_keys;
-    private List<Long> watched_users;
-    private List<Long> watched_roles;
-    private List<Long> excluded_channels;
-    private Map<Long, Message> last_messages;
-    private List<Subscription> moderator_subscriptions;
+    private CacheObject<ServerSettings> settings;
+    private CacheObject<RegexKey> regex_keys;
+    private CacheObject<WatchedUser> watched_users;
+    private CacheObject<WatchedRole> watched_roles;
+    private CacheObject<ExcludedChannel> excluded_channels;
+    private CacheObject<LastMessage> last_messages;
+    private CacheObject<Subscription> moderator_subscriptions;
 
-    public ServerCache(long id, DatabaseManager dbmg) {
+    ServerCache(long id, DatabaseManager dbmg) {
         this.id = id;
-        this.dbmg = dbmg;
     }
 
     public long getId() {
         return id;
     }
 
-    public Map<Long, UserStats> getUserdata() {
+    public CacheObject<UserStats> getUserStats() {
         return userdata;
     }
 
-    void setUserData(Map<Long, UserStats> userdata) {
-        this.userdata = userdata;
-    }
-
-    public ServerSettings getSettings() {
+    public CacheObject<ServerSettings> getSettings() {
         return settings;
     }
 
-    void setSettings(ServerSettings settings) {
-        this.settings = settings;
-    }
-
-    public List<RegexKey> getRegexKeys() {
+    public CacheObject<RegexKey> getRegexKeys() {
         return regex_keys;
     }
 
-    void setRegexKeys(List<String> regex_keys) {
-        this.regex_keys = regex_keys;
-    }
-
-    public List<Long> getWatchedUsers() {
+    public CacheObject<WatchedUser> getWatchedUsers() {
         return watched_users;
     }
 
-    void setWatchedUsers(List<Long> watched_users) {
-        this.watched_users = watched_users;
-    }
-
-    public List<Long> getWatchedRoles() {
+    public CacheObject<WatchedRole> getWatchedRoles() {
         return watched_roles;
     }
 
-    void setWatchedRoles(List<Long> watched_roles) {
-        this.watched_roles = watched_roles;
-    }
-
-    public List<Long> getExcludedChannels() {
+    public CacheObject<ExcludedChannel> getExcludedChannels() {
         return excluded_channels;
     }
 
-    void setExcludedChannels(List<Long> excluded_channels) {
-        this.excluded_channels = excluded_channels;
-    }
-
-    public Map<Long, Message> getLastMessages() {
+    public CacheObject<LastMessage> getLastMessages() {
         return last_messages;
     }
 
-    void setLastMessages(Map<Long, Message> last_messages) {
-        this.last_messages = last_messages;
-    }
-
-    public List<Subscription> getModeratorSubscriptions() {
+    public CacheObject<Subscription> getModeratorSubscriptions() {
         return moderator_subscriptions;
-    }
-
-    void setModeratorSubscriptions(List<Subscription> moderator_subscriptions) {
-        this.moderator_subscriptions = moderator_subscriptions;
     }
 }

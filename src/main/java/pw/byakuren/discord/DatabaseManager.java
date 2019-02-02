@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
 import pw.byakuren.discord.objects.cache.datatypes.RegexKey;
 import pw.byakuren.discord.objects.cache.datatypes.ServerSettings;
+import pw.byakuren.discord.objects.cache.datatypes.Subscription;
 import pw.byakuren.discord.objects.cache.datatypes.UserStats;
 
 import java.sql.SQLException;
@@ -62,6 +63,16 @@ public class DatabaseManager {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public List<Subscription> getModeratorSubscriptions(long server) {
+        try {
+            //TODO get all mods via jda and create the list
+            return new ArrayList<Subscription>();
+        } catch (/*SQL*/Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public List<Long> getModeratorSubscriptions(Member moderator) {

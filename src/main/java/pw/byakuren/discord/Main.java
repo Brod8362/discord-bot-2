@@ -66,9 +66,9 @@ public class Main extends ListenerAdapter {
         return next;
     }
 
-    private void connectToDatabase() {
+    private void connectToDatabase(JDA jda) {
         try {
-            dbmg = new DatabaseManager(new SQLConnection());
+            dbmg = new DatabaseManager(new SQLConnection(), jda);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -102,7 +102,7 @@ public class Main extends ListenerAdapter {
 
     @Override
     public void onReady(ReadyEvent event) {
-        connectToDatabase();
+        connectToDatabase(event.getJDA());
         loadCommands();
         loadModules(event.getJDA());
         try {

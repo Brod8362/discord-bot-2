@@ -5,16 +5,18 @@ import pw.byakuren.discord.DatabaseManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface CacheDatatype {
+public class CacheDatatype {
 
-    <T> boolean matches(T... qualifier);
+    public <T> boolean matches(T... qualifier) {
+        return false;
+    }
 
-    static <T> CacheDatatype get(T qualifier, DatabaseManager dbmg) {
+    public static <T> CacheDatatype get(T qualifier, DatabaseManager dbmg) {
         return null;
     }
 
-    static List<CacheDatatype> getAll(DatabaseManager dbmg) {
-        return new ArrayList<CacheDatatype>();
+    public static <T> List<T> getAll(DatabaseManager dbmg, long serverid) {
+        return new ArrayList<T>();
     }
 
 }

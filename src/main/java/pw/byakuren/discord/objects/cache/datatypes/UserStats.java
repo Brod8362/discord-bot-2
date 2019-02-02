@@ -1,6 +1,6 @@
 package pw.byakuren.discord.objects.cache.datatypes;
 
-public class UserStats {
+public class UserStats extends CacheDatatype {
 
     private long server;
     private long user;

@@ -1,36 +1,41 @@
 package pw.byakuren.discord.objects.cache;
 
 import pw.byakuren.discord.DatabaseManager;
+import pw.byakuren.discord.objects.cache.datatypes.CacheDatatype;
 
 import java.util.List;
 
-public class CacheObject<CacheDatatype> {
+public class CacheObject<E extends CacheDatatype> {
 
     DatabaseManager dbmg;
 
-    List<CacheDatatype> data;
+    private final long id;
+
+    private List<E> data;
 
 
-    public CacheObject() {
+    public CacheObject(long serverid) {
         data = getAllFromDatabase();
+        id = serverid;
     }
 
-    public <T> CacheDatatype get(T... qualifiers) {
-        for (CacheDatatype o: data) {
+    public E get(Object... qualifiers) {
+        for (E o: data) {
             if (o.matches(qualifiers)) return o;
         }
+        return null;
     }
 
-    public List<CacheDatatype> getAll() {
+    public List<E> getAll() {
         return data;
     }
 
-    private <E> CacheDatatype getFromDatabase() {
+    private <E> E getFromDatabase() {
         //todo database getting here
         return null;
     }
 
-    public List<CacheDatatype> getAllFromDatabase() {
-        return null; //todo have it run the static method of the class
+    public List<E> getAllFromDatabase() {
+        return E.getAll(dbmg, id);
     }
 }

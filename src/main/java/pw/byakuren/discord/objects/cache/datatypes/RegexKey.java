@@ -2,7 +2,7 @@ package pw.byakuren.discord.objects.cache.datatypes;
 
 import net.dv8tion.jda.api.entities.Guild;
 
-public class RegexKey {
+public class RegexKey extends CacheDatatype {
 
     private final Guild guild;
     private final String key;
@@ -23,4 +23,5 @@ public class RegexKey {
     public RegexKey clone() {
         return new RegexKey(guild, key);
     }
+
 }

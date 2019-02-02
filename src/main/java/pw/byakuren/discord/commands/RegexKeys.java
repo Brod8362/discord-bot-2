@@ -2,6 +2,7 @@ package pw.byakuren.discord.commands;
 
 import net.dv8tion.jda.api.entities.Message;
 import pw.byakuren.discord.DatabaseManager;
+import pw.byakuren.discord.objects.cache.datatypes.RegexKey;
 
 import java.util.List;
 
@@ -55,7 +56,7 @@ public class RegexKeys implements Command {
                 message.addReaction("\uD83D\uDC4D").queue();
                 break;
             case "list":
-                List<String> list = dbmg.getRegexKeys(message.getGuild());
+                List<RegexKey> list = dbmg.getRegexKeys(message.getGuild());
                 s.append("Keys:\n");
                 for (int i = 0; i < list.size()-1; i++) {
                     s.append("`").append(list.get(i)).append("`, ");

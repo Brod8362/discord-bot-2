@@ -1,8 +1,11 @@
 package pw.byakuren.discord.objects.cache.datatypes;
 
 import net.dv8tion.jda.api.entities.User;
+import pw.byakuren.discord.DatabaseManager;
 
-public class Subscription implements CacheDatatype {
+import java.util.List;
+
+public class Subscription extends CacheDatatype {
 
     private final User moderator;
     private final User user;
@@ -22,6 +25,10 @@ public class Subscription implements CacheDatatype {
 
     public Subscription clone() {
         return new Subscription(moderator, user);
+    }
+
+    public static List<Subscription> getAll(DatabaseManager dbmg, long serverid) {
+        return dbmg.getModeratorSubscriptions(serverid);
     }
 
     @Override
