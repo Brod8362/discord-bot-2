@@ -4,7 +4,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import pw.byakuren.discord.DatabaseManager;
-import pw.byakuren.discord.objects.Subscription;
+import pw.byakuren.discord.objects.cache.datatypes.Subscription;
 
 import java.util.ArrayList;
 import java.util.List;

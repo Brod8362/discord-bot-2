@@ -1,18 +1,23 @@
 package pw.byakuren.discord;
 
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
-import pw.byakuren.discord.objects.ServerSettings;
-import pw.byakuren.discord.objects.UserStats;
+import pw.byakuren.discord.objects.cache.datatypes.RegexKey;
+import pw.byakuren.discord.objects.cache.datatypes.ServerSettings;
+import pw.byakuren.discord.objects.cache.datatypes.UserStats;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseManager {
 
     private SQLConnection sql;
+    private JDA jda;
 
-    public DatabaseManager(SQLConnection sql) throws SQLException {
+    public DatabaseManager(SQLConnection sql, JDA jda) throws SQLException {
             this.sql = sql;
+            this.jda = jda;
             sql.initialize();
     }
 
@@ -291,13 +296,22 @@ public class DatabaseManager {
         }
     }
 
-    public List<String> getRegexKeys(Guild server) {
-        return getRegexKeys(server.getIdLong());
+    public List<RegexKey> getRegexKeys(Guild guild) {
+        return getRegexKeys(guild.getIdLong());
     }
 
-    public List<String> getRegexKeys(long serverid) {
+    public List<RegexKey> getRegexKeys(long serverid) {
         try {
-            return sql.executeGetRegexKeys(serverid);
+            Guild g = jda.getGuildById(serverid);
+            if (g == null) {
+                //todo handle null case
+            }
+            List<String> keys_raw = sql.executeGetRegexKeys(serverid);
+            List<RegexKey> keys = new ArrayList<>();
+            for (String k: keys_raw) {
+                keys.add(new RegexKey(g, k));
+            }
+            return keys;
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -2,14 +2,35 @@ package pw.byakuren.discord.objects.cache;
 
 import pw.byakuren.discord.DatabaseManager;
 
-import java.sql.PreparedStatement;
+import java.util.List;
 
-public class CacheObject {
+public class CacheObject<CacheDatatype> {
 
     DatabaseManager dbmg;
 
-    public <T> CacheObject(T datatype, PreparedStatement get_statement, PreparedStatement set_statement) {
+    List<CacheDatatype> data;
 
+
+    public CacheObject() {
+        data = getAllFromDatabase();
     }
 
+    public <T> CacheDatatype get(T... qualifiers) {
+        for (CacheDatatype o: data) {
+            if (o.matches(qualifiers)) return o;
+        }
+    }
+
+    public List<CacheDatatype> getAll() {
+        return data;
+    }
+
+    private <E> CacheDatatype getFromDatabase() {
+        //todo database getting here
+        return null;
+    }
+
+    public List<CacheDatatype> getAllFromDatabase() {
+        return null; //todo have it run the static method of the class
+    }
 }

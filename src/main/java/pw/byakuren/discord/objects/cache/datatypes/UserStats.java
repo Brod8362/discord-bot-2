@@ -1,4 +1,4 @@
-package pw.byakuren.discord.objects;
+package pw.byakuren.discord.objects.cache.datatypes;
 
 public class UserStats {
 

@@ -2,22 +2,23 @@ package pw.byakuren.discord.objects.cache;
 
 import net.dv8tion.jda.api.entities.Message;
 import pw.byakuren.discord.DatabaseManager;
-import pw.byakuren.discord.objects.ServerSettings;
-import pw.byakuren.discord.objects.Subscription;
-import pw.byakuren.discord.objects.UserStats;
+import pw.byakuren.discord.objects.cache.datatypes.RegexKey;
+import pw.byakuren.discord.objects.cache.datatypes.ServerSettings;
+import pw.byakuren.discord.objects.cache.datatypes.Subscription;
+import pw.byakuren.discord.objects.cache.datatypes.UserStats;
 
 import java.util.List;
 import java.util.Map;
 
 public class ServerCache {
 
-    private long id;
+    private final long id;
 
     private DatabaseManager dbmg;
 
-    private Map<Long, UserStats> userdata;
+    private CacheObject<UserStats> userdata;
     private ServerSettings settings;
-    private List<String> regex_keys;
+    private List<RegexKey> regex_keys;
     private List<Long> watched_users;
     private List<Long> watched_roles;
     private List<Long> excluded_channels;
@@ -31,10 +32,6 @@ public class ServerCache {
 
     public long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public Map<Long, UserStats> getUserdata() {
@@ -53,7 +50,7 @@ public class ServerCache {
         this.settings = settings;
     }
 
-    public List<String> getRegexKeys() {
+    public List<RegexKey> getRegexKeys() {
         return regex_keys;
     }
 
