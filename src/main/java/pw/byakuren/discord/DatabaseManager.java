@@ -2,11 +2,10 @@ package pw.byakuren.discord;
 
 import net.dv8tion.jda.api.entities.*;
 import pw.byakuren.discord.objects.ServerSettings;
+import pw.byakuren.discord.objects.UserStats;
 
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class DatabaseManager {
 
@@ -114,8 +113,8 @@ public class DatabaseManager {
         return -1;
     }
 
-    public Map<String, Integer> getUserChatData(Member user) {
-        return new HashMap<String, Integer>();
+    public UserStats getUserChatData(Member user) {
+        return new UserStats(user.getGuild().getIdLong(), user.getUser().getIdLong());
     }
 
     /* Methods for modyfing watched roles. */

@@ -2,8 +2,8 @@ package pw.byakuren.discord.objects;
 
 public class UserStats {
 
-    private int server;
-    private int user;
+    private long server;
+    private long user;
     private int reactions_sent = 0;
     private int reactions_received = 0;
     private int messages_sent = 0;
@@ -20,16 +20,16 @@ public class UserStats {
         this.attachments_sent = attachments_sent;
     }
 
-    public UserStats(int server, int user) {
+    public UserStats(long server, long user) {
         this.server = server;
         this.user = user;
     }
 
-    public int getServer() {
+    public long getServer() {
         return server;
     }
 
-    public int getUser() {
+    public long getUser() {
         return user;
     }
 
