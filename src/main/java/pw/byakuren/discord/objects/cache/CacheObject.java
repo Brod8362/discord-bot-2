@@ -36,6 +36,6 @@ public class CacheObject<E extends CacheDatatype> {
     }
 
     public List<E> getAllFromDatabase() {
-        return E.getAll(dbmg, id);
+        return E.getAll(id, dbmg);
     }
 }

@@ -16,8 +16,7 @@ public class ExcludedChannel extends CacheDatatype {
         return new ExcludedChannel(jda.getTextChannelById(channelid));
     }
 
-    @Override
-    public <T> boolean matches(T... qualifier) {
+    public boolean matches(Object... qualifier) {
         if (qualifier.length > 1) return false;
         return false; //todo finish this
     }
