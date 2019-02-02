@@ -31,8 +31,8 @@ public class Subscription extends CacheDatatype {
         return dbmg.getModeratorSubscriptions(serverid);
     }
 
-    @Override
-    public <T> boolean matches(T... qualifier) {
+
+    public boolean matches(Object... qualifier) {
         if (qualifier.length != 2) return false;
         if (!(qualifier[0] instanceof User) || !(qualifier[1] instanceof User)) return false;
         User u1 = (User)qualifier[0];
