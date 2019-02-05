@@ -3,6 +3,7 @@ package pw.byakuren.discord.objects.cache;
 import pw.byakuren.discord.DatabaseManager;
 import pw.byakuren.discord.objects.cache.datatypes.CacheDatatype;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CacheObject<E extends CacheDatatype> {
@@ -20,9 +21,7 @@ public class CacheObject<E extends CacheDatatype> {
     }
 
     public E get(Object... qualifiers) {
-        for (E o: data) {
-            if (o.matches(qualifiers)) return o;
-        }
+        //todo re-implement later
         return null;
     }
 
@@ -36,6 +35,7 @@ public class CacheObject<E extends CacheDatatype> {
     }
 
     public List<E> getAllFromDatabase() {
-        return E.getAll(id, dbmg);
+        //todo ???
+        return new ArrayList<>();
     }
 }

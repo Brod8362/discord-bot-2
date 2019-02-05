@@ -2,14 +2,7 @@ package pw.byakuren.discord.objects.cache.datatypes;
 
 import pw.byakuren.discord.DatabaseManager;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class CacheDatatype {
-
-    public boolean matches(Object... qualifier) {
-        return false;
-    }
 
     /**
      *
@@ -19,11 +12,6 @@ public class CacheDatatype {
      */
     public static <T> T get(Object qualifier, DatabaseManager dbmg) {
         return null;
-    }
-
-
-    public static <T> List<T> getAll(long serverid, DatabaseManager dbmg) {
-        return new ArrayList<>();
     }
 
 }
