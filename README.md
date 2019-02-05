@@ -7,12 +7,9 @@ This is a full rewrite of my other discord bot in JDA.
 
 Setup
 ====
-TBD
+Put your token in the file named "token.default" and rename it to "token", with no extension.
 
-SQL Setup
----------
-You must have an SQL server running on localhost. The name of the database, username, and password are up to your discretion,
-and can be configured in the "sqldata" configuration file, in the respective order above.
+If you'd like a custom prefix, make a file named "prefix" and put your desired prefix in it. Restart the bot for changes to take effect.
 
 Bugs
 ====
