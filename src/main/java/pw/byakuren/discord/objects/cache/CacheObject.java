@@ -29,7 +29,7 @@ public class CacheObject<E extends CacheDatatype> {
         return data;
     }
 
-    private <E> E getFromDatabase() {
+    private E getFromDatabase() {
         //todo database getting here
         return null;
     }
