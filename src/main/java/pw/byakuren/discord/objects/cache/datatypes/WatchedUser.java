@@ -6,8 +6,8 @@ import pw.byakuren.discord.DatabaseManager;
 
 public class WatchedUser extends CacheDatatype {
 
-    long serverid;
-    Member user;
+    private long serverid;
+    private Member user;
 
     public WatchedUser(long serverid, long uid, JDA jda) {
         this.serverid = serverid;

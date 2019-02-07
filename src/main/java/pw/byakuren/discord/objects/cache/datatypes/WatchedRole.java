@@ -5,8 +5,8 @@ import net.dv8tion.jda.api.entities.Role;
 
 public class WatchedRole extends CacheDatatype {
 
-    long serverid;
-    Role role;
+    private long serverid;
+    private Role role;
 
     public WatchedRole(long roleid, JDA jda) {
         this.role = jda.getRoleById(roleid);
@@ -16,5 +16,13 @@ public class WatchedRole extends CacheDatatype {
     public WatchedRole(Role role) {
         this.role = role;
         this.serverid = role.getGuild().getIdLong();
+    }
+
+    public long getServerId() {
+        return serverid;
+    }
+
+    public Role getRole() {
+        return role;
     }
 }
