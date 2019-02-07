@@ -370,4 +370,14 @@ public class DatabaseManager {
         }
         return null;
     }
+
+    public WatchedUser getWatchedUser(long serverid, long userid) {
+        try {
+            if (sql.checkWatchedUser(serverid, userid))
+                return new WatchedUser(serverid, userid, jda);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

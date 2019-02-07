@@ -31,6 +31,7 @@ public class SQLConnection {
     private PreparedStatement addWatchedUser;
     private PreparedStatement removeWatchedUser;
     private PreparedStatement checkWatchedUser;
+    private PreparedStatement getwatchedUser;
     private PreparedStatement getWatchedUsers;
 
     private PreparedStatement addWatchedRole;
@@ -78,6 +79,7 @@ public class SQLConnection {
         addWatchedUser = connection.prepareStatement("INSERT INTO watched_users VALUES (?, ?, ?)");
         removeWatchedUser = connection.prepareStatement("DELETE FROM watched_users WHERE server=? AND user=?");
         getWatchedUsers = connection.prepareStatement("SELECT * FROM watched_users WHERE server=?");
+        getwatchedUser = connection.prepareStatement("SELECT 1 FROM watched_users WHERE server=? AND user=?");
         checkWatchedUser = connection.prepareStatement("SELECT 1 FROM watched_users WHERE server=? AND user=?");
 
         addWatchedRole = connection.prepareStatement("INSERT INTO watched_roles VALUES (?, ?, ?)");
@@ -357,6 +359,5 @@ public class SQLConnection {
         checkWatchedRole.setLong(2, role);
         return checkWatchedRole.executeQuery().next();
     }
-
 
 }
