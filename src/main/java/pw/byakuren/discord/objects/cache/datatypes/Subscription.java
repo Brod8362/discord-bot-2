@@ -31,12 +31,4 @@ public class Subscription extends CacheDatatype {
         return dbmg.getModeratorSubscriptions(serverid);
     }
 
-
-    public boolean matches(Object... qualifier) {
-        if (qualifier.length != 2) return false;
-        if (!(qualifier[0] instanceof User) || !(qualifier[1] instanceof User)) return false;
-        User u1 = (User)qualifier[0];
-        User u2 = (User)qualifier[1];
-        return (u1 == moderator && u2 == user);
-    }
 }
