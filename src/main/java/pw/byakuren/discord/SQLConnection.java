@@ -27,6 +27,7 @@ public class SQLConnection {
     private PreparedStatement removeExcludedChannel;
     private PreparedStatement getExcludedChannels;
     private PreparedStatement checkExcludedChannel;
+    private PreparedStatement checkExcludedChannelSingle;
 
     private PreparedStatement addWatchedUser;
     private PreparedStatement removeWatchedUser;
@@ -70,6 +71,7 @@ public class SQLConnection {
         removeExcludedChannel = connection.prepareStatement("DELETE FROM excluded_channels WHERE server=? AND channel=?");
         getExcludedChannels = connection.prepareStatement("SELECT * FROM excluded_channels WHERE server=?");
         checkExcludedChannel = connection.prepareStatement("SELECT 1 FROM excluded_channels WHERE server=? AND channel=?");
+        checkExcludedChannelSingle = connection.prepareStatement("SELECT 1 FROM excluded_channels WHERE channel=?");
 
         addSubscription = connection.prepareStatement("INSERT INTO moderator_subscriptions VALUES (?, ?, ?, ?)");
         removeSubscription = connection.prepareStatement("DELETE FROM moderator_subscriptions WHERE server=? AND moderator=? AND user=?");
@@ -246,6 +248,11 @@ public class SQLConnection {
     public boolean executeCheckExcludedChannel(long server, long channel) throws SQLException {
         checkExcludedChannel.setLong(1, server);
         checkExcludedChannel.setLong(2, channel);
+        return checkExcludedChannel.executeQuery().next();
+    }
+
+    public boolean executeCheckExcludedChannel(long channel) throws SQLException {
+        checkExcludedChannelSingle.setLong(1, channel);
         return checkExcludedChannel.executeQuery().next();
     }
 

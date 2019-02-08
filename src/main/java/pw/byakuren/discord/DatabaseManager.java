@@ -256,9 +256,20 @@ public class DatabaseManager {
         return getExcludedChannels(server.getIdLong());
     }
     
-    public List<Long> getExcludedChannels(long serverid) {
+    public List<Long> getExcludedChannels(long serverid) { //todo change this to the object itself
         try {
             return sql.executeGetExcludedChannels(serverid);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public ExcludedChannel getExcludedChannel(long channelid) {
+        try {
+            if (sql.executeCheckExcludedChannel(channelid)) {
+                return new ExcludedChannel(channelid, jda);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -380,4 +391,5 @@ public class DatabaseManager {
         }
         return null;
     }
+
 }
