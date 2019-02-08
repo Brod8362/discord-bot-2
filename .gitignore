@@ -1,3 +1,4 @@
 token
 database.db
 prefix
+out/*
