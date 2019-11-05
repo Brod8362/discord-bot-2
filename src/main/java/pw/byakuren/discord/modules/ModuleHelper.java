@@ -24,7 +24,7 @@ public class ModuleHelper {
 
     public Module getModule(String name) {
         for (Module md : modules.keySet() ) {
-           if (md.getInfo().getName().toLowerCase().equals(name.toLowerCase()))
+           if (md.getInfo().name.toLowerCase().equals(name.toLowerCase()))
                return md;
         }
         return null;

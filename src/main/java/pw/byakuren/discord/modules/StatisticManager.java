@@ -1,6 +1,7 @@
 package pw.byakuren.discord.modules;
 
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.events.Event;
 import pw.byakuren.discord.DatabaseManager;
 import pw.byakuren.discord.commands.CommandHelper;
 
@@ -21,12 +22,13 @@ public class StatisticManager implements Module {
     public void run(CommandHelper cmdhelp) {}
 
     @Override
-    public ModuleInfo getInfo() {
-        return new ModuleInfo("StatisticManager", "Brod8362", "d");
+    public void run(Event event) {
+
     }
 
     @Override
-    public boolean isExtension() {
-        return true;
+    public ModuleInfo getInfo() {
+        return new ModuleInfo("StatisticManager", "Brod8362", "d", ModuleType.EVENT_MODULE);
     }
+
 }

@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.Event;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.RateLimitedException;
@@ -11,6 +12,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import pw.byakuren.discord.commands.*;
 import pw.byakuren.discord.modules.Module;
 import pw.byakuren.discord.modules.ModuleHelper;
+import pw.byakuren.discord.modules.ModuleType;
 import pw.byakuren.discord.modules.StatisticManager;
 import pw.byakuren.discord.objects.cache.Cache;
 
@@ -116,12 +118,21 @@ public class Main extends ListenerAdapter {
             e.printStackTrace();
         }
         for (Module md: mdhelp.getModules().keySet()) {
-            if (md.isExtension()) {
+            if (md.getInfo().type==ModuleType.COMMAND_MODULE) {
                 md.run(cmdhelp);
             }
         }
         cache = new Cache(dbmg, event.getJDA());
 
+    }
+
+    @Override
+    public void onGenericEvent(Event event) {
+        for (Module md: mdhelp.getModules().keySet()) {
+            if (md.getInfo().type== ModuleType.EVENT_MODULE && mdhelp.isEnabled(md)) {
+                md.run(event);
+            }
+        }
     }
 
     @Override
@@ -138,7 +149,7 @@ public class Main extends ListenerAdapter {
         dbmg.updateLastMessage(event.getMessage());
 
         for (Module md: mdhelp.getModules().keySet()) {
-            if (!md.isExtension() && mdhelp.isEnabled(md)) {
+            if (md.getInfo().type==ModuleType.MESSAGE_MODULE && mdhelp.isEnabled(md)) {
                 md.run(message);
             }
         }

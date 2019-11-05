@@ -1,26 +1,16 @@
 package pw.byakuren.discord.modules;
 
 public class ModuleInfo {
-    private String name;
-    private String author;
-    private String version;
+    public final String name;
+    public final String author;
+    public  final String version;
+    public final ModuleType type;
 
 
-    public ModuleInfo(String name, String author, String version) {
+    public ModuleInfo(String name, String author, String version, ModuleType type) {
         this.name = name;
         this.author = author;
         this.version = version;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public String getVersion() {
-        return version;
+        this.type = type;
     }
 }
