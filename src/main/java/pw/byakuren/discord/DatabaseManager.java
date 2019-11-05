@@ -127,6 +127,7 @@ public class DatabaseManager {
     }
 
     public UserStats getUserChatData(Member user) {
+        //todo gather data from database
         return new UserStats(user.getGuild().getIdLong(), user.getUser().getIdLong());
     }
 
