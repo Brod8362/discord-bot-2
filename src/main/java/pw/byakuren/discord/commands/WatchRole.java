@@ -26,7 +26,7 @@ public class WatchRole implements Command {
 
     @Override
     public String getHelp() {
-        return null;
+        return "Manage watched pingable roles.";
     }
 
     @Override
@@ -56,8 +56,13 @@ public class WatchRole implements Command {
                 List<Long> list = dbmg.getWatchedRoles(message.getGuild());
                 StringBuilder s = new StringBuilder();
                 s.append("Watched roles:\n");
+
                 for (Long aList : list) {
                     s.append("<@&").append(aList).append("> ");
+                }
+                if (list.size() == 0) {
+                    s = new StringBuilder();
+                    s.append("No watched roles. Use 'add' to add some.");
                 }
                 message.getChannel().sendMessage(s.toString()).queue();
                 break;
