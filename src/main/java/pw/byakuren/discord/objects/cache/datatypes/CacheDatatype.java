@@ -2,7 +2,9 @@ package pw.byakuren.discord.objects.cache.datatypes;
 
 import pw.byakuren.discord.DatabaseManager;
 
-public class CacheDatatype {
+import java.util.List;
+
+public abstract class CacheDatatype {
 
     /**
      *
@@ -11,7 +13,11 @@ public class CacheDatatype {
      * @return The requested object if found, otherwise null.
      */
     public static <T> T get(Object qualifier, DatabaseManager dbmg) {
-        return null;
+        throw new UnsupportedOperationException("Method not implemented");
+    }
+
+    public static <T> List<T> getAll(long serverid, DatabaseManager dbmg) {
+           throw new UnsupportedOperationException("Method not implemented");
     }
 
 }

@@ -10,7 +10,6 @@ public interface Module {
 
     void run(CommandHelper cmdhelp);
 
-
     ModuleInfo getInfo();
 
     boolean isExtension();

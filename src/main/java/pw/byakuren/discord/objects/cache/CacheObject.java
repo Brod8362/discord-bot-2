@@ -35,7 +35,7 @@ public class CacheObject<E extends CacheDatatype> {
     }
 
     public List<E> getAllFromDatabase() {
-        //todo ???
+
         return new ArrayList<>();
     }
 }

@@ -2,6 +2,10 @@ package pw.byakuren.discord.objects.cache.datatypes;
 
 public class UserStats extends CacheDatatype {
 
+    enum Statistic {
+        REACTIONS_SENT, REACTIONS_RECEIVED, MESSAGES_SENT, MESSAGES_DELETED, ATTACHMENTS_SENT;
+    }
+
     private long server;
     private long user;
     private int reactions_sent = 0;
@@ -33,64 +37,67 @@ public class UserStats extends CacheDatatype {
         return user;
     }
 
-    public int getReactions_sent() {
-        return reactions_sent;
+    public int getStatistic(Statistic e) {
+        switch (e) {
+            case REACTIONS_SENT:
+                return reactions_sent;
+            case REACTIONS_RECEIVED:
+                return reactions_received;
+            case MESSAGES_SENT:
+                return messages_sent;
+            case MESSAGES_DELETED:
+                return messages_deleted;
+            case ATTACHMENTS_SENT:
+                return attachments_sent;
+            default:
+                return -1;
+        }
     }
 
-    public int getReactions_received() {
-        return reactions_received;
+    public boolean incrementStatistic(Statistic e) {
+        switch (e) {
+            case REACTIONS_SENT:
+                reactions_sent++;
+                break;
+            case REACTIONS_RECEIVED:
+                reactions_received++;
+                break;
+            case MESSAGES_SENT:
+                messages_sent++;
+                break;
+            case MESSAGES_DELETED:
+                messages_deleted++;
+                break;
+            case ATTACHMENTS_SENT:
+                attachments_sent++;
+                break;
+            default:
+                return false;
+        }
+        return true;
     }
 
-    public int getMessages_sent() {
-        return messages_sent;
-    }
-
-    public int getMessages_deleted() {
-        return messages_deleted;
-    }
-
-    public int getAttachments_sent() {
-        return attachments_sent;
-    }
-
-    public void incrementReactionsSent() {
-        reactions_sent++;
-    }
-
-    public void incrementReactionsReceived() {
-        reactions_received++;
-    }
-
-    public void incrementMessagesSent() {
-        messages_sent++;
-    }
-
-    public void incrementAttachmentsSent() {
-        attachments_sent++;
-    }
-
-    public void incrementMessagesDeleted() {
-        messages_deleted++;
-    }
-
-    public void decrementAttachementsSent() {
-        attachments_sent--;
-    }
-
-    public void decrementReactionsSent() {
-        reactions_sent--;
-    }
-
-    public void decrementReactionsReceived() {
-        reactions_received--;
-    }
-
-    public void decrementMessagesSent() {
-        messages_sent--;
-    }
-
-    public void decrementMessagesDeleted() {
-        messages_deleted--;
+    public boolean decrementStatistic(Statistic e) {
+        switch (e) {
+            case REACTIONS_SENT:
+                reactions_sent--;
+                break;
+            case REACTIONS_RECEIVED:
+                reactions_received--;
+                break;
+            case MESSAGES_SENT:
+                messages_sent--;
+                break;
+            case MESSAGES_DELETED:
+                messages_deleted--;
+                break;
+            case ATTACHMENTS_SENT:
+                attachments_sent--;
+                break;
+            default:
+                return false;
+        }
+        return true;
     }
 
 

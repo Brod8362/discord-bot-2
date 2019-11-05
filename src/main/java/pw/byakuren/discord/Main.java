@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import pw.byakuren.discord.commands.*;
 import pw.byakuren.discord.modules.Module;
 import pw.byakuren.discord.modules.ModuleHelper;
+import pw.byakuren.discord.modules.StatisticManager;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
@@ -93,6 +94,7 @@ public class Main extends ListenerAdapter {
     }
 
     private void loadModules(JDA jda) {
+        mdhelp.registerModule(new StatisticManager());
         System.out.println(String.format("Loaded %s modules.", mdhelp.getModules().size()));
     }
 
