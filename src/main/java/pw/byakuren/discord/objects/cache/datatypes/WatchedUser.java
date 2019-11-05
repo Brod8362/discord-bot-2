@@ -4,7 +4,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
 import pw.byakuren.discord.DatabaseManager;
 
-public class WatchedUser extends CacheDatatype {
+public class WatchedUser extends CacheEntry {
 
     private long serverid;
     private Member user;

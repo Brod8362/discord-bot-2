@@ -1,12 +1,11 @@
 package pw.byakuren.discord.objects.cache;
 
 import pw.byakuren.discord.DatabaseManager;
-import pw.byakuren.discord.objects.cache.datatypes.CacheDatatype;
+import pw.byakuren.discord.objects.cache.datatypes.CacheEntry;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class CacheObject<E extends CacheDatatype> {
+public class CacheObject<E extends CacheEntry> {
 
     DatabaseManager dbmg;
 

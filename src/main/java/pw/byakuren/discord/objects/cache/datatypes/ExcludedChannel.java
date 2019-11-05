@@ -7,7 +7,7 @@ import pw.byakuren.discord.DatabaseManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExcludedChannel extends CacheDatatype {
+public class ExcludedChannel extends CacheEntry {
 
 
     private long serverid;
@@ -23,16 +23,16 @@ public class ExcludedChannel extends CacheDatatype {
         this.serverid = channel.getGuild().getIdLong();
     }
 
-    public static CacheDatatype get(Object qualifier, DatabaseManager dbmg) {
+    public static CacheEntry get(Object qualifier, DatabaseManager dbmg) {
         if (qualifier instanceof Long) {
             return dbmg.getExcludedChannel((long)qualifier);
         }
         return null;
     }
 
-    public static List<CacheDatatype> getAll(long serverid, DatabaseManager dbmg) {
+    public static List<CacheEntry> getAll(long serverid, DatabaseManager dbmg) {
         List<TextChannel> l = dbmg.getExcludedChannels(serverid);
-        ArrayList<CacheDatatype> c = new ArrayList<>();
+        ArrayList<CacheEntry> c = new ArrayList<>();
         for (TextChannel t: l) {
             c.add(new ExcludedChannel(t));
         }

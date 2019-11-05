@@ -2,7 +2,7 @@ package pw.byakuren.discord.objects.cache.datatypes;
 
 import net.dv8tion.jda.api.entities.Guild;
 
-public class RegexKey extends CacheDatatype {
+public class RegexKey extends CacheEntry {
 
     private final Guild guild;
     private final String key;

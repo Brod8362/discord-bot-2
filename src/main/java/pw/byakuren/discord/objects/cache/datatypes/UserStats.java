@@ -1,6 +1,6 @@
 package pw.byakuren.discord.objects.cache.datatypes;
 
-public class UserStats extends CacheDatatype {
+public class UserStats extends CacheEntry {
 
     enum Statistic {
         REACTIONS_SENT, REACTIONS_RECEIVED, MESSAGES_SENT, MESSAGES_DELETED, ATTACHMENTS_SENT;

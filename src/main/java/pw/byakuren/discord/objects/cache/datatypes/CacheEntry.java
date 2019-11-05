@@ -4,7 +4,7 @@ import pw.byakuren.discord.DatabaseManager;
 
 import java.util.List;
 
-public abstract class CacheDatatype {
+public abstract class CacheEntry {
 
     /**
      *
@@ -12,11 +12,11 @@ public abstract class CacheDatatype {
      * @param dbmg DatabaseManager to be used for attempting to get the requested object.
      * @return The requested object if found, otherwise null.
      */
-    public static CacheDatatype get(Object qualifier, DatabaseManager dbmg) {
+    public static CacheEntry get(Object qualifier, DatabaseManager dbmg) {
         throw new UnsupportedOperationException("Method not implemented");
     }
 
-    public static List<CacheDatatype> getAll(long serverid, DatabaseManager dbmg) {
+    public static List<CacheEntry> getAll(long serverid, DatabaseManager dbmg) {
         throw new UnsupportedOperationException("Method not implemented");
     }
 

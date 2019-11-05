@@ -5,7 +5,7 @@ import pw.byakuren.discord.DatabaseManager;
 
 import java.util.List;
 
-public class Subscription extends CacheDatatype {
+public class Subscription extends CacheEntry {
 
     private final User moderator;
     private final User user;

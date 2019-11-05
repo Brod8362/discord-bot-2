@@ -3,7 +3,7 @@ package pw.byakuren.discord.objects.cache.datatypes;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Role;
 
-public class WatchedRole extends CacheDatatype {
+public class WatchedRole extends CacheEntry {
 
     private long serverid;
     private Role role;

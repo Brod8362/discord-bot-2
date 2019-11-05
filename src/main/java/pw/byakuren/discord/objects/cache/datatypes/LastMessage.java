@@ -6,7 +6,7 @@ import pw.byakuren.discord.DatabaseManager;
 
 import java.sql.Date;
 
-public class LastMessage extends CacheDatatype {
+public class LastMessage extends CacheEntry {
 
     private long serverid;
     private long userid;
