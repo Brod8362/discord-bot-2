@@ -2,6 +2,7 @@ package pw.byakuren.discord.objects.cache.datatypes;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Role;
+import pw.byakuren.discord.DatabaseManager;
 
 public class WatchedRole extends CacheEntry {
 
@@ -24,5 +25,15 @@ public class WatchedRole extends CacheEntry {
 
     public Role getRole() {
         return role;
+    }
+
+    @Override
+    protected void write(DatabaseManager dbmg) {
+        dbmg.addWatchedRole(role);
+    }
+
+    @Override
+    protected void delete(DatabaseManager dbmg) {
+        dbmg.removeWatchedRole(role);
     }
 }

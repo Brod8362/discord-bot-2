@@ -1,5 +1,6 @@
 package pw.byakuren.discord.objects.cache.datatypes;
 
+import pw.byakuren.discord.DatabaseManager;
 import pw.byakuren.discord.objects.Statistic;
 
 public class UserStats extends CacheEntry {
@@ -119,5 +120,19 @@ public class UserStats extends CacheEntry {
                 return false;
         }
         return true;
+    }
+
+    @Override
+    protected void write(DatabaseManager dbmg) {
+        dbmg.editUserChatData(server, user, Statistic.REACTIONS_SENT.datapoint_name, reactions_sent);
+        dbmg.editUserChatData(server, user, Statistic.REACTIONS_RECEIVED.datapoint_name, reactions_received);
+        dbmg.editUserChatData(server, user, Statistic.MESSAGES_SENT.datapoint_name, messages_sent);
+        dbmg.editUserChatData(server, user, Statistic.MESSAGES_DELETED.datapoint_name, messages_deleted);
+        dbmg.editUserChatData(server, user, Statistic.ATTACHMENTS_SENT.datapoint_name, attachments_sent);
+    }
+
+    @Override
+    protected void delete(DatabaseManager dbmg) {
+        //todo delete chat data option
     }
 }

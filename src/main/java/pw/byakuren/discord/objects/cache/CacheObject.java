@@ -26,8 +26,11 @@ public class CacheObject<E extends CacheEntry> {
      * @return Number of items written to database.
      */
     public int write() {
-        return 0;
+        int c = 0;
+        for (E e: data) {
+            if (e.write_check(dbmg)) c++;
+        }
+        return c;
     }
-
 
 }

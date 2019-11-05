@@ -41,4 +41,11 @@ public class LastMessage extends CacheEntry {
         return dbmg.getLastMessage(m.getGuild().getIdLong(), m.getUser().getIdLong());
     }
 
+    @Override
+    protected void write(DatabaseManager dbmg) {
+        dbmg.updateLastMessage(serverid, userid, content, messageid);
+    }
+
+    @Override
+    protected void delete(DatabaseManager dbmg) {}
 }

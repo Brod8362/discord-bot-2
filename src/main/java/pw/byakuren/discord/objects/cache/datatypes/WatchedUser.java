@@ -19,8 +19,13 @@ public class WatchedUser extends CacheEntry {
         this.serverid = user.getGuild().getIdLong();
     }
 
-    public static WatchedUser get(Object qualifier, DatabaseManager dbmg) {
-        //todo ???
-        return null;
+    @Override
+    protected void write(DatabaseManager dbmg) {
+        dbmg.addWatchedUser(user);
+    }
+
+    @Override
+    protected void delete(DatabaseManager dbmg) {
+        dbmg.removeWatchedUser(user);
     }
 }

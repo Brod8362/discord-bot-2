@@ -9,7 +9,6 @@ import java.util.List;
 
 public class ExcludedChannel extends CacheEntry {
 
-
     private long serverid;
     private TextChannel channel;
 
@@ -30,4 +29,13 @@ public class ExcludedChannel extends CacheEntry {
         return null;
     }
 
+    @Override
+    protected void write(DatabaseManager dbmg) {
+        dbmg.addExcludedChannel(channel);
+    }
+
+    @Override
+    protected void delete(DatabaseManager dbmg) {
+        dbmg.removeExcludedChannel(channel);
+    }
 }

@@ -29,6 +29,7 @@ public class SQLConnection {
     private PreparedStatement addRegexKey;
     private PreparedStatement removeRegexKey;
     private PreparedStatement getRegexKeys;
+    private PreparedStatement checkRegexKey;
 
     private PreparedStatement addExcludedChannel;
     private PreparedStatement removeExcludedChannel;
@@ -78,6 +79,7 @@ public class SQLConnection {
         addRegexKey = connection.prepareStatement("INSERT INTO server_regex_keys VALUES (?, ?)");
         removeRegexKey = connection.prepareStatement("DELETE FROM server_regex_keys WHERE server=? AND regex_key=?");
         getRegexKeys = connection.prepareStatement("SELECT * FROM server_regex_keys WHERE server=?");
+        checkRegexKey = connection.prepareStatement("SELECT 1 FROM server_regex_keys WHERE server=? AND regex_keys=?");
 
         addExcludedChannel = connection.prepareStatement("INSERT INTO excluded_channels VALUES (?, ?)");
         removeExcludedChannel = connection.prepareStatement("DELETE FROM excluded_channels WHERE server=? AND channel=?");
@@ -240,6 +242,14 @@ public class SQLConnection {
             list.add(set.getString("regex_key"));
         }
         return list;
+    }
+
+    public boolean checkRegexKey(long server, String key) throws SQLException {
+        checkRegexKey.setLong(1, server);
+        checkRegexKey.setString(2, key);
+        ResultSet r = checkRegexKey.executeQuery();
+        checkRegexKey.clearParameters();
+        return r.next();
     }
 
     public void executeAddExcludedChannel(long server, long channel) throws SQLException {

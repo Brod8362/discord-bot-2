@@ -122,12 +122,15 @@ public class DatabaseManager {
         }
     }
 
-    public void editUserChatData(Member user, String datapoint, int new_val) {
+    public void editUserChatData(long server, long us, String datapoint, int new_val) {
         try {
-            sql.executeEditDatapoint(user.getGuild().getIdLong(), user.getUser().getIdLong(), datapoint, new_val);
+            sql.executeEditDatapoint(server, us, datapoint, new_val);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+    public void editUserChatData(Member user, String datapoint, int new_val) {
+        editUserChatData(user.getGuild().getIdLong(), user.getUser().getIdLong(), datapoint, new_val);
     }
 
     public void removeUserChatData(Member user, String datapoint) {
@@ -392,6 +395,19 @@ public class DatabaseManager {
         }
         return null;
     }
+
+    public boolean checkRegexKey(long serverid, String key) {
+        try {
+            return sql.checkRegexKey(serverid, key);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean checkRegexKey(RegexKey k) {
+        return checkRegexKey(k.getGuild().getIdLong(), k.getKey());
+    }
     
     /* Miscellaneous methods. */
 
@@ -404,9 +420,13 @@ public class DatabaseManager {
     }
 
     public void updateLastMessage(Message m) {
+       updateLastMessage(m.getGuild().getIdLong(), m.getMember().getUser().getIdLong(),
+               m.getContentDisplay(), m.getIdLong());
+    }
+
+    public void updateLastMessage(long server, long user, String content, long id) {
         try {
-            sql.executeUpdateLastMessage(m.getGuild().getIdLong(), m.getMember().getUser().getIdLong(),
-                    m.getContentDisplay(), m.getIdLong());
+            sql.executeUpdateLastMessage(server, user, content, id);
         } catch (SQLException e) {
             e.printStackTrace();
         }
