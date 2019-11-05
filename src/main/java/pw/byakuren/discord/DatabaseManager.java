@@ -252,13 +252,18 @@ public class DatabaseManager {
         }
     }
     
-    public List<Long> getExcludedChannels(Guild server) {
+    public List<TextChannel> getExcludedChannels(Guild server) {
         return getExcludedChannels(server.getIdLong());
     }
     
-    public List<Long> getExcludedChannels(long serverid) { //todo change this to the object itself
+    public List<TextChannel> getExcludedChannels(long serverid) {
         try {
-            return sql.executeGetExcludedChannels(serverid);
+            ArrayList<TextChannel> gs = new ArrayList<>();
+            List<Long> s = sql.executeGetExcludedChannels(serverid);
+            for (long l: s) {
+                gs.add(jda.getTextChannelById(l));
+            }
+            return gs;
         } catch (SQLException e) {
             e.printStackTrace();
         }

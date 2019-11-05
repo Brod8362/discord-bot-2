@@ -36,7 +36,7 @@ public class UserInfo implements Command {
             u = message.getMentionedMembers().get(0);
         }
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setTitle(u.getUser().getName()+"#"+u.getUser().getDiscriminator());
+        embed.setTitle(String.format("%s#%s", u.getUser().getName(), u.getUser().getDiscriminator()));
         embed.setThumbnail(u.getUser().getAvatarUrl());
         embed.addField("Nickname", u.getNickname(), true);
         embed.addField("ID", u.getUser().getId(), true);

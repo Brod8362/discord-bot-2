@@ -11,7 +11,7 @@ public class SQLConnection {
     private Connection connection = null;
     private Statement statement = null;
 
-    private PreparedStatement updateDatapoint;
+    private PreparedStatement incrementDatapoint;
     private PreparedStatement createDatapoint;
 
     private PreparedStatement addSubscription;
@@ -56,7 +56,7 @@ public class SQLConnection {
             System.out.println("Tables need to be created.");
             createTables();
         }
-        updateDatapoint = connection.prepareStatement("UPDATE user_chat_data SET count=count+1 WHERE server=? AND user=? AND datapoint=?");
+        incrementDatapoint = connection.prepareStatement("UPDATE user_chat_data SET count=count+1 WHERE server=? AND user=? AND datapoint=?");
         createDatapoint = connection.prepareStatement("INSERT INTO user_chat_data VALUES (?, ?, ?, 1)");
 
         updateLastMessage = connection.prepareStatement("REPLACE INTO last_messages (server, user, content, id, date_sent) VALUES (?, ?, ?, ?, ?)");
