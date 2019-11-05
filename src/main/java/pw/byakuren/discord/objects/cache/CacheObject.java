@@ -22,6 +22,12 @@ public class CacheObject<E extends CacheEntry> {
         this.factory=factory;
     }
 
+    /**
+     * @return Number of items written to database.
+     */
+    public int write() {
+        return 0;
+    }
 
 
 }

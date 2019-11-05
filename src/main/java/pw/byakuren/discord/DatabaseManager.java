@@ -131,6 +131,7 @@ public class DatabaseManager {
     }
 
     public void removeUserChatData(Member user, String datapoint) {
+        //todo complete
         throw new UnsupportedOperationException("unimplemented");
     }
 

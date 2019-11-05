@@ -18,6 +18,9 @@ public class ServerCache {
     private CacheObject<LastMessage> last_messages;
     private CacheObject<Subscription> moderator_subscriptions;
 
+    ServerWriteThread write_thread;
+    CacheObject[] objects = new CacheObject[]{userdata, settings, regex_keys, watched_roles, watched_users, excluded_channels, last_messages, moderator_subscriptions};
+
     ServerCache(long id, DatabaseManager dbmg, JDA jda) {
         this.id = id;
         userdata = new CacheObject<>(id, dbmg, new UserStatsFactory(id, dbmg));
@@ -29,6 +32,7 @@ public class ServerCache {
         excluded_channels = new CacheObject<>(id, dbmg, new ExcludedChannelFactory(id, dbmg));
         last_messages = new CacheObject<>(id, dbmg, new LastMessageFactory(id, dbmg));
         moderator_subscriptions = new CacheObject<>(id, dbmg, new SubscriptionFactory(id, dbmg));
+        write_thread = new ServerWriteThread(id, objects);
     }
 
     public long getId() {
