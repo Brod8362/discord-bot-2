@@ -1,10 +1,8 @@
 package pw.byakuren.discord.objects.cache.datatypes;
 
-public class UserStats extends CacheEntry {
+import pw.byakuren.discord.objects.Statistic;
 
-    enum Statistic {
-        REACTIONS_SENT, REACTIONS_RECEIVED, MESSAGES_SENT, MESSAGES_DELETED, ATTACHMENTS_SENT;
-    }
+public class UserStats extends CacheEntry {
 
     private long server;
     private long user;

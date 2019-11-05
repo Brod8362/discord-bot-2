@@ -13,6 +13,7 @@ public class ServerSettingsFactory extends DatatypeFactory<ServerSettings> {
 
     @Override
     public List<ServerSettings> getAll() {
+        //todo implement server settings at all
         throw new UnsupportedOperationException("unimplemented");
     }
 

@@ -12,6 +12,7 @@ import pw.byakuren.discord.commands.*;
 import pw.byakuren.discord.modules.Module;
 import pw.byakuren.discord.modules.ModuleHelper;
 import pw.byakuren.discord.modules.StatisticManager;
+import pw.byakuren.discord.objects.cache.Cache;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
@@ -29,6 +30,8 @@ public class Main extends ListenerAdapter {
     private ModuleHelper mdhelp = new ModuleHelper();
     private DatabaseManager dbmg;
     private User owner;
+
+    Cache cache;
 
     public static void main(String[] args) {
         String token = getToken();
@@ -117,6 +120,8 @@ public class Main extends ListenerAdapter {
                 md.run(cmdhelp);
             }
         }
+        cache = new Cache(dbmg, event.getJDA());
+
     }
 
     @Override

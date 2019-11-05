@@ -17,26 +17,11 @@ public class CacheObject<E extends CacheEntry> {
 
 
     public CacheObject(long serverid, DatabaseManager dbmg, DatatypeFactory<E> factory) {
-        data = getAllFromDatabase();
+        data = factory.getAll();
         id = serverid;
         this.factory=factory;
     }
 
-    public E get(Object... qualifiers) {
-        //todo re-implement later
-        return null;
-    }
 
-    public List<E> getAll() {
-        return data;
-    }
 
-    private E getFromDatabase() {
-        //todo database getting here
-        return null;
-    }
-
-    private List<E> getAllFromDatabase() {
-        throw new UnsupportedOperationException("unimplemented");
-    }
 }

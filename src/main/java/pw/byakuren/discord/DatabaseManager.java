@@ -131,6 +131,11 @@ public class DatabaseManager {
         return new UserStats(user.getGuild().getIdLong(), user.getUser().getIdLong());
     }
 
+    public List<UserStats> getAllChatDataForServer(long serverid) {
+        //todo gather all data
+        return new ArrayList<UserStats>();
+    }
+
     /* Methods for modyfing watched roles. */
 
     public void addWatchedRole(Role role) {

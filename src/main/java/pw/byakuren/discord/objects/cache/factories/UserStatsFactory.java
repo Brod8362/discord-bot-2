@@ -14,8 +14,7 @@ public class UserStatsFactory extends DatatypeFactory<UserStats> {
 
     @Override
     public List<UserStats> getAll() {
-        //TODO implement get all user data for server
-        throw new UnsupportedOperationException("unimplemented");
+        return dbmg.getAllChatDataForServer(serverid);
     }
 
     @Override

@@ -21,7 +21,8 @@ public class ServerCache {
     ServerCache(long id, DatabaseManager dbmg, JDA jda) {
         this.id = id;
         userdata = new CacheObject<>(id, dbmg, new UserStatsFactory(id, dbmg));
-        settings = new CacheObject<>(id, dbmg, new ServerSettingsFactory(id, dbmg));
+//        settings = new CacheObject<>(id, dbmg, new ServerSettingsFactory(id, dbmg));
+        //todo implement settings cache
         regex_keys = new CacheObject<>(id, dbmg, new RegexKeyFactory(id, dbmg));
         watched_users = new CacheObject<>(id, dbmg, new WatchedUserFactory(id, dbmg, jda));
         watched_roles = new CacheObject<>(id, dbmg, new WatchedRoleFactory(id, dbmg, jda));
