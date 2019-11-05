@@ -30,7 +30,14 @@ public class WatchedRoleFactory extends DatatypeFactory<WatchedRole> {
 
     @Override
     public WatchedRole get(Object... qualifiers) {
-        throw new UnsupportedOperationException("unimplemented");
-        //todo single role gathering
+        if (qualifiers.length != 1) return null;
+        if (qualifiers[0] instanceof Long) {
+            boolean res = dbmg.checkWatchedRole(serverid, (long)qualifiers[0]);
+            if (res) {
+                return new WatchedRole((long)qualifiers[0], jda);
+            }
+            return null;
+        }
+        return null;
     }
 }
