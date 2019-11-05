@@ -12,7 +12,7 @@ public class UserStats extends CacheEntry {
     private int messages_deleted = 0;
     private int attachments_sent = 0;
 
-    public UserStats(int server, int user, int reactions_sent, int reactions_received, int messages_sent, int messages_deleted, int attachments_sent) {
+    public UserStats(long server, long user, int reactions_sent, int reactions_received, int messages_sent, int messages_deleted, int attachments_sent) {
         this.server = server;
         this.user = user;
         this.reactions_sent = reactions_sent;

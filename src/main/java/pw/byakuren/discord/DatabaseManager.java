@@ -1,12 +1,16 @@
 package pw.byakuren.discord;
 
+import com.sun.tools.javac.util.Pair;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
+import pw.byakuren.discord.objects.Statistic;
+import pw.byakuren.discord.objects.Triple;
 import pw.byakuren.discord.objects.cache.datatypes.*;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class DatabaseManager {
 
@@ -127,8 +131,39 @@ public class DatabaseManager {
     }
 
     public UserStats getUserChatData(Member user) {
-        //todo gather data from database
-        return new UserStats(user.getGuild().getIdLong(), user.getUser().getIdLong());
+        List<Pair<String, Integer>> data = null;
+        try {
+            data = sql.getAllDatapoints(user.getGuild().getIdLong(), user.getUser().getIdLong());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if (data==null) return null;
+        int rec_rx = 0;
+        int rec_tx = 0;
+        int msg_sd = 0;
+        int msg_dl = 0;
+        int atc_sd = 0;
+        for (Pair<String,Integer> t: data) {
+            switch (Objects.requireNonNull(Statistic.datapointToStatistic(t.fst))) {
+                case MESSAGES_SENT:
+                    msg_sd = t.snd;
+                    break;
+                case REACTIONS_SENT:
+                    rec_tx = t.snd;
+                    break;
+                case ATTACHMENTS_SENT:
+                    atc_sd = t.snd;
+                    break;
+                case MESSAGES_DELETED:
+                    msg_dl = t.snd;
+                    break;
+                case REACTIONS_RECEIVED:
+                    rec_rx = t.snd;
+                    break;
+            }
+        }
+        return new UserStats(user.getGuild().getIdLong(), user.getUser().getIdLong(),
+                rec_tx, rec_rx, msg_sd, msg_dl, atc_sd);
     }
 
     public List<UserStats> getAllChatDataForServer(long serverid) {
