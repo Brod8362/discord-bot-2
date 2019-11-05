@@ -30,13 +30,4 @@ public class ExcludedChannel extends CacheEntry {
         return null;
     }
 
-    public static List<CacheEntry> getAll(long serverid, DatabaseManager dbmg) {
-        List<TextChannel> l = dbmg.getExcludedChannels(serverid);
-        ArrayList<CacheEntry> c = new ArrayList<>();
-        for (TextChannel t: l) {
-            c.add(new ExcludedChannel(t));
-        }
-        return c;
-    }
-
 }

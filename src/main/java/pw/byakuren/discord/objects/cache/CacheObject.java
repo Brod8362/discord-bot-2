@@ -2,21 +2,24 @@ package pw.byakuren.discord.objects.cache;
 
 import pw.byakuren.discord.DatabaseManager;
 import pw.byakuren.discord.objects.cache.datatypes.CacheEntry;
+import pw.byakuren.discord.objects.cache.factories.DatatypeFactory;
 
 import java.util.List;
 
 public class CacheObject<E extends CacheEntry> {
 
-    DatabaseManager dbmg;
+    private DatabaseManager dbmg;
+    private DatatypeFactory<E> factory;
 
     private final long id;
 
     private List<E> data;
 
 
-    public CacheObject(long serverid) {
+    public CacheObject(long serverid, DatatypeFactory factory) {
         data = getAllFromDatabase();
         id = serverid;
+        this.factory=factory;
     }
 
     public E get(Object... qualifiers) {
@@ -34,6 +37,6 @@ public class CacheObject<E extends CacheEntry> {
     }
 
     private List<E> getAllFromDatabase() {
-        return E.getAll(id, dbmg);
+        throw new UnsupportedOperationException("unimplemented");
     }
 }

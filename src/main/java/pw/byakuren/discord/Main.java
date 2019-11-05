@@ -94,7 +94,7 @@ public class Main extends ListenerAdapter {
     }
 
     private void loadModules(JDA jda) {
-        mdhelp.registerModule(new StatisticManager());
+        mdhelp.registerModule(new StatisticManager(dbmg));
         System.out.println(String.format("Loaded %s modules.", mdhelp.getModules().size()));
     }
 
