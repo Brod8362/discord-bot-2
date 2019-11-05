@@ -1,7 +1,9 @@
 package pw.byakuren.discord.objects.cache;
 
+import net.dv8tion.jda.api.JDA;
 import pw.byakuren.discord.DatabaseManager;
 import pw.byakuren.discord.objects.cache.datatypes.*;
+import pw.byakuren.discord.objects.cache.factories.*;
 
 public class ServerCache {
 
@@ -16,8 +18,16 @@ public class ServerCache {
     private CacheObject<LastMessage> last_messages;
     private CacheObject<Subscription> moderator_subscriptions;
 
-    ServerCache(long id, DatabaseManager dbmg) {
+    ServerCache(long id, DatabaseManager dbmg, JDA jda) {
         this.id = id;
+        userdata = new CacheObject<>(id, dbmg, new UserStatsFactory(id, dbmg));
+        settings = new CacheObject<>(id, dbmg, new ServerSettingsFactory(id, dbmg));
+        regex_keys = new CacheObject<>(id, dbmg, new RegexKeyFactory(id, dbmg));
+        watched_users = new CacheObject<>(id, dbmg, new WatchedUserFactory(id, dbmg, jda));
+        watched_roles = new CacheObject<>(id, dbmg, new WatchedRoleFactory(id, dbmg, jda));
+        excluded_channels = new CacheObject<>(id, dbmg, new ExcludedChannelFactory(id, dbmg));
+        last_messages = new CacheObject<>(id, dbmg, new LastMessageFactory(id, dbmg));
+        moderator_subscriptions = new CacheObject<>(id, dbmg, new SubscriptionFactory(id, dbmg));
     }
 
     public long getId() {

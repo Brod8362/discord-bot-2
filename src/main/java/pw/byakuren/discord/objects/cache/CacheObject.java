@@ -16,7 +16,7 @@ public class CacheObject<E extends CacheEntry> {
     private List<E> data;
 
 
-    public CacheObject(long serverid, DatatypeFactory factory) {
+    public CacheObject(long serverid, DatabaseManager dbmg, DatatypeFactory<E> factory) {
         data = getAllFromDatabase();
         id = serverid;
         this.factory=factory;
