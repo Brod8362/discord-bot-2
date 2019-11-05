@@ -19,7 +19,7 @@ public class ServerCache {
     private CacheObject<Subscription> moderator_subscriptions;
 
     ServerWriteThread write_thread;
-    CacheObject[] objects = new CacheObject[]{userdata, settings, regex_keys, watched_roles, watched_users, excluded_channels, last_messages, moderator_subscriptions};
+    CacheObject[] objects = new CacheObject[]{userdata, /*settings,*/ regex_keys, watched_roles, watched_users, excluded_channels, last_messages, moderator_subscriptions};
 
     ServerCache(long id, DatabaseManager dbmg, JDA jda) {
         this.id = id;

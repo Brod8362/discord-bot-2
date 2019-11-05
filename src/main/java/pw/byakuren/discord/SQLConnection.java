@@ -79,7 +79,7 @@ public class SQLConnection {
         addRegexKey = connection.prepareStatement("INSERT INTO server_regex_keys VALUES (?, ?)");
         removeRegexKey = connection.prepareStatement("DELETE FROM server_regex_keys WHERE server=? AND regex_key=?");
         getRegexKeys = connection.prepareStatement("SELECT * FROM server_regex_keys WHERE server=?");
-        checkRegexKey = connection.prepareStatement("SELECT 1 FROM server_regex_keys WHERE server=? AND regex_keys=?");
+        checkRegexKey = connection.prepareStatement("SELECT 1 FROM server_regex_keys WHERE server=? AND regex_key=?");
 
         addExcludedChannel = connection.prepareStatement("INSERT INTO excluded_channels VALUES (?, ?)");
         removeExcludedChannel = connection.prepareStatement("DELETE FROM excluded_channels WHERE server=? AND channel=?");
