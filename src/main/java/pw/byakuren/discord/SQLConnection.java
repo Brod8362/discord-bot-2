@@ -1,5 +1,7 @@
 package pw.byakuren.discord;
 
+import com.sun.tools.javac.util.Pair;
+import pw.byakuren.discord.objects.Triple;
 import pw.byakuren.discord.objects.cache.datatypes.LastMessage;
 
 import java.sql.*;
@@ -13,6 +15,11 @@ public class SQLConnection {
 
     private PreparedStatement incrementDatapoint;
     private PreparedStatement createDatapoint;
+    private PreparedStatement editDatapoint;
+    private PreparedStatement getDatapoint;
+    private PreparedStatement getAllDatapoints;
+    private PreparedStatement getAllDatapointsServer;
+    private PreparedStatement checkDatapointExists;
 
     private PreparedStatement addSubscription;
     private PreparedStatement removeSubscription;
@@ -32,7 +39,6 @@ public class SQLConnection {
     private PreparedStatement addWatchedUser;
     private PreparedStatement removeWatchedUser;
     private PreparedStatement checkWatchedUser;
-    private PreparedStatement getwatchedUser;
     private PreparedStatement getWatchedUsers;
 
     private PreparedStatement addWatchedRole;
@@ -56,8 +62,14 @@ public class SQLConnection {
             System.out.println("Tables need to be created.");
             createTables();
         }
+
         incrementDatapoint = connection.prepareStatement("UPDATE user_chat_data SET count=count+1 WHERE server=? AND user=? AND datapoint=?");
         createDatapoint = connection.prepareStatement("INSERT INTO user_chat_data VALUES (?, ?, ?, 1)");
+        editDatapoint = connection.prepareStatement("UPDATE user_chat_data SET count=? WHERE server=? AND user=? AND datapoint=?");
+        getDatapoint = connection.prepareStatement("SELECT count FROM user_chat_data WHERE server=? AND user=? AND datapoint=?");
+        getAllDatapoints = connection.prepareStatement("SELECT datapoint,count FROM user_chat_data WHERE server=? AND user=?");
+        getAllDatapointsServer = connection.prepareStatement("SELECT * FROM user_chat_data WHERE server=?");
+        checkDatapointExists = connection.prepareStatement("SELECT 1 FROM user_chat_data WHERE server=? AND user=? AND datapoint=?");
 
         updateLastMessage = connection.prepareStatement("REPLACE INTO last_messages (server, user, content, id, date_sent) VALUES (?, ?, ?, ?, ?)");
         getLastMessage = connection.prepareStatement("SELECT 1 FROM last_messages WHERE server=? AND user=?");
@@ -81,7 +93,6 @@ public class SQLConnection {
         addWatchedUser = connection.prepareStatement("INSERT INTO watched_users VALUES (?, ?, ?)");
         removeWatchedUser = connection.prepareStatement("DELETE FROM watched_users WHERE server=? AND user=?");
         getWatchedUsers = connection.prepareStatement("SELECT * FROM watched_users WHERE server=?");
-        getwatchedUser = connection.prepareStatement("SELECT 1 FROM watched_users WHERE server=? AND user=?");
         checkWatchedUser = connection.prepareStatement("SELECT 1 FROM watched_users WHERE server=? AND user=?");
 
         addWatchedRole = connection.prepareStatement("INSERT INTO watched_roles VALUES (?, ?, ?)");
@@ -365,6 +376,72 @@ public class SQLConnection {
         checkWatchedRole.setLong(1, server);
         checkWatchedRole.setLong(2, role);
         return checkWatchedRole.executeQuery().next();
+    }
+
+    public void executeIncrementDatapoint(long server, long user, String datapoint) throws SQLException {
+        if (!checkDatapointExists(server, user, datapoint)) {
+            executeCreateDatapoint(server, user, datapoint);
+            return;
+        }
+        incrementDatapoint.setLong(1, server);
+        incrementDatapoint.setLong(2, user);
+        incrementDatapoint.setString(3, datapoint);
+        incrementDatapoint.executeUpdate();
+        incrementDatapoint.clearParameters();
+    }
+
+    public void executeCreateDatapoint(long server, long user, String datapoint) throws SQLException {
+        createDatapoint.setLong(1, server);
+        createDatapoint.setLong(2, user);
+        createDatapoint.setString(3, datapoint);
+        createDatapoint.execute();
+        createDatapoint.clearParameters();
+    }
+
+    public void executeEditDatapoint(long server, long user, String datapoint, int val) throws SQLException {
+        editDatapoint.setInt(1, val);
+        editDatapoint.setLong(2, server);
+        editDatapoint.setLong(3, user);
+        editDatapoint.setString(4, datapoint);
+        editDatapoint.executeUpdate();
+        editDatapoint.clearParameters();
+    }
+
+    public int getDatapoint(long server, long user, String datapoint) throws SQLException {
+        getDatapoint.setLong(1, server);
+        getDatapoint.setLong(2, user);
+        getDatapoint.setString(3, datapoint);
+        ResultSet r = getDatapoint.executeQuery();
+        return r.getInt(1);
+    }
+
+    public List<Pair<String,Integer>> getAllDatapoints(long server, long user) throws SQLException {
+        getAllDatapoints.setLong(1, server);
+        getAllDatapoints.setLong(2, user);
+        ResultSet r = getAllDatapoints.executeQuery();
+        List<Pair<String,Integer>> ps = new ArrayList<>();
+        while (r.next()) {
+            ps.add(new Pair<>(r.getString(3), r.getInt(4)));
+        }
+        return ps;
+    }
+
+    public List<Triple<Long, String, Integer>> getAllDatapointsServer(long server) throws SQLException {
+        getAllDatapointsServer.setLong(1, server);
+        ResultSet r = getAllDatapointsServer.executeQuery();
+        List<Triple<Long,String,Integer>> ts = new ArrayList<>();
+        while (r.next()) {
+            ts.add(new Triple<>(r.getLong(2), r.getString(3), r.getInt(4)));
+        }
+        return ts;
+    }
+
+    public boolean checkDatapointExists(long server, long user, String datapoint) throws SQLException {
+        checkDatapointExists.setLong(1, server);
+        checkDatapointExists.setLong(2, user);
+        checkDatapointExists.setString(3, datapoint);
+        checkDatapointExists.clearParameters();
+        return checkDatapointExists.executeQuery().next();
     }
 
 }

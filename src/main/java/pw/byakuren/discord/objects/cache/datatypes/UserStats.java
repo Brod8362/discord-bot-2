@@ -98,7 +98,26 @@ public class UserStats extends CacheEntry {
         return true;
     }
 
-
-
-
+    public boolean setStatistic(Statistic e, int v) {
+        switch (e) {
+            case REACTIONS_SENT:
+                reactions_sent=v;
+                break;
+            case REACTIONS_RECEIVED:
+                reactions_received=v;
+                break;
+            case MESSAGES_SENT:
+                messages_sent=v;
+                break;
+            case MESSAGES_DELETED:
+                messages_deleted=v;
+                break;
+            case ATTACHMENTS_SENT:
+                attachments_sent=v;
+                break;
+            default:
+                return false;
+        }
+        return true;
+    }
 }
