@@ -59,7 +59,7 @@ public class SQLConnection {
         updateDatapoint = connection.prepareStatement("UPDATE user_chat_data SET count=count+1 WHERE server=? AND user=? AND datapoint=?");
         createDatapoint = connection.prepareStatement("INSERT INTO user_chat_data VALUES (?, ?, ?, 1)");
 
-        updateLastMessage = connection.prepareStatement("REPLACE INTO last_messages (server, user, content, id, date_sent) VALUES (?, ?, ?, ?)");
+        updateLastMessage = connection.prepareStatement("REPLACE INTO last_messages (server, user, content, id, date_sent) VALUES (?, ?, ?, ?, ?)");
         getLastMessage = connection.prepareStatement("SELECT 1 FROM last_messages WHERE server=? AND user=?");
         getLastMessages = connection.prepareStatement("SELECT * FROM last_messages WHERE server=?");
 
