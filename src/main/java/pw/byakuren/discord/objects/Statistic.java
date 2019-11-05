@@ -2,14 +2,18 @@ package pw.byakuren.discord.objects;
 
 public enum Statistic {
 
-    REACTIONS_SENT("reactions_tx"), REACTIONS_RECEIVED("reactions_rx"),
-    MESSAGES_SENT("messages_sent"), MESSAGES_DELETED("messages_deleted"),
-    ATTACHMENTS_SENT("attachments_sent");
+    REACTIONS_SENT("reactions_tx", "Reactions Sent"),
+    REACTIONS_RECEIVED("reactions_rx", "Reactions Received"),
+    MESSAGES_SENT("messages_sent", "Messages Sent"),
+    MESSAGES_DELETED("messages_deleted", "Messaged Deleted"),
+    ATTACHMENTS_SENT("attachments_sent", "Attachments Sent");
 
     public final String datapoint_name;
+    public final String nice_name;
 
-    Statistic(String s) {
+    Statistic(String s, String n) {
         datapoint_name = s;
+        nice_name = n;
     }
 
     public static Statistic datapointToStatistic(String str) {
