@@ -115,18 +115,31 @@ public class DatabaseManager {
     * */
 
     public void addUserChatData(Member user, String datapoint) {
-
+        try {
+            sql.executeCreateDatapoint(user.getGuild().getIdLong(), user.getUser().getIdLong(), datapoint);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void editUserChatData(Member user, String datapoint, long difference) {
-
+    public void editUserChatData(Member user, String datapoint, int new_val) {
+        try {
+            sql.executeEditDatapoint(user.getGuild().getIdLong(), user.getUser().getIdLong(), datapoint, new_val);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void removeUserChatData(Member user, String datapoint) {
-
+        throw new UnsupportedOperationException("unimplemented");
     }
 
     public int getUserChatDatapoint(Member user, String datapoint) {
+        try {
+            return sql.getDatapoint(user.getGuild().getIdLong(), user.getUser().getIdLong(), datapoint);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return -1;
     }
 
@@ -138,11 +151,7 @@ public class DatabaseManager {
             e.printStackTrace();
         }
         if (data==null) return null;
-        int rec_rx = 0;
-        int rec_tx = 0;
-        int msg_sd = 0;
-        int msg_dl = 0;
-        int atc_sd = 0;
+        int rec_rx = 0, rec_tx = 0, msg_sd = 0, msg_dl = 0, atc_sd = 0;
         for (Pair<String,Integer> t: data) {
             switch (Objects.requireNonNull(Statistic.datapointToStatistic(t.fst))) {
                 case MESSAGES_SENT:
@@ -171,7 +180,7 @@ public class DatabaseManager {
         return new ArrayList<UserStats>();
     }
 
-    /* Methods for modyfing watched roles. */
+    /* Methods for modifying watched roles. */
 
     public void addWatchedRole(Role role) {
         addWatchedRole(role.getGuild().getIdLong(), role.getIdLong());
