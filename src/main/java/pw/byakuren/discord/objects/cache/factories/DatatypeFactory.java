@@ -1,11 +1,21 @@
 package pw.byakuren.discord.objects.cache.factories;
 
+import pw.byakuren.discord.DatabaseManager;
+
 import java.util.List;
 
-public interface DatatypeFactory<E> {
+public abstract class DatatypeFactory<E> {
 
-    public List<E> getAll();
+    protected long serverid;
+    protected DatabaseManager dbmg;
 
-    public E get(Object... qualifiers);
+    public DatatypeFactory(long serverid, DatabaseManager dbmg) {
+        this.serverid = serverid;
+        this.dbmg = dbmg;
+    }
+
+    public abstract List<E> getAll();
+
+    public abstract E get(Object... qualifiers);
 
 }

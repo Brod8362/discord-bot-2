@@ -7,25 +7,20 @@ import pw.byakuren.discord.objects.cache.datatypes.ExcludedChannel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class ExcludedChannelFactory implements DatatypeFactory<ExcludedChannel> {
+public class ExcludedChannelFactory extends DatatypeFactory<ExcludedChannel> {
 
-    private DatabaseManager dbmg;
-    private long serverid;
-
-    public ExcludedChannelFactory(DatabaseManager dbmg, long serverid) {
-        this.dbmg = dbmg;
-        this.serverid = serverid;
+    public ExcludedChannelFactory(long serverid, DatabaseManager dbmg) {
+        super(serverid, dbmg);
     }
 
     @Override
     public List<ExcludedChannel> getAll() {
-        List<TextChannel> l = dbmg.getExcludedChannels(serverid);
-        ArrayList<ExcludedChannel> c = new ArrayList<>();
-        for (TextChannel t: l) {
-            c.add(new ExcludedChannel(t));
-        }
-        return c;
+        return dbmg.getExcludedChannels(serverid)
+                .stream()
+                .map(ExcludedChannel::new)
+                .collect(Collectors.toList());
     }
 
     @Override
