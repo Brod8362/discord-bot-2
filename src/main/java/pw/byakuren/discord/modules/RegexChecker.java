@@ -43,7 +43,7 @@ public class RegexChecker implements Module {
             b.setDescription(String.format("[Jump](%s)\n%s", message.getJumpUrl(), message.getContentRaw()));
             b.setColor(Color.RED);
             b.setAuthor(message.getAuthor().getName(), message.getJumpUrl(), message.getAuthor().getAvatarUrl());
-            b.setFooter("Matched: "+String.join(", ", matches), null);
+            b.setFooter("**Matched:** "+String.join(", ", matches), null);
             message.getChannel().sendMessage(b.build()).queue();
         }
     }
