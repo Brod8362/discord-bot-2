@@ -53,17 +53,14 @@ public class ServerWriteThread {
     }
 
     private Runnable getRunnable() {
-        return new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(WAIT_TIME); //wait 3 minutes
-                } catch (InterruptedException e) {
-                    //intended interrupt
-                }
-                if (!run) return;
-                writeAll();
+        return () -> {
+            try {
+                Thread.sleep(WAIT_TIME); //wait 3 minutes
+            } catch (InterruptedException e) {
+                //intended interrupt
             }
+            if (!run) return;
+            writeAll();
         };
     }
 }
