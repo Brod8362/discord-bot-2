@@ -2,16 +2,20 @@ package pw.byakuren.discord.commands;
 
 import net.dv8tion.jda.api.entities.Message;
 import pw.byakuren.discord.DatabaseManager;
+import pw.byakuren.discord.objects.cache.Cache;
 import pw.byakuren.discord.objects.cache.datatypes.RegexKey;
 
 import java.util.List;
 
+import static pw.byakuren.discord.objects.cache.WriteState.PENDING_DELETE;
+import static pw.byakuren.discord.objects.cache.WriteState.PENDING_WRITE;
+
 public class RegexKeys implements Command {
 
-    private DatabaseManager dbmg = null;
+    private Cache c;
 
-    public RegexKeys(DatabaseManager dbmg) {
-        this.dbmg = dbmg;
+    public RegexKeys(Cache c) {
+        this.c = c;
     }
 
     @Override
@@ -38,30 +42,47 @@ public class RegexKeys implements Command {
     public void run(Message message, List<String> args) {
         if (args.size() == 0) return;
         StringBuilder s = new StringBuilder();
+        List<RegexKey> list = c.getServerCache(message.getGuild()).getAllValidRegexKeys();
         switch (args.get(0)) {
             case "add":
                 if (args.size() == 1) return;
-                for (int i = 1; i < args.size(); i++) {
+                for (int i = 1; i < args.size()-1; i++) {
                     s.append(args.get(i)).append(" ");
                 }
-                dbmg.addRegexKey(message.getGuild(), s.toString());
+                s.append(args.get(args.size()-1));
+                RegexKey k = new RegexKey(message.getGuild(), s.toString());
+                k.write_state=PENDING_WRITE;
+                c.getServerCache(message.getGuild()).getRegexKeys().getData().add(k);
                 message.addReaction("\uD83D\uDC4D").queue();
                 break;
             case "remove":
                 if (args.size() == 1) return;
-                for (int i = 1; i < args.size(); i++) {
+                for (int i = 1; i < args.size()-1; i++) {
                     s.append(args.get(i)).append(" ");
                 }
-                dbmg.removeRegexKey(message.getGuild(), s.toString());
+                s.append(args.get(args.size()-1));
+                int pos = 0;
+                for (; pos < list.size(); pos ++) {
+                    if (list.get(pos).getKey().equals(s.toString()))
+                        break;
+                }
+                if (pos == list.size()) {
+                    message.getChannel().sendMessage("Key not found.").queue();
+                    return;
+                }
+                c.getServerCache(message.getGuild()).getRegexKeys().getData().get(pos).write_state=PENDING_DELETE;
                 message.addReaction("\uD83D\uDC4D").queue();
                 break;
             case "list":
-                List<RegexKey> list = dbmg.getRegexKeys(message.getGuild());
+                if (list.size() == 0) {
+                    message.getChannel().sendMessage("You have no regex keys, use `add [key]` to add some!").queue();
+                    return;
+                }
                 s.append("Keys:\n");
                 for (int i = 0; i < list.size()-1; i++) {
-                    s.append("`").append(list.get(i)).append("`, ");
+                    s.append("`").append(list.get(i).getKey()).append("`, ");
                 }
-                s.append("`").append(list.get(list.size() - 1)).append("`");
+                s.append("`").append(list.get(list.size() - 1).getKey()).append("`");
                 message.getChannel().sendMessage(s.toString()).queue();
                 break;
             default:

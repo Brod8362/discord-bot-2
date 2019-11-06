@@ -7,6 +7,10 @@ import pw.byakuren.discord.DatabaseManager;
 import pw.byakuren.discord.objects.cache.datatypes.*;
 import pw.byakuren.discord.objects.cache.factories.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static pw.byakuren.discord.objects.cache.WriteState.PENDING_DELETE;
 import static pw.byakuren.discord.objects.cache.WriteState.PENDING_WRITE;
 
 public class ServerCache {
@@ -92,5 +96,16 @@ public class ServerCache {
         s.write_state=PENDING_WRITE;
         userdata.getData().add(s);
         return s;
+    }
+
+    public List<RegexKey> getAllValidRegexKeys() {
+        List<RegexKey> keys = new ArrayList<>(regex_keys.getData());
+        for (int i =0; i < keys.size(); i++) {
+            if (keys.get(i).write_state==PENDING_DELETE) {
+                keys.remove(i);
+                i--;
+            }
+        }
+        return keys;
     }
 }
