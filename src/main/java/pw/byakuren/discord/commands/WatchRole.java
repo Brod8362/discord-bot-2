@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.entities.Role;
 import pw.byakuren.discord.DatabaseManager;
 import pw.byakuren.discord.objects.cache.Cache;
 import pw.byakuren.discord.objects.cache.ServerCache;
+import pw.byakuren.discord.objects.cache.WriteState;
 import pw.byakuren.discord.objects.cache.datatypes.WatchedRole;
 
 import java.util.List;
@@ -44,8 +45,11 @@ public class WatchRole implements Command {
         switch (args.get(0)) {
             case "add":
                 for (Role r: message.getMentionedRoles()) {
-                    if (!sc.roleIsWatched(r))
-                        sc.getWatchedRoles().getData().add(new WatchedRole(r));
+                    if (!sc.roleIsWatched(r)) {
+                        WatchedRole rol = new WatchedRole(r);
+                        rol.write_state = WriteState.PENDING_WRITE;
+                        sc.getWatchedRoles().getData().add(rol);
+                    }
                 }
                 message.addReaction("\uD83D\uDC4D").queue();
                 break;

@@ -11,6 +11,7 @@ import pw.byakuren.discord.objects.cache.datatypes.RegexKey;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class RegexChecker implements Module {
@@ -46,6 +47,7 @@ public class RegexChecker implements Module {
                     String.join("`, `", matches)));
             b.setColor(Color.RED);
             b.setAuthor(message.getAuthor().getName(), message.getJumpUrl(), message.getAuthor().getAvatarUrl());
+            b.setFooter(new Date().toString(), null);
             message.getChannel().sendMessage(b.build()).queue();
         }
     }

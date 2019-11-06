@@ -372,7 +372,7 @@ public class SQLConnection {
         addWatchedRole.setLong(1, server);
         addWatchedRole.setLong(2, role);
         addWatchedRole.setDate(3, new Date(System.currentTimeMillis()));
-        addWatchedRole.executeUpdate();
+        addWatchedRole.execute();
         addWatchedRole.clearParameters();
     }
 

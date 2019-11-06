@@ -42,7 +42,7 @@ public class Stop implements Command {
         JDA jda = message.getJDA();
         Message m = message.getChannel().sendMessage("Waiting for write threads...").complete();
         c.writeAllAndQuit();
-        m.editMessage("Shutting down.").complete();
+        m.editMessage("Shutting down. \uD83D\uDE34").complete();
         dbmg.getSQL().disconnect();
         jda.shutdown();
     }
