@@ -89,7 +89,15 @@ public class DatabaseManager {
     /* Methods for changing server settings and features. */
 
     public void addServerSetting(Guild server, String setting, long value) {
+        addServerSetting(server.getIdLong(), setting, value);
+    }
 
+    public void addServerSetting(long server, String setting, long value) {
+        try {
+            sql.addServerSetting(server, setting, value);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void removeServerSetting(Guild server, String setting) {
@@ -97,15 +105,28 @@ public class DatabaseManager {
     }
 
     public void editServerSetting(Guild server, String setting, long newvalue) {
-
+        editServerSetting(server.getIdLong(), setting, newvalue);
     }
 
-    public ServerSettings getServerSettings(Guild server) {
+    public void editServerSetting(long serverid, String setting, long newvalue) {
+        try {
+            sql.editServerSetting(serverid, setting, newvalue);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<ServerSettings> getServerSettings(Guild server) {
         return getServerSettings(server.getIdLong());
     }
 
-    public ServerSettings getServerSettings(long serverid) {
-        return new ServerSettings();
+    public List<ServerSettings> getServerSettings(long serverid) {
+        try {
+            return sql.getAllServerSettings(serverid);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /* Methods for modifying user chat data/statistics.

@@ -3,10 +3,12 @@ package pw.byakuren.discord;
 import com.sun.tools.javac.util.Pair;
 import pw.byakuren.discord.objects.Triple;
 import pw.byakuren.discord.objects.cache.datatypes.LastMessage;
+import pw.byakuren.discord.objects.cache.datatypes.ServerParameter;
+import pw.byakuren.discord.objects.cache.datatypes.ServerSettings;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Date;
+import java.util.*;
 
 public class SQLConnection {
 
@@ -48,6 +50,10 @@ public class SQLConnection {
     private PreparedStatement getWatchedRoles;
 
     private PreparedStatement modifyServerSetting;
+    private PreparedStatement checkServerSetting;
+    private PreparedStatement addServerSetting;
+    private PreparedStatement getServerSetting;
+    private PreparedStatement getAllServerSettings;
 
     private PreparedStatement updateLastMessage;
     private PreparedStatement getLastMessage;
@@ -101,6 +107,12 @@ public class SQLConnection {
         removeWatchedRole = connection.prepareStatement("DELETE FROM watched_roles WHERE server=? AND role=?");
         getWatchedRoles = connection.prepareStatement("SELECT * FROM watched_roles WHERE server=?");
         checkWatchedRole = connection.prepareStatement("SELECT 1 FROM watched_roles WHERE server=? AND role=?");
+
+        modifyServerSetting = connection.prepareStatement("UPDATE server_settings SET value=? WHERE server=? AND setting=?");
+        addServerSetting = connection.prepareStatement("INSERT INTO server_settings VALUES (?, ?, ?)");
+        checkServerSetting = connection.prepareStatement("SELECT 1 FROM server_settings WHERE server=? AND setting=?");
+        getServerSetting = connection.prepareStatement("SELECT value FROM server_settings WHERE server=? AND setting=?");
+        getAllServerSettings = connection.prepareStatement("SELECT setting, value FROM server_settings WHERE server=?");
     }
 
     private boolean verifyTables() {
@@ -456,6 +468,49 @@ public class SQLConnection {
         ResultSet r = checkDatapointExists.executeQuery();
         checkDatapointExists.clearParameters();
         return r.next();
+    }
+
+    public boolean checkServerSettingExists(long server, String setting) throws SQLException {
+        checkServerSetting.setLong(1, server);
+        checkServerSetting.setString(2, setting);
+        ResultSet r = checkServerSetting.executeQuery();
+        checkServerSetting.clearParameters();
+        return r.next();
+    }
+
+    public long getServerSetting(long server, String setting) throws SQLException {
+        getServerSetting.setLong(1, server);
+        getServerSetting.setString(2, setting);
+        ResultSet r = getServerSetting.executeQuery();
+        checkServerSetting.clearParameters();
+        return r.getLong(1);
+    }
+
+    public void editServerSetting(long server, String setting, long val) throws SQLException {
+        modifyServerSetting.setLong(1, val);
+        modifyServerSetting.setLong(2, server);
+        modifyServerSetting.setString(3, setting);
+        modifyServerSetting.executeUpdate();
+        modifyServerSetting.clearParameters();
+    }
+
+    public void addServerSetting(long server, String setting, long val) throws SQLException {
+        addServerSetting.setLong(1, server);
+        addServerSetting.setString(2, setting);
+        addServerSetting.setLong(3, val);
+        addServerSetting.execute();
+        addServerSetting.clearParameters();;
+    }
+
+    public List<ServerSettings> getAllServerSettings(long server) throws SQLException {
+        getAllServerSettings.setLong(1, server);
+        ResultSet r = getAllServerSettings.executeQuery();
+        getAllServerSettings.clearParameters();
+        List<ServerSettings> l = new ArrayList<>();
+        while (r.next()) {
+            l.add(new ServerSettings(server, ServerParameter.stringToSetting(r.getString(1)), r.getLong(2)));
+        }
+        return l;
     }
 
 }
