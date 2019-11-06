@@ -10,6 +10,7 @@ import pw.byakuren.discord.objects.cache.WriteState;
 import pw.byakuren.discord.objects.cache.datatypes.WatchedRole;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class WatchRole implements Command {
 
@@ -70,10 +71,7 @@ public class WatchRole implements Command {
                 List<WatchedRole> list = sc.getAllValidWatchedRoles();
                 StringBuilder s = new StringBuilder();
                 s.append("Watched roles:\n");
-
-                for (WatchedRole rw: list) {
-                    s.append(rw.getRole().getAsMention()).append(" ");
-                }
+                s.append(list.stream().map(WatchedRole::getRoleMention).collect(Collectors.joining(", ")));
                 if (list.size() == 0) {
                     s = new StringBuilder();
                     s.append("No watched roles. Use 'add' to add some.");

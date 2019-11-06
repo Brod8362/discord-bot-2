@@ -55,7 +55,7 @@ public class ExcludedChannels implements Command {
                     return;
                 }
                 StringBuilder s = new StringBuilder();
-                s.append("Channels:");
+                s.append("Channels:\n");
                 s.append(list.stream().map(ExcludedChannel::getChannelMention).collect(Collectors.joining(", ")));
                 message.getChannel().sendMessage(s.toString()).queue();
                 break;

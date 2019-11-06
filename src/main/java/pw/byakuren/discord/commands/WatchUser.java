@@ -9,6 +9,7 @@ import pw.byakuren.discord.objects.cache.ServerCache;
 import pw.byakuren.discord.objects.cache.datatypes.WatchedUser;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class WatchUser implements Command {
 
@@ -68,9 +69,7 @@ public class WatchUser implements Command {
                 List<WatchedUser> list = sc.getAllValidWatchedUsers();
                 StringBuilder s = new StringBuilder();
                 s.append("Watched users:\n");
-                for (WatchedUser wu : list) {
-                    s.append(wu.getUser().getAsMention()).append(" ");
-                }
+                s.append(list.stream().map(WatchedUser::getUserMention).collect(Collectors.joining(", ")));
                 message.getChannel().sendMessage(s.toString()).queue();
                 break;
             default:

@@ -27,6 +27,10 @@ public class WatchedRole extends CacheEntry {
         return role;
     }
 
+    public String getRoleMention() {
+        return role.getAsMention();
+    }
+
     @Override
     protected void write(DatabaseManager dbmg) {
         dbmg.addWatchedRole(role);

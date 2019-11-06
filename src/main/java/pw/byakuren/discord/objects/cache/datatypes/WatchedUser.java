@@ -27,6 +27,10 @@ public class WatchedUser extends CacheEntry {
         return user;
     }
 
+    public String getUserMention() {
+        return user.getAsMention();
+    }
+
     @Override
     protected void write(DatabaseManager dbmg) {
         dbmg.addWatchedUser(user);
