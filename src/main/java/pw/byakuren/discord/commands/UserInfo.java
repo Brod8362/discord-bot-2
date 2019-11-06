@@ -3,10 +3,20 @@ package pw.byakuren.discord.commands;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import pw.byakuren.discord.objects.Statistic;
+import pw.byakuren.discord.objects.cache.Cache;
+import pw.byakuren.discord.objects.cache.datatypes.UserStats;
 
 import java.util.List;
 
 public class UserInfo implements Command {
+
+    Cache c;
+
+    public UserInfo(Cache c) {
+        this.c = c;
+    }
+
     @Override
     public String getName() {
         return "ui";
@@ -43,6 +53,14 @@ public class UserInfo implements Command {
         embed.addField("Joined At", u.getTimeJoined().toString(), true);
         embed.addField("Account Creation Date", u.getUser().getTimeCreated().toString(), true);
         //TODO - add fields from DB in here
+        UserStats stats = c.getServerCache(u.getGuild()).getStatsForUser(u);
+        if (stats != null) {
+            for (Statistic s: Statistic.values()) {
+                embed.addField(s.nice_name, stats.getStatistic(s)+"", true);
+            }
+        } else {
+            embed.setFooter("User Statistics not available.", null);
+        }
         message.getChannel().sendMessage(embed.build()).queue();
     }
 }

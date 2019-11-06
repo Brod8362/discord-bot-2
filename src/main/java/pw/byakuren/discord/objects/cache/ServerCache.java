@@ -1,9 +1,13 @@
 package pw.byakuren.discord.objects.cache;
 
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.User;
 import pw.byakuren.discord.DatabaseManager;
 import pw.byakuren.discord.objects.cache.datatypes.*;
 import pw.byakuren.discord.objects.cache.factories.*;
+
+import static pw.byakuren.discord.objects.cache.WriteState.PENDING_WRITE;
 
 public class ServerCache {
 
@@ -69,5 +73,23 @@ public class ServerCache {
 
     public CacheObject<Subscription> getModeratorSubscriptions() {
         return moderator_subscriptions;
+    }
+
+    public UserStats getStatsForUser(Member m) {
+        return getStatsForUser(m.getGuild().getIdLong(), m.getUser());
+    }
+
+    public UserStats getStatsForUser(long serverid, User u) {
+        return getStatsForUser(serverid, u.getIdLong());
+    }
+
+    public UserStats getStatsForUser(long serverid,long id) {
+        for (UserStats s: userdata.getData()) {
+            if (s.getUser()==id) return s;
+        }
+        UserStats s = new UserStats(serverid, id);
+        s.write_state=PENDING_WRITE;
+        userdata.getData().add(s);
+        return s;
     }
 }

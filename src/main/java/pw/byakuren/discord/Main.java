@@ -86,7 +86,7 @@ public class Main extends ListenerAdapter {
         cmdhelp.registerCommand(new Invite());
         cmdhelp.registerCommand(new Modules(mdhelp));
         cmdhelp.registerCommand(new Help(cmdhelp));
-        cmdhelp.registerCommand(new UserInfo());
+        cmdhelp.registerCommand(new UserInfo(cache));
         cmdhelp.registerCommand(new ServerInfo());
         cmdhelp.registerCommand(new SQL(dbmg));
         cmdhelp.registerCommand(new RegexKeys(dbmg));
