@@ -157,10 +157,18 @@ public class ServerCache {
 
     public Role getModeratorRole(JDA jda) {
         for (ServerSettings s: settings.getData()) {
-            if (s.getSetting()==ServerParameter.SERVER_MODERATOR_ROLE) {
+            if (s.getSetting()==ServerParameter.SERVER_MODERATOR_ROLE && s.write_state!=PENDING_DELETE) {
                 return jda.getRoleById(s.getValue());
             }
         }
         return null;
+    }
+
+    public void removeModeratorRole() {
+        for (ServerSettings s: settings.getData()) {
+            if (s.getSetting()==ServerParameter.SERVER_MODERATOR_ROLE) {
+                s.write_state=PENDING_DELETE;
+            }
+        }
     }
 }

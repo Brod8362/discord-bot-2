@@ -82,6 +82,7 @@ public class Main extends ListenerAdapter {
         cmdhelp.registerCommand(new Invite());
         cmdhelp.registerCommand(new Modules(mdhelp));
         cmdhelp.registerCommand(new Help(cmdhelp, cache));
+        cmdhelp.registerCommand(new SetModeratorRole(cache));
         cmdhelp.registerCommand(new UserInfo(cache));
         cmdhelp.registerCommand(new ServerInfo());
         cmdhelp.registerCommand(new RegexKeys(cache));
@@ -90,7 +91,7 @@ public class Main extends ListenerAdapter {
         cmdhelp.registerCommand(new WatchRole(cache));
         cmdhelp.registerCommand(new SetLogChannel(cache));
 
-        System.out.println(String.format("Loaded %s commands.", cmdhelp.getCommands().size()));
+        System.out.println(String.format("Loaded %s commands.", cmdhelp.getCommandSet().size()));
     }
 
     private void loadModules(JDA jda) {
