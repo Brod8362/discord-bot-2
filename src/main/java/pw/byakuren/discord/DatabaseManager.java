@@ -25,67 +25,6 @@ public class DatabaseManager {
         return sql;
     }
 
-    /* For handling moderator susbcriptions to actions on specific users. */
-
-    public void addModeratorSubscription(Member moderator, Member user) {
-        addModeratorSubscription(user.getGuild().getIdLong(), moderator.getUser().getIdLong(), user.getUser().getIdLong());
-    }
-
-    public void addModeratorSubscription(long server, long moderator, long user) {
-        try {
-            sql.executeAddSubscription(server, moderator, user);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void removeModeratorSubscription(Member moderator, Member user) {
-        removeModeratorSubscription(user.getGuild().getIdLong(), moderator.getUser().getIdLong(), user.getUser().getIdLong());
-    }
-
-    public void removeModeratorSubscription(long server, long moderator, long user) {
-        try {
-            sql.executeRemoveSubscription(server, moderator, user);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public boolean checkModeratorSubscription(Member moderator, Member user) {
-        return checkModeratorSubscription(moderator.getGuild().getIdLong(), moderator.getUser().getIdLong(), user.getUser().getIdLong());
-    }
-
-    public boolean checkModeratorSubscription(long server, long moderator, long user) {
-        try {
-            return sql.executeCheckSubscribed(server, moderator, user);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    public List<Subscription> getModeratorSubscriptions(long server) {
-        try {
-            //TODO get all mods via jda and create the list
-            return new ArrayList<Subscription>();
-        } catch (/*SQL*/Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public List<Long> getModeratorSubscriptions(Member moderator) {
-        return getModeratorSubscriptions(moderator.getGuild().getIdLong(), moderator.getUser().getIdLong());
-    }
-
-    public List<Long> getModeratorSubscriptions(long server, long moderator) {
-        try {
-            return sql.executeGetSubscriptions(server, moderator);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
     /* Methods for changing server settings and features. */
 

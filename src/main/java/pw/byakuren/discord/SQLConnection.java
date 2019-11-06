@@ -23,11 +23,6 @@ public class SQLConnection {
     private PreparedStatement getAllDatapointsServer;
     private PreparedStatement checkDatapointExists;
 
-    private PreparedStatement addSubscription;
-    private PreparedStatement removeSubscription;
-    private PreparedStatement getSubscriptions;
-    private PreparedStatement checkSubscribed;
-
     private PreparedStatement addRegexKey;
     private PreparedStatement removeRegexKey;
     private PreparedStatement getRegexKeys;
@@ -93,10 +88,6 @@ public class SQLConnection {
         checkExcludedChannel = connection.prepareStatement("SELECT 1 FROM excluded_channels WHERE server=? AND channel=?");
         checkExcludedChannelSingle = connection.prepareStatement("SELECT 1 FROM excluded_channels WHERE channel=?");
 
-        addSubscription = connection.prepareStatement("INSERT INTO moderator_subscriptions VALUES (?, ?, ?, ?)");
-        removeSubscription = connection.prepareStatement("DELETE FROM moderator_subscriptions WHERE server=? AND moderator=? AND user=?");
-        getSubscriptions = connection.prepareStatement("SELECT * FROM moderator_subscriptions WHERE server=? AND moderator=?");
-        checkSubscribed = connection.prepareStatement("SELECT 1 FROM moderator_subscriptions WHERE server=? AND moderator=? AND user=?");
 
         addWatchedUser = connection.prepareStatement("INSERT INTO watched_users VALUES (?, ?, ?)");
         removeWatchedUser = connection.prepareStatement("DELETE FROM watched_users WHERE server=? AND user=?");
@@ -157,8 +148,6 @@ public class SQLConnection {
         String[] queries = new String[]{
                 "CREATE TABLE last_messages (server INTEGER NOT NULL, user INTEGER NOT NULL, content TEXT NOT NULL, id INTEGER NOT NULL, date_sent TIMESTAMP NOT NULL, PRIMARY KEY(server, user))",
                 "CREATE INDEX msg_idx ON last_messages(server)",
-                "CREATE TABLE moderator_subscriptions (server INTEGER NOT NULL, moderator INTEGER NOT NULL, user INTEGER NOT NULL, date_added TIMESTAMP NOT NULL)",
-                "CREATE INDEX mod_idx ON moderator_subscriptions(server)",
                 "CREATE TABLE excluded_channels (server INTEGER NOT NULL, channel INTEGER NOT NULL)",
                 "CREATE INDEX exclude_idx ON excluded_channels(server)",
                 "CREATE TABLE watched_users (server INTEGER NOT NULL, user INTEGER NOT NULL, date_added TIMESTAMP NOT NULL, PRIMARY KEY(server,user))",
@@ -298,42 +287,6 @@ public class SQLConnection {
             list.add(set.getLong("channel"));
         }
         return list;
-    }
-
-    public void executeAddSubscription(long server, long moderator, long user) throws SQLException {
-        addSubscription.setLong(1, server);
-        addSubscription.setLong(2, moderator);
-        addSubscription.setLong(3, user);
-        addSubscription.setDate(4, new Date(System.currentTimeMillis()));
-        addSubscription.executeUpdate();
-        addSubscription.clearParameters();
-    }
-
-    public void executeRemoveSubscription(long server, long moderator, long user) throws SQLException {
-        removeSubscription.setLong(1, server);
-        removeSubscription.setLong(2, moderator);
-        removeSubscription.setLong(3, user);
-        removeSubscription.executeUpdate();
-        removeSubscription.clearParameters();
-    }
-
-    public List<Long> executeGetSubscriptions(long server, long moderator) throws SQLException {
-        getSubscriptions.setLong(1, server);
-        getSubscriptions.setLong(2, moderator);
-        ResultSet set = getSubscriptions.executeQuery();
-        getSubscriptions.clearParameters();
-        ArrayList<Long> list = new ArrayList<>();
-        while (set.next()) {
-            list.add(set.getLong("user"));
-        }
-        return list;
-    }
-
-    public boolean executeCheckSubscribed(long server, long moderator, long user) throws SQLException {
-        checkSubscribed.setLong(1, server);
-        checkSubscribed.setLong(2, moderator);
-        checkSubscribed.setLong(3, user);
-        return checkSubscribed.executeQuery().next();
     }
 
     public void executeAddWatchedUser(long server, long user) throws SQLException {

@@ -85,7 +85,6 @@ public class Main extends ListenerAdapter {
         cmdhelp.registerCommand(new ServerInfo());
         cmdhelp.registerCommand(new RegexKeys(cache));
         cmdhelp.registerCommand(new ExcludedChannels(dbmg));
-        cmdhelp.registerCommand(new Subscribe(dbmg));
         cmdhelp.registerCommand(new WatchUser(cache));
         cmdhelp.registerCommand(new WatchRole(cache));
         cmdhelp.registerCommand(new SetLogChannel(cache));

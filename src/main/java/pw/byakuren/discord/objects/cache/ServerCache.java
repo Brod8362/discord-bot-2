@@ -27,7 +27,6 @@ public class ServerCache {
     private CacheObject<WatchedRole> watched_roles;
     private CacheObject<ExcludedChannel> excluded_channels;
     private CacheObject<LastMessage> last_messages;
-    private CacheObject<Subscription> moderator_subscriptions;
 
     ServerWriteThread write_thread;
     CacheObject[] objects;
@@ -42,8 +41,7 @@ public class ServerCache {
         watched_roles = new CacheObject<>(id, dbmg, new WatchedRoleFactory(id, dbmg, jda));
         excluded_channels = new CacheObject<>(id, dbmg, new ExcludedChannelFactory(id, dbmg));
         last_messages = new CacheObject<>(id, dbmg, new LastMessageFactory(id, dbmg));
-        moderator_subscriptions = new CacheObject<>(id, dbmg, new SubscriptionFactory(id, dbmg));
-        objects = new CacheObject[]{userdata, settings, regex_keys, watched_roles, watched_users, excluded_channels, last_messages, moderator_subscriptions};
+        objects = new CacheObject[]{userdata, settings, regex_keys, watched_roles, watched_users, excluded_channels, last_messages};
         write_thread = new ServerWriteThread(id, objects);
     }
 
@@ -77,10 +75,6 @@ public class ServerCache {
 
     public CacheObject<LastMessage> getLastMessages() {
         return last_messages;
-    }
-
-    public CacheObject<Subscription> getModeratorSubscriptions() {
-        return moderator_subscriptions;
     }
 
     public UserStats getStatsForUser(Member m) {

@@ -1,15 +1,10 @@
 package pw.byakuren.discord.objects.cache;
 
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
 import pw.byakuren.discord.DatabaseManager;
-import pw.byakuren.discord.objects.cache.datatypes.Subscription;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Cache {
