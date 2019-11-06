@@ -45,6 +45,13 @@ public class ServerWriteThread {
         return t;
     }
 
+    public void writeAllAndQuit() {
+        for (CacheObject o: objects) {
+            o.write();
+        }
+        stop();
+    }
+
     private Runnable getRunnable() {
         return new Runnable() {
             @Override

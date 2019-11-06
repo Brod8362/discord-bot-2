@@ -52,4 +52,10 @@ public class Cache {
         loadServerCache(g.getIdLong());
     }
 
+    public void writeAllAndQuit() {
+        for (ServerCache sc: servers.values()) {
+            sc.write_thread.writeAllAndQuit();
+        }
+    }
+
 }

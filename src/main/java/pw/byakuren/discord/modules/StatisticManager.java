@@ -64,11 +64,12 @@ public class StatisticManager implements Module {
             }
         }
         //increment sent msg count
-        for (UserStats stat : stats) {
-            if (stat.getUser() == m.getAuthor().getIdLong()) {
-                stat.incrementStatistic(Statistic.MESSAGES_SENT);
-            }
+        sc.getStatsForUser(m.getMember()).incrementStatistic(Statistic.MESSAGES_SENT);
+        int c = m.getAttachments().size();
+        for (int i =0; i < c; i++) {
+            sc.getStatsForUser(m.getMember()).incrementStatistic(Statistic.ATTACHMENTS_SENT);
         }
+
     }
 
     private void messageDeleteEvent(Event e) {
@@ -77,12 +78,8 @@ public class StatisticManager implements Module {
         if (m==null) return;
         Guild g = m.getGuild();
         ServerCache sc = c.getServerCache(g);
-        List<UserStats> stats = sc.getUserStats().getData();
-        for (UserStats stat : stats) {
-            if (stat.getUser() == m.getAuthor().getIdLong()) {
-                stat.incrementStatistic(Statistic.MESSAGES_DELETED);
-            }
-        }
+        sc.getStatsForUser(m.getMember()).incrementStatistic(Statistic.MESSAGES_DELETED);
+
     }
 
     private void messageReactionAddEvent(Event e) {
@@ -90,16 +87,9 @@ public class StatisticManager implements Module {
         Message m = ev.getTextChannel().getMessageById(ev.getMessageId()).complete();
         Guild g = m.getGuild();
         ServerCache sc = c.getServerCache(g);
-        List<LastMessage> msgs = sc.getLastMessages().getData();
-        List<UserStats> stats = sc.getUserStats().getData();
         //increment reaction recv
-        for (UserStats stat : stats) {
-            if (stat.getUser() == m.getAuthor().getIdLong()) {
-                stat.incrementStatistic(Statistic.REACTIONS_RECEIVED);
-            } else if (stat.getUser() == ev.getMember().getUser().getIdLong()) {
-                stat.incrementStatistic(Statistic.REACTIONS_SENT);
-            }
-        }
+        sc.getStatsForUser(m.getMember()).incrementStatistic(Statistic.REACTIONS_RECEIVED);
+        sc.getStatsForUser(ev.getMember()).incrementStatistic(Statistic.REACTIONS_SENT);
     }
 
     @Override
