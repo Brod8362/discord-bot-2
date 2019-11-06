@@ -8,9 +8,7 @@ import pw.byakuren.discord.objects.Triple;
 import pw.byakuren.discord.objects.cache.datatypes.*;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class DatabaseManager {
 
@@ -180,8 +178,19 @@ public class DatabaseManager {
     }
 
     public List<UserStats> getAllChatDataForServer(long serverid) {
-        //todo gather all data
-        return new ArrayList<UserStats>();
+        List<Triple<Long, String, Integer>> raw = null;
+        try {
+            raw = sql.getAllDatapointsServer(serverid);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        Map<Long, UserStats> users = new HashMap<>();
+        for (Triple<Long, String, Integer> t: raw) {
+            UserStats s = users.getOrDefault(t.a, new UserStats(serverid, t.a));
+            s.setStatistic(Objects.requireNonNull(Statistic.datapointToStatistic(t.b)), t.c);
+            users.put(t.a, s);
+        }
+        return new ArrayList<>(users.values());
     }
 
     /* Methods for modifying watched roles. */

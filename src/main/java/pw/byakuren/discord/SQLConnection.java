@@ -409,6 +409,9 @@ public class SQLConnection {
     }
 
     public void executeEditDatapoint(long server, long user, String datapoint, int val) throws SQLException {
+        if (!checkDatapointExists(server, user, datapoint)) {
+            executeCreateDatapoint(server,user, datapoint);
+        }
         editDatapoint.setInt(1, val);
         editDatapoint.setLong(2, server);
         editDatapoint.setLong(3, user);
@@ -450,8 +453,9 @@ public class SQLConnection {
         checkDatapointExists.setLong(1, server);
         checkDatapointExists.setLong(2, user);
         checkDatapointExists.setString(3, datapoint);
+        ResultSet r = checkDatapointExists.executeQuery();
         checkDatapointExists.clearParameters();
-        return checkDatapointExists.executeQuery().next();
+        return r.next();
     }
 
 }
