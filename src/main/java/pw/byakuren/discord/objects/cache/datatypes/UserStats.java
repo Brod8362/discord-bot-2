@@ -3,6 +3,8 @@ package pw.byakuren.discord.objects.cache.datatypes;
 import pw.byakuren.discord.DatabaseManager;
 import pw.byakuren.discord.objects.Statistic;
 
+import static pw.byakuren.discord.objects.cache.WriteState.PENDING_WRITE;
+
 public class UserStats extends CacheEntry {
 
     private long server;
@@ -73,6 +75,7 @@ public class UserStats extends CacheEntry {
             default:
                 return false;
         }
+        write_state = PENDING_WRITE;
         return true;
     }
 
@@ -96,6 +99,7 @@ public class UserStats extends CacheEntry {
             default:
                 return false;
         }
+        write_state=PENDING_WRITE;
         return true;
     }
 
@@ -119,6 +123,7 @@ public class UserStats extends CacheEntry {
             default:
                 return false;
         }
+        write_state=PENDING_WRITE;
         return true;
     }
 

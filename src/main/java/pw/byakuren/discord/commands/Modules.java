@@ -50,7 +50,7 @@ public class Modules implements Command {
             case "list":
                 EmbedBuilder embed = new EmbedBuilder();
                 for (Module md: mdhelp.getModules().keySet()) {
-                    embed.addField(md.getInfo().getName(), String.valueOf(mdhelp.isEnabled(md)), false);
+                    embed.addField(md.getInfo().name, String.valueOf(mdhelp.isEnabled(md)), false);
                 }
                 if (mdhelp.getModules().keySet().size() == 0) {
                     embed.addField("No modules found.", "", false);

@@ -99,7 +99,7 @@ public class Main extends ListenerAdapter {
     }
 
     private void loadModules(JDA jda) {
-        mdhelp.registerModule(new StatisticManager(dbmg));
+        mdhelp.registerModule(new StatisticManager(cache));
         System.out.println(String.format("Loaded %s modules.", mdhelp.getModules().size()));
     }
 
@@ -110,6 +110,7 @@ public class Main extends ListenerAdapter {
     @Override
     public void onReady(ReadyEvent event) {
         connectToDatabase(event.getJDA());
+        cache = new Cache(dbmg, event.getJDA());
         loadCommands();
         loadModules(event.getJDA());
         try {
@@ -122,12 +123,13 @@ public class Main extends ListenerAdapter {
                 md.run(cmdhelp);
             }
         }
-        cache = new Cache(dbmg, event.getJDA());
+
 
     }
 
     @Override
     public void onGenericEvent(Event event) {
+        //todo run as separate thread
         for (Module md: mdhelp.getModules().keySet()) {
             if (md.getInfo().type== ModuleType.EVENT_MODULE && mdhelp.isEnabled(md)) {
                 md.run(event);

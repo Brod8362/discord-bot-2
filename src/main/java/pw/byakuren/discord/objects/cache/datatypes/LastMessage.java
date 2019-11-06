@@ -8,11 +8,11 @@ import java.sql.Date;
 
 public class LastMessage extends CacheEntry {
 
-    private long serverid;
-    private long userid;
-    private long messageid;
-    private String content;
-    private Date date;
+    public final long serverid;
+    public final long userid;
+    public final long messageid;
+    public final String content;
+    public final Date date;
 
     public LastMessage(Message m) {
         serverid = m.getGuild().getIdLong();
@@ -29,7 +29,6 @@ public class LastMessage extends CacheEntry {
         this.content = content;
         this.date = date;
     }
-
 
     /**
      *
