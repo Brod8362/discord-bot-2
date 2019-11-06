@@ -37,7 +37,6 @@ public class Stop implements Command {
         return true;
     }
 
-
     @Override
     public void run(Message message, List<String> args) {
         JDA jda = message.getJDA();

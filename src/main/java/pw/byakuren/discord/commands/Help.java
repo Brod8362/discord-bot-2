@@ -14,11 +14,6 @@ public class Help implements Command {
         cmdhelp = cmd;
     }
 
-    public Help() {
-    }
-
-
-
     @Override
     public String getName() {
         return "help";

@@ -6,7 +6,6 @@ import pw.byakuren.discord.commands.CommandHelper;
 
 public interface Module {
 
-
     void run(Message message);
 
     void run(CommandHelper cmdhelp);

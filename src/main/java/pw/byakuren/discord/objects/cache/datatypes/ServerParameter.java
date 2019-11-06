@@ -18,7 +18,6 @@ public enum ServerParameter {
         this.type=type;
     }
 
-
     public static ServerParameter stringToSetting(String str) {
         for (ServerParameter s: ServerParameter.values()) {
             if (s.string.equals(str)) return s;

@@ -15,5 +15,4 @@ public interface Command {
 
     void run(Message message, List<String> args);
 
-
 }

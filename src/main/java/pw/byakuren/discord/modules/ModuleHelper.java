@@ -10,6 +10,7 @@ public class ModuleHelper {
     public void registerModule(Module md) {
         modules.put( md, true);
     }
+
     public void registerModule(Module md, boolean enabled) {
         modules.put( md, enabled);
     }

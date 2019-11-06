@@ -7,7 +7,6 @@ import java.util.List;
 
 public class LastMessageFactory extends DatatypeFactory<LastMessage> {
 
-
     public LastMessageFactory(long serverid, DatabaseManager dbmg) {
         super(serverid, dbmg);
     }

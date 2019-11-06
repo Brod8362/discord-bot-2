@@ -86,6 +86,7 @@ public class DatabaseManager {
         }
         return null;
     }
+
     /* Methods for changing server settings and features. */
 
     public void addServerSetting(Guild server, String setting, long value) {
@@ -101,7 +102,7 @@ public class DatabaseManager {
     }
 
     public void removeServerSetting(Guild server, String setting) {
-
+        //todo complete
     }
 
     public void editServerSetting(Guild server, String setting, long newvalue) {
