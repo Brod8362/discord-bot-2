@@ -41,10 +41,11 @@ public class RegexChecker implements Module {
             }
             EmbedBuilder b = new EmbedBuilder();
             b.setTitle("Message matches for keys");
-            b.setDescription(String.format("[Jump](%s)\n%s", message.getJumpUrl(), message.getContentRaw()));
+            b.setDescription(String.format("[Jump](%s)\n%s\n**Matched**: `%s`",
+                    message.getJumpUrl(), message.getContentRaw(),
+                    String.join("`, `", matches)));
             b.setColor(Color.RED);
             b.setAuthor(message.getAuthor().getName(), message.getJumpUrl(), message.getAuthor().getAvatarUrl());
-            b.setFooter("**Matched:** "+String.join(", ", matches), null);
             message.getChannel().sendMessage(b.build()).queue();
         }
     }

@@ -18,8 +18,8 @@ public class WatchUser implements Command {
     }
 
     @Override
-    public String getName() {
-        return "watch";
+    public String[] getNames() {
+        return new String[]{"voicewatch", "vw"};
     }
 
     @Override
@@ -29,7 +29,7 @@ public class WatchUser implements Command {
 
     @Override
     public String getHelp() {
-        return null;
+        return "Add a user to voicewatch.";
     }
 
     @Override

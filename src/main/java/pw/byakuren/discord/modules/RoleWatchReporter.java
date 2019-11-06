@@ -50,13 +50,8 @@ public class RoleWatchReporter implements Module {
         if (lc == null) return;
         EmbedBuilder b = new EmbedBuilder();
         b.setTitle("Watched role"+(rs.size() > 1 ? "s":"")+" pinged");
-        b.setAuthor(m.getMember().getEffectiveName(), m.getAuthor().getEffectiveAvatarUrl());
+        b.setAuthor(m.getMember().getUser().getName(), m.getAuthor().getEffectiveAvatarUrl());
         b.setDescription(m.getContentRaw());
-        List<String> mentions = new ArrayList<>();
-        for (Role r: rs) {
-            mentions.add(r.getAsMention());
-        }
-        b.setFooter(String.join(" ", mentions), null);
         lc.sendMessage(b.build()).queue();
     }
 

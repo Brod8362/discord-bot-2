@@ -18,9 +18,7 @@ import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 
 public class Main extends ListenerAdapter {
@@ -159,24 +157,24 @@ public class Main extends ListenerAdapter {
             arg = msg.substring(prefix.length()); //this is meant to grab the command name
         } catch (StringIndexOutOfBoundsException ignored) {} //this is called when the message is too short or there is no message body
         if (msg.startsWith(prefix)) {
-            for (String key : cmdhelp.getCommands().keySet()) { //check all commands
-                Command cmd = cmdhelp.getCommands().get(key);
-                if (arg.startsWith(cmd.getName())) { //check to see if called command matches a registered one
-                    List<String> args = new ArrayList<>(); //instantiate list for args
-                    Scanner parse = new Scanner(msg.substring(prefix.length() + cmd.getName().length())); //remove command
-                    while (parse.hasNext()) {
-                        args.add(parse.next()); //put all args into list
-                    }
+            for (Map.Entry<String, Command> key : cmdhelp.getCommands().entrySet()) { //check all commands
+                Command cmd = key.getValue();
+                if (arg.startsWith(key.getKey())) { //check to see if called command matches a registered one
+                    List<String> args_raw = Arrays.asList(msg.split(" "));
+                    ArrayList<String> args = new ArrayList<>(args_raw);
+                    args.remove(0);
                     /* For commands that require the user to be the bot hoster */
                     if (cmd.needsBotOwner()) {
                         if (isBotOwner(message.getAuthor())) {
                             cmd.run(message, args);
+                            return;
                         } else {
                             message.addReaction("❌").queue();
                             return;
                         }
                     }
                     cmd.run(message, args); //run given command w/ args
+                    return;
                 }
             }
         }

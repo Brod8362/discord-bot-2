@@ -18,8 +18,8 @@ public class WatchRole implements Command {
     }
 
     @Override
-    public String getName() {
-        return "role";
+    public String[] getNames() {
+        return new String[]{"watchrole", "role", "rw"};
     }
 
     @Override

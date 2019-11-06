@@ -14,8 +14,8 @@ public class Subscribe implements Command {
         this.dbmg = dbmg;
     }
     @Override
-    public String getName() {
-        return "subscribe";
+    public String[] getNames() {
+        return new String[]{"subscribe", "sub"};
     }
 
     @Override

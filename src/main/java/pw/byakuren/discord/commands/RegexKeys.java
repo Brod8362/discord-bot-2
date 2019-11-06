@@ -19,8 +19,8 @@ public class RegexKeys implements Command {
     }
 
     @Override
-    public String getName() {
-        return "regex";
+    public String[] getNames() {
+        return new String[]{"regex","keys"};
     }
 
     @Override
@@ -30,7 +30,7 @@ public class RegexKeys implements Command {
 
     @Override
     public String getHelp() {
-        return null;
+        return "Manage regex keys.";
     }
 
     @Override

@@ -16,8 +16,8 @@ public class Modules implements Command {
     }
 
     @Override
-    public String getName() {
-        return "modules";
+    public String[] getNames() {
+        return new String[]{"modules"};
     }
 
     @Override
@@ -50,7 +50,7 @@ public class Modules implements Command {
             case "list":
                 EmbedBuilder embed = new EmbedBuilder();
                 for (Module md: mdhelp.getModules().keySet()) {
-                    embed.addField(md.getInfo().name, String.valueOf(mdhelp.isEnabled(md)), false);
+                    embed.addField(md.getInfo().name, String.valueOf(mdhelp.isEnabled(md)), true);
                 }
                 if (mdhelp.getModules().keySet().size() == 0) {
                     embed.addField("No modules found.", "", false);

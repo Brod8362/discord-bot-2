@@ -18,8 +18,8 @@ public class UserInfo implements Command {
     }
 
     @Override
-    public String getName() {
-        return "ui";
+    public String[] getNames() {
+        return new String[]{"userinfo", "uinfo", "ui"};
     }
 
     @Override

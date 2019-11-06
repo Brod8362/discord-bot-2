@@ -8,8 +8,8 @@ import java.util.List;
 public class Invite implements Command {
 
     @Override
-    public String getName() {
-        return "invite";
+    public String[] getNames() {
+        return new String[]{"invite","inv"};
     }
 
     @Override

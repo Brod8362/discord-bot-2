@@ -15,8 +15,8 @@ public class ExcludedChannels implements Command {
     }
 
     @Override
-    public String getName() {
-        return "exclude";
+    public String[] getNames() {
+        return new String[]{"exclude"};
     }
 
     @Override
@@ -26,7 +26,7 @@ public class ExcludedChannels implements Command {
 
     @Override
     public String getHelp() {
-        return null;
+        return "Exclude a channel from being flagged for regex keywords.";
     }
 
     @Override

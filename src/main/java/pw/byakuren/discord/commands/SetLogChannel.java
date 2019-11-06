@@ -19,8 +19,8 @@ public class SetLogChannel implements Command {
     }
 
     @Override
-    public String getName() {
-        return "slc";
+    public String[] getNames() {
+        return new String[]{"logchannel","setlogchannel","slc"};
     }
 
     @Override

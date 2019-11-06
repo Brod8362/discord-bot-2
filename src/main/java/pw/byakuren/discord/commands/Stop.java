@@ -18,8 +18,8 @@ public class Stop implements Command {
     }
 
     @Override
-    public String getName() {
-        return "stop";
+    public String[] getNames() {
+        return new String[]{"stop"};
     }
 
     @Override

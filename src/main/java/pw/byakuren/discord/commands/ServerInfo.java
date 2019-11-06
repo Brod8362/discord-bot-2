@@ -7,9 +7,10 @@ import net.dv8tion.jda.api.entities.Message;
 import java.util.List;
 
 public class ServerInfo implements Command {
+
     @Override
-    public String getName() {
-        return "si";
+    public String[] getNames() {
+        return new String[]{"serverinfo", "sinfo", "si"};
     }
 
     @Override
