@@ -3,6 +3,7 @@ package pw.byakuren.discord.commands;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import pw.byakuren.discord.DatabaseManager;
+import pw.byakuren.discord.commands.permissions.CommandPermission;
 import pw.byakuren.discord.objects.cache.Cache;
 import pw.byakuren.discord.objects.cache.ServerCache;
 import pw.byakuren.discord.objects.cache.datatypes.WatchedUser;
@@ -33,8 +34,8 @@ public class WatchUser implements Command {
     }
 
     @Override
-    public boolean needsBotOwner() {
-        return false;
+    public CommandPermission minimumPermission() {
+        return CommandPermission.MOD_ROLE;
     }
 
     @Override

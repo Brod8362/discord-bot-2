@@ -2,8 +2,11 @@ package pw.byakuren.discord.commands;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
+import pw.byakuren.discord.commands.permissions.CommandPermission;
 
 import java.util.List;
+
+import static pw.byakuren.discord.commands.permissions.CommandPermission.REGULAR_USER;
 
 public class Invite implements Command {
 
@@ -23,8 +26,8 @@ public class Invite implements Command {
     }
 
     @Override
-    public boolean needsBotOwner() {
-        return false;
+    public CommandPermission minimumPermission() {
+        return REGULAR_USER;
     }
 
     @Override

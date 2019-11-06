@@ -3,6 +3,7 @@ package pw.byakuren.discord.commands;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import pw.byakuren.discord.commands.permissions.CommandPermission;
 import pw.byakuren.discord.objects.Statistic;
 import pw.byakuren.discord.objects.cache.Cache;
 import pw.byakuren.discord.objects.cache.datatypes.UserStats;
@@ -33,8 +34,8 @@ public class UserInfo implements Command {
     }
 
     @Override
-    public boolean needsBotOwner() {
-        return false;
+    public CommandPermission minimumPermission() {
+        return CommandPermission.REGULAR_USER;
     }
 
     @Override

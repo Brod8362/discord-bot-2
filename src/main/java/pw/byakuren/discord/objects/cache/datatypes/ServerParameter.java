@@ -2,7 +2,8 @@ package pw.byakuren.discord.objects.cache.datatypes;
 
 public enum ServerParameter {
 
-    SERVER_LOG_CHANNEL("log_channel", "Server Log Channel", ServerSettingType.CHANNEL);
+    SERVER_LOG_CHANNEL("log_channel", "Server Log Channel", ServerSettingType.CHANNEL),
+    SERVER_MODERATOR_ROLE("mod_role", "Server Moderator ROle", ServerSettingType.ROLE);
 
     enum ServerSettingType {
         CHANNEL, ROLE, BOOLEAN, INTEGER;

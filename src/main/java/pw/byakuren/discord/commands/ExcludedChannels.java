@@ -3,8 +3,11 @@ package pw.byakuren.discord.commands;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import pw.byakuren.discord.DatabaseManager;
+import pw.byakuren.discord.commands.permissions.CommandPermission;
 
 import java.util.List;
+
+import static pw.byakuren.discord.commands.permissions.CommandPermission.MOD_ROLE;
 
 public class ExcludedChannels implements Command {
 
@@ -30,8 +33,8 @@ public class ExcludedChannels implements Command {
     }
 
     @Override
-    public boolean needsBotOwner() {
-        return false;
+    public CommandPermission minimumPermission() {
+        return MOD_ROLE;
     }
 
     @Override

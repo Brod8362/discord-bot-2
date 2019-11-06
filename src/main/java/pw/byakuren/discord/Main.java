@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.RateLimitedException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import pw.byakuren.discord.commands.*;
+import pw.byakuren.discord.commands.permissions.CommandPermission;
 import pw.byakuren.discord.modules.*;
 import pw.byakuren.discord.modules.Module;
 import pw.byakuren.discord.objects.cache.Cache;
@@ -80,7 +81,7 @@ public class Main extends ListenerAdapter {
         cmdhelp.registerCommand(new Stop(dbmg, cache));
         cmdhelp.registerCommand(new Invite());
         cmdhelp.registerCommand(new Modules(mdhelp));
-        cmdhelp.registerCommand(new Help(cmdhelp));
+        cmdhelp.registerCommand(new Help(cmdhelp, cache));
         cmdhelp.registerCommand(new UserInfo(cache));
         cmdhelp.registerCommand(new ServerInfo());
         cmdhelp.registerCommand(new RegexKeys(cache));
@@ -156,26 +157,20 @@ public class Main extends ListenerAdapter {
             arg = msg.substring(prefix.length()); //this is meant to grab the command name
         } catch (StringIndexOutOfBoundsException ignored) {} //this is called when the message is too short or there is no message body
         if (msg.startsWith(prefix)) {
-            for (Map.Entry<String, Command> key : cmdhelp.getCommands().entrySet()) { //check all commands
-                Command cmd = key.getValue();
-                if (arg.startsWith(key.getKey())) { //check to see if called command matches a registered one
-                    List<String> args_raw = Arrays.asList(msg.split(" "));
-                    ArrayList<String> args = new ArrayList<>(args_raw);
-                    args.remove(0);
-                    /* For commands that require the user to be the bot hoster */
-                    if (cmd.needsBotOwner()) {
-                        if (isBotOwner(message.getAuthor())) {
-                            cmd.run(message, args);
-                            return;
-                        } else {
-                            message.addReaction("❌").queue();
-                            return;
-                        }
-                    }
-                    cmd.run(message, args); //run given command w/ args
-                    return;
-                }
+            List<String> args_raw = Arrays.asList(msg.split(" "));
+            ArrayList<String> args = new ArrayList<>(args_raw);
+            Command cmd = cmdhelp.getCommand(args.remove(0).substring(prefix.length()));
+            if (cmd == null) {
+                message.addReaction("❔").queue();
+                return;
             }
+            /* Command permission checking */
+            CommandPermission perm = CommandPermission.getPermission(event.getMember(), cache);
+            if (perm.ordinal() >= cmd.minimumPermission().ordinal()) {
+                new Thread(() -> cmd.run(message, args)).start();
+                return;
+            }
+            message.addReaction("❌").queue();
         }
     }
 }

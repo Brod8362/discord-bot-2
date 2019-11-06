@@ -3,6 +3,7 @@ package pw.byakuren.discord.commands;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
 import pw.byakuren.discord.DatabaseManager;
+import pw.byakuren.discord.commands.permissions.CommandPermission;
 import pw.byakuren.discord.objects.cache.Cache;
 
 import java.util.List;
@@ -33,8 +34,8 @@ public class Stop implements Command {
     }
 
     @Override
-    public boolean needsBotOwner() {
-        return true;
+    public CommandPermission minimumPermission() {
+        return CommandPermission.BOT_OWNER;
     }
 
     @Override

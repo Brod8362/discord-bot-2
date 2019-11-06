@@ -154,4 +154,13 @@ public class ServerCache {
         }
         return false;
     }
+
+    public Role getModeratorRole(JDA jda) {
+        for (ServerSettings s: settings.getData()) {
+            if (s.getSetting()==ServerParameter.SERVER_MODERATOR_ROLE) {
+                return jda.getRoleById(s.getValue());
+            }
+        }
+        return null;
+    }
 }

@@ -2,6 +2,7 @@ package pw.byakuren.discord.commands;
 
 import net.dv8tion.jda.api.entities.Message;
 import pw.byakuren.discord.DatabaseManager;
+import pw.byakuren.discord.commands.permissions.CommandPermission;
 import pw.byakuren.discord.objects.cache.Cache;
 import pw.byakuren.discord.objects.cache.datatypes.RegexKey;
 
@@ -34,8 +35,8 @@ public class RegexKeys implements Command {
     }
 
     @Override
-    public boolean needsBotOwner() {
-        return false;
+    public CommandPermission minimumPermission() {
+        return CommandPermission.MOD_ROLE;
     }
 
     @Override

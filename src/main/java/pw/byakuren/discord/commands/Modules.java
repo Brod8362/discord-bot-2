@@ -2,6 +2,7 @@ package pw.byakuren.discord.commands;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
+import pw.byakuren.discord.commands.permissions.CommandPermission;
 import pw.byakuren.discord.modules.Module;
 import pw.byakuren.discord.modules.ModuleHelper;
 
@@ -31,8 +32,8 @@ public class Modules implements Command {
     }
 
     @Override
-    public boolean needsBotOwner() {
-        return false;
+    public CommandPermission minimumPermission() {
+        return CommandPermission.BOT_OWNER;
     }
 
     @Override
