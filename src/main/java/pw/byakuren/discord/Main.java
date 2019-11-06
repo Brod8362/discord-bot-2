@@ -99,6 +99,7 @@ public class Main extends ListenerAdapter {
         mdhelp.registerModule(new StatisticManager(cache));
         mdhelp.registerModule(new RegexChecker(cache));
         mdhelp.registerModule(new VoiceWatchReporter(cache));
+        mdhelp.registerModule(new RoleWatchReporter(cache));
         System.out.println(String.format("Loaded %s modules.", mdhelp.getModules().size()));
     }
 
