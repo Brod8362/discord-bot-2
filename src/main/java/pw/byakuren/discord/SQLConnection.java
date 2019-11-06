@@ -487,6 +487,10 @@ public class SQLConnection {
     }
 
     public void editServerSetting(long server, String setting, long val) throws SQLException {
+        if (!checkServerSettingExists(server, setting)) {
+            addServerSetting(server, setting, val);
+            return;
+        }
         modifyServerSetting.setLong(1, val);
         modifyServerSetting.setLong(2, server);
         modifyServerSetting.setString(3, setting);

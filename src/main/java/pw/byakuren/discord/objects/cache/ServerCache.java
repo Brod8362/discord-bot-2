@@ -32,15 +32,15 @@ public class ServerCache {
     ServerCache(long id, DatabaseManager dbmg, JDA jda) {
         this.id = id;
         userdata = new CacheObject<>(id, dbmg, new UserStatsFactory(id, dbmg));
-//        settings = new CacheObject<>(id, dbmg, new ServerSettingsFactory(id, dbmg));
-        //todo implement settings cache
+        settings = new CacheObject<>(id, dbmg, new ServerSettingsFactory(id, dbmg));
+
         regex_keys = new CacheObject<>(id, dbmg, new RegexKeyFactory(id, dbmg));
         watched_users = new CacheObject<>(id, dbmg, new WatchedUserFactory(id, dbmg, jda));
         watched_roles = new CacheObject<>(id, dbmg, new WatchedRoleFactory(id, dbmg, jda));
         excluded_channels = new CacheObject<>(id, dbmg, new ExcludedChannelFactory(id, dbmg));
         last_messages = new CacheObject<>(id, dbmg, new LastMessageFactory(id, dbmg));
         moderator_subscriptions = new CacheObject<>(id, dbmg, new SubscriptionFactory(id, dbmg));
-        objects = new CacheObject[]{userdata, /*settings,*/ regex_keys, watched_roles, watched_users, excluded_channels, last_messages, moderator_subscriptions};
+        objects = new CacheObject[]{userdata, settings, regex_keys, watched_roles, watched_users, excluded_channels, last_messages, moderator_subscriptions};
         write_thread = new ServerWriteThread(id, objects);
     }
 
