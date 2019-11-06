@@ -19,6 +19,14 @@ public class WatchedUser extends CacheEntry {
         this.serverid = user.getGuild().getIdLong();
     }
 
+    public long getServerId() {
+        return serverid;
+    }
+
+    public Member getUser() {
+        return user;
+    }
+
     @Override
     protected void write(DatabaseManager dbmg) {
         dbmg.addWatchedUser(user);

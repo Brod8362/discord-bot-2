@@ -88,8 +88,8 @@ public class Main extends ListenerAdapter {
         cmdhelp.registerCommand(new RegexKeys(cache));
         cmdhelp.registerCommand(new ExcludedChannels(dbmg));
         cmdhelp.registerCommand(new Subscribe(dbmg));
-        cmdhelp.registerCommand(new WatchUser(dbmg));
-        cmdhelp.registerCommand(new WatchRole(dbmg));
+        cmdhelp.registerCommand(new WatchUser(cache));
+        cmdhelp.registerCommand(new WatchRole(cache));
         cmdhelp.registerCommand(new SetLogChannel(cache));
 
         System.out.println(String.format("Loaded %s commands.", cmdhelp.getCommands().size()));
@@ -98,6 +98,7 @@ public class Main extends ListenerAdapter {
     private void loadModules(JDA jda) {
         mdhelp.registerModule(new StatisticManager(cache));
         mdhelp.registerModule(new RegexChecker(cache));
+        mdhelp.registerModule(new VoiceWatchReporter(cache));
         System.out.println(String.format("Loaded %s modules.", mdhelp.getModules().size()));
     }
 
@@ -121,8 +122,6 @@ public class Main extends ListenerAdapter {
                 md.run(cmdhelp);
             }
         }
-
-
     }
 
     @Override

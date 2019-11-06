@@ -2,9 +2,11 @@ package pw.byakuren.discord.objects.cache;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import pw.byakuren.discord.DatabaseManager;
+import pw.byakuren.discord.commands.WatchRole;
 import pw.byakuren.discord.objects.cache.datatypes.*;
 import pw.byakuren.discord.objects.cache.factories.*;
 
@@ -117,5 +119,45 @@ public class ServerCache {
             }
         }
         return null;
+    }
+
+    public List<WatchedRole> getAllValidWatchedRoles() {
+        List<WatchedRole> a = new ArrayList<>(watched_roles.getData());
+        for (int i =0; i < a.size(); i++) {
+            if (a.get(i).write_state==PENDING_DELETE) {
+                a.remove(i);
+                i--;
+            }
+        }
+        return a;
+    }
+
+    public boolean roleIsWatched(Role r) {
+        for (WatchedRole wr: getAllValidWatchedRoles()) {
+            if (wr.getRole().getIdLong()==r.getIdLong()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public List<WatchedUser> getAllValidWatchedUsers() {
+        List<WatchedUser> a = new ArrayList<>(watched_users.getData());
+        for (int i =0; i < a.size(); i++) {
+            if (a.get(i).write_state==PENDING_DELETE) {
+                a.remove(i);
+                i--;
+            }
+        }
+        return a;
+    }
+
+    public boolean userIsWatched(Member m) {
+        for (WatchedUser wu: getAllValidWatchedUsers()) {
+            if (wu.getUser().getUser().getIdLong()==m.getUser().getIdLong()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

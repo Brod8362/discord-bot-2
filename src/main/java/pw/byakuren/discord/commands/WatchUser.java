@@ -3,15 +3,18 @@ package pw.byakuren.discord.commands;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import pw.byakuren.discord.DatabaseManager;
+import pw.byakuren.discord.objects.cache.Cache;
+import pw.byakuren.discord.objects.cache.ServerCache;
+import pw.byakuren.discord.objects.cache.datatypes.WatchedUser;
 
 import java.util.List;
 
 public class WatchUser implements Command {
 
-    private DatabaseManager dbmg;
+    private Cache c;
 
-    public WatchUser(DatabaseManager dbmg) {
-        this.dbmg = dbmg;
+    public WatchUser(Cache c) {
+        this.c = c;
     }
 
     @Override
@@ -36,28 +39,36 @@ public class WatchUser implements Command {
 
     @Override
     public void run(Message message, List<String> args) {
+        ServerCache sc = c.getServerCache(message.getGuild());
         if (args.size() < 1) return;
         switch (args.get(0)) {
             case "add":
                 for (Member m: message.getMentionedMembers()) {
-                    if (!dbmg.checkWatchedUser(m))
-                        dbmg.addWatchedUser(m);
+                    if (!sc.userIsWatched(m))
+                        sc.getWatchedUsers().getData().add(new WatchedUser(m));
                 }
                 message.addReaction("\uD83D\uDC4D").queue();
                 break;
             case "remove":
                 for (Member m: message.getMentionedMembers()) {
-                    if (dbmg.checkWatchedUser(m))
-                        dbmg.removeWatchedUser(m);
+                    if (sc.userIsWatched(m)) {
+                        for (int i = 0; i < sc.getWatchedUsers().getData().size(); i++) {
+                            if (sc.getWatchedUsers().getData().get(i).getUser().getUser().getIdLong()==
+                                    m.getUser().getIdLong()) {
+                                sc.getWatchedUsers().getData().remove(i);
+                                i--;
+                            }
+                        }
+                    }
                 }
                 message.addReaction("\uD83D\uDC4D").queue();
                 break;
             case "list":
-                List<Long> list = dbmg.getWatchedUsers(message.getGuild());
+                List<WatchedUser> list = sc.getAllValidWatchedUsers();
                 StringBuilder s = new StringBuilder();
                 s.append("Watched users:\n");
-                for (Long aList : list) {
-                    s.append("<@").append(aList).append("> ");
+                for (WatchedUser wu : list) {
+                    s.append(wu.getUser().getAsMention()).append(" ");
                 }
                 message.getChannel().sendMessage(s.toString()).queue();
                 break;
