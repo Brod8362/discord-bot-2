@@ -80,13 +80,11 @@ public class Main extends ListenerAdapter {
 
     private void loadCommands() {
         cmdhelp.registerCommand(new Stop(dbmg, cache));
-        cmdhelp.registerCommand(new Test());
         cmdhelp.registerCommand(new Invite());
         cmdhelp.registerCommand(new Modules(mdhelp));
         cmdhelp.registerCommand(new Help(cmdhelp));
         cmdhelp.registerCommand(new UserInfo(cache));
         cmdhelp.registerCommand(new ServerInfo());
-        cmdhelp.registerCommand(new SQL(dbmg));
         cmdhelp.registerCommand(new RegexKeys(cache));
         cmdhelp.registerCommand(new ExcludedChannels(dbmg));
         cmdhelp.registerCommand(new Subscribe(dbmg));
