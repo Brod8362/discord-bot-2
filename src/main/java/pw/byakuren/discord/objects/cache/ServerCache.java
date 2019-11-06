@@ -2,6 +2,7 @@ package pw.byakuren.discord.objects.cache;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import pw.byakuren.discord.DatabaseManager;
 import pw.byakuren.discord.objects.cache.datatypes.*;
@@ -107,5 +108,14 @@ public class ServerCache {
             }
         }
         return keys;
+    }
+
+    public TextChannel getLogChannel(JDA jda) {
+        for (ServerSettings s: settings.getData()) {
+            if (s.getSetting()==ServerParameter.SERVER_LOG_CHANNEL) {
+                return jda.getTextChannelById(s.getValue());
+            }
+        }
+        return null;
     }
 }

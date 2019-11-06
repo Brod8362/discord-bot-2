@@ -10,10 +10,8 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.RateLimitedException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import pw.byakuren.discord.commands.*;
+import pw.byakuren.discord.modules.*;
 import pw.byakuren.discord.modules.Module;
-import pw.byakuren.discord.modules.ModuleHelper;
-import pw.byakuren.discord.modules.ModuleType;
-import pw.byakuren.discord.modules.StatisticManager;
 import pw.byakuren.discord.objects.cache.Cache;
 
 import javax.security.auth.login.LoginException;
@@ -101,6 +99,7 @@ public class Main extends ListenerAdapter {
 
     private void loadModules(JDA jda) {
         mdhelp.registerModule(new StatisticManager(cache));
+        mdhelp.registerModule(new RegexChecker(cache));
         System.out.println(String.format("Loaded %s modules.", mdhelp.getModules().size()));
     }
 
