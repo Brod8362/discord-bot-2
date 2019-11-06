@@ -52,7 +52,6 @@ public class UserInfo implements Command {
         embed.addField("ID", u.getUser().getId(), true);
         embed.addField("Joined At", u.getTimeJoined().toString(), true);
         embed.addField("Account Creation Date", u.getUser().getTimeCreated().toString(), true);
-        //TODO - add fields from DB in here
         UserStats stats = c.getServerCache(u.getGuild()).getStatsForUser(u);
         if (stats != null) {
             for (Statistic s: Statistic.values()) {
