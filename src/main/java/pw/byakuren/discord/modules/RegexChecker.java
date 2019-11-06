@@ -23,6 +23,7 @@ public class RegexChecker implements Module {
 
     @Override
     public void run(Message message) {
+        if (message.getAuthor().isBot()) return;
         ServerCache sc = c.getServerCache(message.getGuild());
         List<RegexKey> keys = sc.getAllValidRegexKeys();
         List<String> matches = new ArrayList<>();

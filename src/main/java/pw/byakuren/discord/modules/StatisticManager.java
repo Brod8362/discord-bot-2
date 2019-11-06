@@ -6,8 +6,6 @@ import net.dv8tion.jda.api.events.Event;
 import net.dv8tion.jda.api.events.message.MessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
-import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;
-import pw.byakuren.discord.DatabaseManager;
 import pw.byakuren.discord.commands.CommandHelper;
 import pw.byakuren.discord.objects.Statistic;
 import pw.byakuren.discord.objects.cache.Cache;
@@ -49,6 +47,7 @@ public class StatisticManager implements Module {
     private void messageEvent(Event e) {
         MessageReceivedEvent ev = (MessageReceivedEvent) e;
         Message m = ev.getMessage();
+        if (m.getAuthor().isBot()) return;
         Guild g = m.getGuild();
         ServerCache sc = c.getServerCache(g);
         List<LastMessage> msgs = sc.getLastMessages().getData();
@@ -85,6 +84,7 @@ public class StatisticManager implements Module {
     private void messageReactionAddEvent(Event e) {
         MessageReactionAddEvent ev = (MessageReactionAddEvent) e;
         Message m = ev.getTextChannel().getMessageById(ev.getMessageId()).complete();
+        if (ev.getMember().getUser().isBot() || m.getAuthor().isBot()) return;
         Guild g = m.getGuild();
         ServerCache sc = c.getServerCache(g);
         //increment reaction recv
