@@ -25,6 +25,7 @@ public class RoleWatchReporter implements Module {
     public void run(Message message) {
         if (message.getAuthor().isBot()) return;
         ServerCache sc = c.getServerCache(message.getGuild());
+        if (sc.channelIsExcluded(message.getTextChannel())) return;
         List<Role> roles = new ArrayList<>();
         for (Role r: message.getMentionedRoles()) {
             if (sc.roleIsWatched(r)) {

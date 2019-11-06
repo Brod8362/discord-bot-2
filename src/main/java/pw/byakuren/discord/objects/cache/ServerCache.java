@@ -171,4 +171,32 @@ public class ServerCache {
             }
         }
     }
+
+    public List<ExcludedChannel> getAllValidExcludedChannels() {
+        List<ExcludedChannel> a = new ArrayList<>(excluded_channels.getData());
+        for (int i =0; i < a.size(); i++) {
+            if (a.get(i).write_state==PENDING_DELETE) {
+                a.remove(i);
+                i--;
+            }
+        }
+        return a;
+    }
+
+    public boolean channelIsExcluded(TextChannel c) {
+        for (ExcludedChannel ex: getAllValidExcludedChannels()) {
+            if (ex.getChannel().getIdLong()==c.getIdLong()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void removeExcludedChannel(TextChannel c) {
+        for (ExcludedChannel ex: excluded_channels.getData()) {
+            if (ex.getChannel().getIdLong()==c.getIdLong()) {
+                ex.write_state=PENDING_DELETE;
+            }
+        }
+    }
 }

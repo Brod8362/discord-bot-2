@@ -26,6 +26,7 @@ public class RegexChecker implements Module {
     public void run(Message message) {
         if (message.getAuthor().isBot()) return;
         ServerCache sc = c.getServerCache(message.getGuild());
+        if (sc.channelIsExcluded(message.getTextChannel())) return;
         List<RegexKey> keys = sc.getAllValidRegexKeys();
         List<String> matches = new ArrayList<>();
         for (RegexKey k: keys) {

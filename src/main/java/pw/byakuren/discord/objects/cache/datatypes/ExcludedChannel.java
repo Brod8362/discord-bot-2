@@ -29,6 +29,18 @@ public class ExcludedChannel extends CacheEntry {
         return null;
     }
 
+    public long getServerid() {
+        return serverid;
+    }
+
+    public TextChannel getChannel() {
+        return channel;
+    }
+
+    public String getChannelMention() {
+        return channel.getAsMention();
+    }
+
     @Override
     protected void write(DatabaseManager dbmg) {
         dbmg.addExcludedChannel(channel);
