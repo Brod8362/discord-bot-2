@@ -107,7 +107,7 @@ public class SQLConnection {
     }
 
     private boolean verifyTables() {
-        return (getTables().size() == 8);
+        return (getTables().size() == 7);
     }
 
 
