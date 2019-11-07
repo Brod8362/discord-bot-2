@@ -126,10 +126,9 @@ public class Main extends ListenerAdapter {
 
     @Override
     public void onGenericEvent(Event event) {
-        //todo run as separate thread
         for (Module md: mdhelp.getModules().keySet()) {
             if (md.getInfo().type== ModuleType.EVENT_MODULE && mdhelp.isEnabled(md)) {
-                md.run(event);
+                new Thread(() -> md.run(event)).start();
             }
         }
     }
@@ -149,14 +148,10 @@ public class Main extends ListenerAdapter {
 
         for (Module md: mdhelp.getModules().keySet()) {
             if (md.getInfo().type==ModuleType.MESSAGE_MODULE && mdhelp.isEnabled(md)) {
-                md.run(message);
+                new Thread(() -> md.run(message)).start();
             }
         }
 
-        String arg = "";
-        try {
-            arg = msg.substring(prefix.length()); //this is meant to grab the command name
-        } catch (StringIndexOutOfBoundsException ignored) {} //this is called when the message is too short or there is no message body
         if (msg.startsWith(prefix)) {
             List<String> args_raw = Arrays.asList(msg.split(" "));
             ArrayList<String> args = new ArrayList<>(args_raw);
