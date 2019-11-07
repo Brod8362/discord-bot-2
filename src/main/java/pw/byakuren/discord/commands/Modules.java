@@ -7,6 +7,7 @@ import pw.byakuren.discord.modules.Module;
 import pw.byakuren.discord.modules.ModuleHelper;
 
 import java.util.List;
+import java.util.Map;
 
 public class Modules implements Command {
 
@@ -50,9 +51,13 @@ public class Modules implements Command {
                 break;
             case "list":
                 EmbedBuilder embed = new EmbedBuilder();
-                for (Module md: mdhelp.getModules().keySet()) {
-                    embed.addField(md.getInfo().name, String.valueOf(mdhelp.isEnabled(md)), true);
+                StringBuilder s = new StringBuilder();
+                for (Map.Entry<Module, Boolean> e: mdhelp.getModules().entrySet()) {
+                    s.append(String.format("**%s** - %s\n", e.getKey().getInfo().name,
+                            (e.getValue() ? "enabled":"disabled")));
                 }
+                embed.setDescription(s);
+                embed.setTitle("Loaded modules");
                 if (mdhelp.getModules().keySet().size() == 0) {
                     embed.addField("No modules found.", "", false);
                 }

@@ -8,6 +8,9 @@ public class ModuleHelper {
     private Map<Module, Boolean> modules = new HashMap<>();
 
     public void registerModule(Module md) {
+        if (md.getInfo().name.contains(" ")) {
+            throw new IllegalArgumentException("Module name cannot have spaces");
+        }
         modules.put( md, true);
     }
 
