@@ -2,10 +2,12 @@ package pw.byakuren.discord;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.Event;
 import net.dv8tion.jda.api.events.ReadyEvent;
+import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.RateLimitedException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -168,5 +170,13 @@ public class Main extends ListenerAdapter {
             }
             message.addReaction("❌").queue();
         }
+    }
+
+    @Override
+    public void onGuildJoin(GuildJoinEvent event) {
+        Guild g =event.getGuild();
+        System.out.println("Joined new server "+g.getName());
+        cache.getServerCache(g);
+        System.out.println("Loaded cache for "+g.getName());
     }
 }
