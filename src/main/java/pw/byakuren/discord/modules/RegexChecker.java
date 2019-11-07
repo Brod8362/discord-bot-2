@@ -10,8 +10,7 @@ import pw.byakuren.discord.objects.cache.ServerCache;
 import pw.byakuren.discord.objects.cache.datatypes.RegexKey;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 import java.util.List;
 
 public class RegexChecker implements Module {
@@ -28,12 +27,11 @@ public class RegexChecker implements Module {
         ServerCache sc = c.getServerCache(message.getGuild());
         if (sc.channelIsExcluded(message.getTextChannel())) return;
         List<RegexKey> keys = sc.getAllValidRegexKeys();
-        List<String> matches = new ArrayList<>();
-        for (RegexKey k: keys) {
-            if (message.getContentRaw().matches(k.getKey())) {
-                matches.add(k.getKey());
-            }
-        }
+        Set<String> matches = new HashSet<>();
+        for (RegexKey k: keys) //match single words
+            for (String s: message.getContentRaw().split(" "))
+                if (s.matches(k.getKey()))
+                    matches.add(k.getKey());
         if (matches.size() > 0) {
             TextChannel log = sc.getLogChannel(message.getJDA());
             if (log==null) {
