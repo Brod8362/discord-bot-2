@@ -58,7 +58,8 @@ public class RegexChecker implements Module {
             b.setColor(Color.RED);
             b.setAuthor(message.getAuthor().getName(), message.getJumpUrl(), message.getAuthor().getAvatarUrl());
             b.setFooter(new Date().toString(), null);
-            message.getChannel().sendMessage(b.build()).queue();
+            TextChannel lc = sc.getLogChannel(message.getJDA());
+            lc.sendMessage(b.build()).queue();
         }
     }
 
