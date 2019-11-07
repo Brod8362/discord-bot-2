@@ -28,10 +28,21 @@ public class RegexChecker implements Module {
         if (sc.channelIsExcluded(message.getTextChannel())) return;
         List<RegexKey> keys = sc.getAllValidRegexKeys();
         Set<String> matches = new HashSet<>();
+        Set<String> str_matches = new HashSet<>();
         for (RegexKey k: keys) //match single words
-            for (String s: message.getContentRaw().split(" "))
-                if (s.matches(k.getKey()))
+            for (String s: message.getContentDisplay().split(" "))
+                if (s.matches(k.getKey())) {
                     matches.add(k.getKey());
+                    str_matches.add(s);
+                }
+        StringBuilder highlighted = new StringBuilder();
+        for (String s: message.getContentDisplay().split(" ")) {
+            if (str_matches.contains(s)) {
+                highlighted.append("__").append(s).append("__ ");
+            } else {
+                highlighted.append(s).append(" ");
+            }
+        }
         if (matches.size() > 0) {
             TextChannel log = sc.getLogChannel(message.getJDA());
             if (log==null) {
@@ -42,7 +53,7 @@ public class RegexChecker implements Module {
             EmbedBuilder b = new EmbedBuilder();
             b.setTitle("Message matches for keys");
             b.setDescription(String.format("[Jump](%s)\n%s\n**Matched**: `%s`",
-                    message.getJumpUrl(), message.getContentRaw(),
+                    message.getJumpUrl(), highlighted,
                     String.join("`, `", matches)));
             b.setColor(Color.RED);
             b.setAuthor(message.getAuthor().getName(), message.getJumpUrl(), message.getAuthor().getAvatarUrl());
