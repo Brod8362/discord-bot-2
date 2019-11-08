@@ -2,6 +2,7 @@ package pw.byakuren.discord.objects.cache;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.User;
 import pw.byakuren.discord.DatabaseManager;
 
 import java.util.HashMap;
@@ -12,10 +13,12 @@ public class Cache {
     private Map<Long, ServerCache> servers = new HashMap<>();
     private DatabaseManager dbmg;
     private JDA jda;
+    public final User owner;
 
     public Cache(DatabaseManager dbmg, JDA jda) {
         this.dbmg = dbmg;
         this.jda = jda;
+        owner = jda.getApplicationInfo().complete().getOwner();
         System.out.println("Retrieving all server caches...");
         loadAllServerCaches();
         System.out.println("Cache retrieval complete.");

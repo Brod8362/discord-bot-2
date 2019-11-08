@@ -17,8 +17,7 @@ public enum CommandPermission {
     }
 
     public static CommandPermission getPermission(Member m, Cache c) {
-        User owner = m.getJDA().getApplicationInfo().complete().getOwner();
-        if (m.getUser().getIdLong()==owner.getIdLong()) return BOT_OWNER;
+        if (m.getUser().getIdLong()==c.owner.getIdLong()) return BOT_OWNER;
         if (m.getPermissions().contains(Permission.ADMINISTRATOR)) return SERVER_ADMIN;
         Role r = c.getServerCache(m.getGuild()).getModeratorRole(m.getJDA());
         if (r != null && m.getRoles().contains(r)) return MOD_ROLE;

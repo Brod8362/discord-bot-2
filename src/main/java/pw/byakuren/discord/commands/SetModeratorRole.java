@@ -3,6 +3,8 @@ package pw.byakuren.discord.commands;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
 import pw.byakuren.discord.commands.permissions.CommandPermission;
+import pw.byakuren.discord.commands.subcommands.Subcommand;
+import pw.byakuren.discord.commands.subcommands.SubcommandList;
 import pw.byakuren.discord.objects.cache.Cache;
 import pw.byakuren.discord.objects.cache.ServerCache;
 import pw.byakuren.discord.objects.cache.WriteState;
@@ -21,10 +23,23 @@ public class SetModeratorRole extends Command {
         minimum_permission=CommandPermission.SERVER_ADMIN;
 
         this.c = c;
+
+        subcommands.add(new SubcommandList(this));
+        subcommands.add(new Subcommand(new String[]{"set", "here"}, "Set the moderator role to the mentioned role.", "[@Role]", this) {
+            @Override
+            public void run(Message message, List<String> args) {
+                set(message, args);
+            }
+        });
+        subcommands.add(new Subcommand(new String[]{"view", "v"}, "See the existing moderator role.", null, this) {
+            @Override
+            public void run(Message message, List<String> args) {
+                view(message, args);
+            }
+        });
     }
 
-    @Override
-    public void run(Message message, List<String> args) {
+    private void set(Message message, List<String> args) {
         ServerCache sc = c.getServerCache(message.getGuild());
         Role r = message.getMentionedRoles().get(0);
         Role modr = sc.getModeratorRole(message.getJDA());
@@ -37,5 +52,11 @@ public class SetModeratorRole extends Command {
             sc.getSettings().getData().add(setting);
         }
         message.getChannel().sendMessage("Moderator role set to "+r.getAsMention()).queue();
+    }
+
+    private void view(Message message, List<String> args) {
+        Role r = c.getServerCache(message.getGuild()).getModeratorRole(message.getJDA());
+        message.getChannel().sendMessage(r != null ? "Moderator role is currently set to "+r.getAsMention() :
+                "Moderator role is not set.").queue();
     }
 }

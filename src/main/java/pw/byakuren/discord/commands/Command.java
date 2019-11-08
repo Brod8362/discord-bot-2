@@ -6,6 +6,7 @@ import pw.byakuren.discord.commands.permissions.CommandPermission;
 import pw.byakuren.discord.commands.subcommands.Subcommand;
 import pw.byakuren.discord.objects.cache.Cache;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Command {
@@ -14,7 +15,7 @@ public abstract class Command {
     protected CommandPermission minimum_permission;
     protected String syntax;
     protected String help;
-    protected List<Subcommand> subcommands;
+    protected List<Subcommand> subcommands = new ArrayList<>();
 
     public Command() { }
 
@@ -43,7 +44,7 @@ public abstract class Command {
          return CommandPermission.getPermission(m, c).ordinal() >= minimumPermission().ordinal();
     }
 
-    private final Subcommand getDefaultCommand() {
+    private Subcommand getDefaultCommand() {
         assert subcommands != null;
         if (subcommands.size() == 0) {
             throw new UnsupportedOperationException("Command has no subcommands.");

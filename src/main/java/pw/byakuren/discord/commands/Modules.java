@@ -3,6 +3,8 @@ package pw.byakuren.discord.commands;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import pw.byakuren.discord.commands.permissions.CommandPermission;
+import pw.byakuren.discord.commands.subcommands.Subcommand;
+import pw.byakuren.discord.commands.subcommands.SubcommandList;
 import pw.byakuren.discord.modules.Module;
 import pw.byakuren.discord.modules.ModuleHelper;
 
@@ -16,36 +18,52 @@ public class Modules extends Command {
     public Modules(ModuleHelper mdhelp) {
         names=new String[]{"modules"};
         minimum_permission=CommandPermission.BOT_OWNER;
-        syntax="View and manage active modules.";
+        help="View and manage active modules.";
 
         this.mdhelp = mdhelp;
+        subcommands.add(new SubcommandList(this));
+        subcommands.add(new Subcommand(new String[]{"enable", "on", "e"}, "Enable a module.", "[module_name]", this) {
+            @Override
+            public void run(Message message, List<String> args) {
+                cmd_enable(message, args);
+            }
+        });
+        subcommands.add(new Subcommand(new String[]{"disable", "off", "d"}, "Disable a module.", "[module_name]", this) {
+            @Override
+            public void run(Message message, List<String> args) {
+                cmd_disable(message, args);
+            }
+        });
+        subcommands.add(new Subcommand(new String[]{"list", "l", "d"}, "View all modules.", "[module_name]", this) {
+            @Override
+            public void run(Message message, List<String> args) {
+                cmd_list(message, args);
+            }
+        });
     }
 
-    @Override
-    public void run(Message message, List<String> args) {
-        if (args.size() == 0) return;
-        switch (args.get(0)) {
-            case "disable":
-                mdhelp.disable(mdhelp.getModule(args.get(1)));
-                message.addReaction("✅").queue();
-                return;
-            case "enable":
-                mdhelp.enable(mdhelp.getModule(args.get(1)));
-                message.addReaction("✅").queue();
-                break;
-            case "list":
-                EmbedBuilder embed = new EmbedBuilder();
-                StringBuilder s = new StringBuilder();
-                for (Map.Entry<Module, Boolean> e: mdhelp.getModules().entrySet()) {
-                    s.append(String.format("**%s** - %s\n", e.getKey().getInfo().name,
-                            (e.getValue() ? "enabled":"disabled")));
-                }
-                embed.setDescription(s);
-                embed.setTitle("Loaded modules");
-                if (mdhelp.getModules().keySet().size() == 0) {
-                    embed.addField("No modules found.", "", false);
-                }
-                message.getChannel().sendMessage(embed.build()).queue();
+    private void cmd_enable(Message message, List<String> args) {
+        mdhelp.disable(mdhelp.getModule(args.get(1)));
+        message.addReaction("✅").queue();
+    }
+
+    private void cmd_disable(Message message, List<String> args) {
+        mdhelp.enable(mdhelp.getModule(args.get(1)));
+        message.addReaction("✅").queue();
+    }
+
+    private void cmd_list(Message message, List<String> args) {
+        EmbedBuilder embed = new EmbedBuilder();
+        StringBuilder s = new StringBuilder();
+        for (Map.Entry<Module, Boolean> e: mdhelp.getModules().entrySet()) {
+            s.append(String.format("**%s** - %s\n", e.getKey().getInfo().name,
+                    (e.getValue() ? "enabled":"disabled")));
         }
+        embed.setDescription(s);
+        embed.setTitle("Loaded modules");
+        if (mdhelp.getModules().keySet().size() == 0) {
+            embed.addField("No modules found.", "", false);
+        }
+        message.getChannel().sendMessage(embed.build()).queue();
     }
 }
