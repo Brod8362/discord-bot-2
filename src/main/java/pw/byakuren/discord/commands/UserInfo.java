@@ -10,32 +10,15 @@ import pw.byakuren.discord.objects.cache.datatypes.UserStats;
 
 import java.util.List;
 
-public class UserInfo implements Command {
+public class UserInfo extends Command {
 
     Cache c;
 
     public UserInfo(Cache c) {
+        names=new String[]{"userinfo", "uinfo", "ui"};
+        help="Find info about a user.";
+        minimum_permission=CommandPermission.REGULAR_USER;
         this.c = c;
-    }
-
-    @Override
-    public String[] getNames() {
-        return new String[]{"userinfo", "uinfo", "ui"};
-    }
-
-    @Override
-    public String getSyntax() {
-        return null;
-    }
-
-    @Override
-    public String getHelp() {
-        return "Find info about a user.";
-    }
-
-    @Override
-    public CommandPermission minimumPermission() {
-        return CommandPermission.REGULAR_USER;
     }
 
     @Override

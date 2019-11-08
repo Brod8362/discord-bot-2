@@ -9,32 +9,16 @@ import pw.byakuren.discord.modules.ModuleHelper;
 import java.util.List;
 import java.util.Map;
 
-public class Modules implements Command {
+public class Modules extends Command {
 
     private ModuleHelper mdhelp;
 
     public Modules(ModuleHelper mdhelp) {
+        names=new String[]{"modules"};
+        minimum_permission=CommandPermission.BOT_OWNER;
+        syntax="View and manage active modules.";
+
         this.mdhelp = mdhelp;
-    }
-
-    @Override
-    public String[] getNames() {
-        return new String[]{"modules"};
-    }
-
-    @Override
-    public String getSyntax() {
-        return null;
-    }
-
-    @Override
-    public String getHelp() {
-        return "View and manage active modules.";
-    }
-
-    @Override
-    public CommandPermission minimumPermission() {
-        return CommandPermission.BOT_OWNER;
     }
 
     @Override

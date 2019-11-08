@@ -8,34 +8,18 @@ import pw.byakuren.discord.objects.cache.Cache;
 
 import java.util.List;
 
-public class Stop implements Command {
+public class Stop extends Command {
 
     DatabaseManager dbmg = null;
     Cache c;
 
     public Stop(DatabaseManager dbmg, Cache c) {
+        names=new String[]{"stop"};
+        help="Stop the bot.";
+        minimum_permission=CommandPermission.BOT_OWNER;
+
         this.dbmg = dbmg;
         this.c = c;
-    }
-
-    @Override
-    public String[] getNames() {
-        return new String[]{"stop"};
-    }
-
-    @Override
-    public String getSyntax() {
-        return null;
-    }
-
-    @Override
-    public String getHelp() {
-        return "Stop the bot.";
-    }
-
-    @Override
-    public CommandPermission minimumPermission() {
-        return CommandPermission.BOT_OWNER;
     }
 
     @Override

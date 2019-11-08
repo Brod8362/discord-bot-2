@@ -8,26 +8,12 @@ import java.util.List;
 
 import static pw.byakuren.discord.commands.permissions.CommandPermission.REGULAR_USER;
 
-public class Invite implements Command {
+public class Invite extends Command {
 
-    @Override
-    public String[] getNames() {
-        return new String[]{"invite","inv"};
-    }
-
-    @Override
-    public String getSyntax() {
-        return null;
-    }
-
-    @Override
-    public String getHelp() {
-        return "Get an invite for this bot.";
-    }
-
-    @Override
-    public CommandPermission minimumPermission() {
-        return REGULAR_USER;
+    public Invite() {
+        names= new String[]{"invite","inv"};
+        help="Get an invite for this bot.";
+        minimum_permission=REGULAR_USER;
     }
 
     @Override

@@ -10,34 +10,18 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class Help implements Command {
+public class Help extends Command {
 
     CommandHelper cmdhelp;
     private Cache c;
 
     public Help(CommandHelper cmd, Cache c) {
+        names=new String[]{"help", "h"};
+        help="See command listing";
+        minimum_permission=CommandPermission.REGULAR_USER;
+
         cmdhelp = cmd;
         this.c =c;
-    }
-
-    @Override
-    public String[] getNames() {
-        return new String[]{"help", "h"};
-    }
-
-    @Override
-    public String getSyntax() {
-        return null;
-    }
-
-    @Override
-    public String getHelp() {
-        return "See command listing.";
-    }
-
-    @Override
-    public CommandPermission minimumPermission() {
-        return CommandPermission.REGULAR_USER;
     }
 
     @Override
@@ -47,9 +31,9 @@ public class Help implements Command {
             /* Full comamnd listing */
             b.setTitle("Help listing");
             StringBuilder desc = new StringBuilder();
-            CommandPermission perm = CommandPermission.getPermission(message.getMember(), c);
+
             for (Command cmd: cmdhelp.getCommandSet()) {
-                if ( perm.ordinal() >= cmd.minimumPermission().ordinal())
+                if ( cmd.canRun(message.getMember(), c))
                     desc.append(String.format("**%s** - %s\n", cmd.getNames()[0], cmd.getHelp()));
             }
             b.setDescription(desc);

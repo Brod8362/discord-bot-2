@@ -163,8 +163,7 @@ public class Main extends ListenerAdapter {
                 return;
             }
             /* Command permission checking */
-            CommandPermission perm = CommandPermission.getPermission(event.getMember(), cache);
-            if (perm.ordinal() >= cmd.minimumPermission().ordinal()) {
+            if (cmd.canRun(message.getMember(), cache)) {
                 new Thread(() -> cmd.run(message, args)).start();
                 return;
             }

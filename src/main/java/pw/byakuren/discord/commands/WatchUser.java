@@ -11,32 +11,16 @@ import pw.byakuren.discord.objects.cache.datatypes.WatchedUser;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class WatchUser implements Command {
+public class WatchUser extends Command {
 
     private Cache c;
 
     public WatchUser(Cache c) {
+        names = new String[]{"voicewatch", "vw"};
+        help = "Add a user to voicewatch.";
+        minimum_permission=CommandPermission.MOD_ROLE;
+
         this.c = c;
-    }
-
-    @Override
-    public String[] getNames() {
-        return new String[]{"voicewatch", "vw"};
-    }
-
-    @Override
-    public String getSyntax() {
-        return null;
-    }
-
-    @Override
-    public String getHelp() {
-        return "Add a user to voicewatch.";
-    }
-
-    @Override
-    public CommandPermission minimumPermission() {
-        return CommandPermission.MOD_ROLE;
     }
 
     @Override

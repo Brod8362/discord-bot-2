@@ -14,32 +14,15 @@ import java.util.stream.Collectors;
 
 import static pw.byakuren.discord.commands.permissions.CommandPermission.MOD_ROLE;
 
-public class ExcludedChannels implements Command {
+public class ExcludedChannels extends Command {
 
     private Cache c;
 
     public ExcludedChannels(Cache c) {
+        names=new String[]{"exclude"};
+        minimum_permission=MOD_ROLE;
+        help="Exclude a channel from being flagged for regex keywords.";
         this.c=c;
-    }
-
-    @Override
-    public String[] getNames() {
-        return new String[]{"exclude"};
-    }
-
-    @Override
-    public String getSyntax() {
-        return null;
-    }
-
-    @Override
-    public String getHelp() {
-        return "Exclude a channel from being flagged for regex keywords.";
-    }
-
-    @Override
-    public CommandPermission minimumPermission() {
-        return MOD_ROLE;
     }
 
     @Override

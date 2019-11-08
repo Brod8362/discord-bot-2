@@ -7,26 +7,12 @@ import pw.byakuren.discord.commands.permissions.CommandPermission;
 
 import java.util.List;
 
-public class ServerInfo implements Command {
+public class ServerInfo extends Command {
 
-    @Override
-    public String[] getNames() {
-        return new String[]{"serverinfo", "sinfo", "si"};
-    }
-
-    @Override
-    public String getSyntax() {
-        return null;
-    }
-
-    @Override
-    public String getHelp() {
-        return "Find info about the current server.";
-    }
-
-    @Override
-    public CommandPermission minimumPermission() {
-        return CommandPermission.REGULAR_USER;
+    public ServerInfo() {
+        names=new String[]{"serverinfo", "sinfo", "si"};
+        help="Find info about the current server";
+        minimum_permission=CommandPermission.REGULAR_USER;
     }
 
     @Override

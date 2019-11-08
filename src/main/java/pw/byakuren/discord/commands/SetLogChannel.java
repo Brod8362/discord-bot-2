@@ -11,32 +11,17 @@ import java.util.List;
 
 import static pw.byakuren.discord.objects.cache.WriteState.PENDING_WRITE;
 
-public class SetLogChannel implements Command {
+public class SetLogChannel extends Command {
 
     Cache c;
 
     public SetLogChannel(Cache c) {
+        names=new String[]{"logchannel","setlogchannel","slc"};
+        syntax="<none required>";
+        help="Set current channel to the server log channel";
+        minimum_permission=CommandPermission.SERVER_ADMIN;
+
         this.c = c;
-    }
-
-    @Override
-    public String[] getNames() {
-        return new String[]{"logchannel","setlogchannel","slc"};
-    }
-
-    @Override
-    public String getSyntax() {
-        return null;
-    }
-
-    @Override
-    public String getHelp() {
-        return "Set current channel to server log channel.";
-    }
-
-    @Override
-    public CommandPermission minimumPermission() {
-        return CommandPermission.SERVER_ADMIN;
     }
 
     @Override

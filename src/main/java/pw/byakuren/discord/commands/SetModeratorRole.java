@@ -11,32 +11,16 @@ import pw.byakuren.discord.objects.cache.datatypes.ServerSettings;
 
 import java.util.List;
 
-public class SetModeratorRole implements Command {
+public class SetModeratorRole extends Command {
 
     Cache c;
 
     public SetModeratorRole(Cache c) {
+        names=new String[]{"setmodrole", "modrole"};
+        help="Sets the moderator role for the server. Role must be pingable.";
+        minimum_permission=CommandPermission.SERVER_ADMIN;
+
         this.c = c;
-    }
-
-    @Override
-    public String[] getNames() {
-        return new String[]{"setmodrole", "modrole"};
-    }
-
-    @Override
-    public String getSyntax() {
-        return null;
-    }
-
-    @Override
-    public String getHelp() {
-        return "Sets the moderator role for the server. Role must be pingable.";
-    }
-
-    @Override
-    public CommandPermission minimumPermission() {
-        return CommandPermission.SERVER_ADMIN;
     }
 
     @Override

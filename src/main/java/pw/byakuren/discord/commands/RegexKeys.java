@@ -11,32 +11,16 @@ import java.util.List;
 import static pw.byakuren.discord.objects.cache.WriteState.PENDING_DELETE;
 import static pw.byakuren.discord.objects.cache.WriteState.PENDING_WRITE;
 
-public class RegexKeys implements Command {
+public class RegexKeys extends Command {
 
     private Cache c;
 
     public RegexKeys(Cache c) {
+        names=new String[]{"regex","keys"};
+        help="Manage regex keys.";
+        minimum_permission=CommandPermission.MOD_ROLE;
+
         this.c = c;
-    }
-
-    @Override
-    public String[] getNames() {
-        return new String[]{"regex","keys"};
-    }
-
-    @Override
-    public String getSyntax() {
-        return null;
-    }
-
-    @Override
-    public String getHelp() {
-        return "Manage regex keys.";
-    }
-
-    @Override
-    public CommandPermission minimumPermission() {
-        return CommandPermission.MOD_ROLE;
     }
 
     @Override

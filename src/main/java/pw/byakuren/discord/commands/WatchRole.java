@@ -12,32 +12,16 @@ import pw.byakuren.discord.objects.cache.datatypes.WatchedRole;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class WatchRole implements Command {
+public class WatchRole extends Command {
 
     private Cache c;
 
     public WatchRole(Cache c) {
+        names=new String[]{"watchrole", "role", "rw"};
+        help="Manage watched pingable roles";
+        minimum_permission=CommandPermission.MOD_ROLE;
+
         this.c = c;
-    }
-
-    @Override
-    public String[] getNames() {
-        return new String[]{"watchrole", "role", "rw"};
-    }
-
-    @Override
-    public String getSyntax() {
-        return null;
-    }
-
-    @Override
-    public String getHelp() {
-        return "Manage watched pingable roles.";
-    }
-
-    @Override
-    public CommandPermission minimumPermission() {
-        return CommandPermission.MOD_ROLE;
     }
 
     @Override
