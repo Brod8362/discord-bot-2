@@ -13,7 +13,8 @@ import pw.byakuren.discord.commands.CommandHelper;
 import pw.byakuren.discord.objects.cache.Cache;
 
 import java.awt.*;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class VoiceWatchReporter implements Module {
 
@@ -72,7 +73,7 @@ public class VoiceWatchReporter implements Module {
         b.setTitle("Watched user voice activity");
         b.setColor(joined ? Color.RED : Color.CYAN);
         b.setDescription("User "+(joined ? "joined" : "left")+" voice channel #"+chan.getName());
-        b.setFooter(new Date().toString(), null);
+        b.setTimestamp(LocalDateTime.now());
         lc.sendMessage(b.build()).queue();
     }
 
@@ -83,7 +84,7 @@ public class VoiceWatchReporter implements Module {
         b.setTitle("Watched user voice activity");
         b.setColor(Color.ORANGE);
         b.setDescription("User moved from #"+f.getName()+" to #"+t.getName());
-        b.setFooter(new Date().toString(), null);
+        b.setTimestamp(LocalDateTime.now());
         lc.sendMessage(b.build()).queue();
     }
 

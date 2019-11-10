@@ -10,8 +10,10 @@ import pw.byakuren.discord.objects.cache.ServerCache;
 import pw.byakuren.discord.objects.cache.datatypes.RegexKey;
 
 import java.awt.*;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class RegexChecker implements Module {
 
@@ -57,7 +59,8 @@ public class RegexChecker implements Module {
                     String.join("`, `", matches)));
             b.setColor(Color.RED);
             b.setAuthor(message.getAuthor().getName(), message.getJumpUrl(), message.getAuthor().getAvatarUrl());
-            b.setFooter(new Date().toString(), null);
+            b.setTimestamp(LocalDateTime.now());
+            b.setFooter("#"+message.getTextChannel().getName(), null);
             TextChannel lc = sc.getLogChannel(message.getJDA());
             lc.sendMessage(b.build()).queue();
         }

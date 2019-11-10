@@ -9,8 +9,8 @@ import pw.byakuren.discord.commands.CommandHelper;
 import pw.byakuren.discord.objects.cache.Cache;
 import pw.byakuren.discord.objects.cache.ServerCache;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class RoleWatchReporter implements Module {
@@ -54,7 +54,8 @@ public class RoleWatchReporter implements Module {
         b.setTitle("Watched role"+(rs.size() > 1 ? "s":"")+" pinged");
         b.setAuthor(m.getMember().getUser().getName(), null, m.getAuthor().getEffectiveAvatarUrl());
         b.setDescription(m.getContentRaw());
-        b.setFooter(new Date().toString(), null);
+        b.setTimestamp(LocalDateTime.now());
+        b.setFooter("#"+m.getChannel().getName(), null);
         lc.sendMessage(b.build()).queue();
     }
 
