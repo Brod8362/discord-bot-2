@@ -23,7 +23,7 @@ public class Cache {
     public Cache(DatabaseManager dbmg, JDA jda) {
         this.dbmg = dbmg;
         this.jda = jda;
-        owner = jda.getApplicationInfo().complete().getOwner();
+        owner = jda.retrieveApplicationInfo().complete().getOwner();
         System.out.println("Retrieving all server caches...");
         loadAllServerCaches();
         System.out.println("Cache retrieval complete.");

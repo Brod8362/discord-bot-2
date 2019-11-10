@@ -31,6 +31,6 @@ dependencies {
 }
 
 dependencies {
-    compile 'net.dv8tion:JDA:4.ALPHA.0_10'
+    compile 'net.dv8tion:JDA:4.0.0_59'
     compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.25.2'
 }

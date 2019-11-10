@@ -83,7 +83,7 @@ public class StatisticManager implements Module {
 
     private void messageReactionAddEvent(Event e) {
         MessageReactionAddEvent ev = (MessageReactionAddEvent) e;
-        Message m = ev.getTextChannel().getMessageById(ev.getMessageId()).complete();
+        Message m = ev.getTextChannel().retrieveMessageById(ev.getMessageId()).complete();
         if (ev.getMember().getUser().isBot() || m.getAuthor().isBot()) return;
         Guild g = m.getGuild();
         ServerCache sc = c.getServerCache(g);

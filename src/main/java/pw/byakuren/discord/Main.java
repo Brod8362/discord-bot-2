@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.Event;
+import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -118,13 +119,15 @@ public class Main extends ListenerAdapter {
     }
 
     @Override
-    public void onGenericEvent(Event event) {
+    public void onGenericEvent(GenericEvent event) {
         for (Module md: mdhelp.getModules().keySet()) {
             if (md.getInfo().type== ModuleType.EVENT_MODULE && mdhelp.isEnabled(md)) {
-                new Thread(() -> md.run(event)).start();
+                new Thread(() -> md.run((Event)event)).start();
             }
         }
     }
+
+
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
