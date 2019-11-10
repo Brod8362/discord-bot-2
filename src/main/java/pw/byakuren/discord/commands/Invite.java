@@ -2,7 +2,6 @@ package pw.byakuren.discord.commands;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
-import pw.byakuren.discord.commands.permissions.CommandPermission;
 
 import java.util.List;
 

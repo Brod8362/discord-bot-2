@@ -32,6 +32,10 @@ public class ServerWriteThread {
         System.out.printf("Write thread %s stopped.\n", t.getName());
     }
 
+    void disableRun() {
+        run=false;
+    }
+
     void restart() {
         stop();
         start();
@@ -45,10 +49,10 @@ public class ServerWriteThread {
         return t;
     }
 
-    public void writeAllAndQuit() {
-        for (CacheObject o: objects) {
-            o.write();
-        }
+    void writeAllAndQuit() {
+        System.out.printf("Writing data for %s...\n", t.getName());
+        run=false;
+        writeAll();
         stop();
     }
 

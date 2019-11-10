@@ -9,19 +9,20 @@ import net.dv8tion.jda.api.events.Event;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.exceptions.RateLimitedException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import pw.byakuren.discord.commands.*;
-import pw.byakuren.discord.commands.permissions.CommandPermission;
-import pw.byakuren.discord.modules.*;
 import pw.byakuren.discord.modules.Module;
+import pw.byakuren.discord.modules.*;
 import pw.byakuren.discord.objects.cache.Cache;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
 
 
 public class Main extends ListenerAdapter {
@@ -30,9 +31,8 @@ public class Main extends ListenerAdapter {
     private CommandHelper cmdhelp = new CommandHelper();
     private ModuleHelper mdhelp = new ModuleHelper();
     private DatabaseManager dbmg;
-    private User owner;
 
-    Cache cache;
+    private Cache cache;
 
     public static void main(String[] args) {
         String token = getToken();
@@ -96,7 +96,7 @@ public class Main extends ListenerAdapter {
         System.out.println(String.format("Loaded %s commands.", cmdhelp.getCommandSet().size()));
     }
 
-    private void loadModules(JDA jda) {
+    private void loadModules() {
         mdhelp.registerModule(new StatisticManager(cache));
         mdhelp.registerModule(new RegexChecker(cache));
         mdhelp.registerModule(new VoiceWatchReporter(cache));
@@ -104,21 +104,12 @@ public class Main extends ListenerAdapter {
         System.out.println(String.format("Loaded %s modules.", mdhelp.getModules().size()));
     }
 
-    private boolean isBotOwner(User u) {
-      return u.equals(owner);
-    }
-
     @Override
     public void onReady(ReadyEvent event) {
         connectToDatabase(event.getJDA());
         cache = new Cache(dbmg, event.getJDA());
         loadCommands();
-        loadModules(event.getJDA());
-        try {
-            owner = event.getJDA().getApplicationInfo().complete(true).getOwner();
-        } catch (RateLimitedException e) {
-            e.printStackTrace();
-        }
+        loadModules();
         for (Module md: mdhelp.getModules().keySet()) {
             if (md.getInfo().type==ModuleType.COMMAND_MODULE) {
                 md.run(cmdhelp);
@@ -137,7 +128,6 @@ public class Main extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        JDA jda = event.getJDA();
         User author = event.getAuthor(); //get message author
         Message message = event.getMessage(); //get message object
         String msg = message.getContentDisplay(); //get message content
@@ -164,7 +154,11 @@ public class Main extends ListenerAdapter {
             }
             /* Command permission checking */
             if (cmd.canRun(message.getMember(), cache)) {
-                new Thread(() -> cmd.run(message, args)).start();
+                try {
+                    new Thread(() -> cmd.run(message, args)).start();
+                } catch (Exception e) {
+                    reportError(message, e);
+                }
                 return;
             }
             message.addReaction("❌").queue();
@@ -177,5 +171,10 @@ public class Main extends ListenerAdapter {
         System.out.println("Joined new server "+g.getName());
         cache.getServerCache(g);
         System.out.println("Loaded cache for "+g.getName());
+    }
+
+    public static void reportError(Message m, Exception e) {
+        String s = String.format("big ouchie! (%s)\n ", e.getMessage());
+        m.getChannel().sendMessage(s).queue();
     }
 }

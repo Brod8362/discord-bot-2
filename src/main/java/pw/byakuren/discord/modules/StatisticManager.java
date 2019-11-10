@@ -8,10 +8,10 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import pw.byakuren.discord.commands.CommandHelper;
 import pw.byakuren.discord.objects.Statistic;
+import pw.byakuren.discord.objects.Triple;
 import pw.byakuren.discord.objects.cache.Cache;
 import pw.byakuren.discord.objects.cache.ServerCache;
 import pw.byakuren.discord.objects.cache.datatypes.LastMessage;
-import pw.byakuren.discord.objects.cache.datatypes.UserStats;
 
 import java.util.List;
 
@@ -51,7 +51,9 @@ public class StatisticManager implements Module {
         Guild g = m.getGuild();
         ServerCache sc = c.getServerCache(g);
         List<LastMessage> msgs = sc.getLastMessages().getData();
-        List<UserStats> stats = sc.getUserStats().getData();
+
+        c.addMessageReference(m);
+
         //set user's last message
         //todo move to separate location
         for (int i = 0; i < msgs.size(); i++) {
@@ -73,12 +75,10 @@ public class StatisticManager implements Module {
 
     private void messageDeleteEvent(Event e) {
         MessageDeleteEvent ev = (MessageDeleteEvent) e;
-        Message m = ev.getTextChannel().getMessageById(ev.getMessageId()).complete();
-        if (m==null) return;
-        Guild g = m.getGuild();
-        ServerCache sc = c.getServerCache(g);
-        sc.getStatsForUser(m.getMember()).incrementStatistic(Statistic.MESSAGES_DELETED);
-
+        Triple t = c.seeDeletedMessageAuthor(ev.getMessageIdLong());
+        if (t == null ) return;
+        ServerCache sc = c.getServerCache((long)t.b);
+        sc.getStatsForUser((long)t.b, (long)t.c).incrementStatistic(Statistic.MESSAGES_DELETED);
     }
 
     private void messageReactionAddEvent(Event e) {
