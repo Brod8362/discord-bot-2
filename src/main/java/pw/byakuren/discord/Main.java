@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 
 public class Main extends ListenerAdapter {
@@ -160,7 +161,13 @@ public class Main extends ListenerAdapter {
             /* Command permission checking */
             if (cmd.canRun(message.getMember(), cache)) {
                 try {
-                    new Thread(() -> cmd.run(message, args)).start();
+                    new Thread(() -> {
+                        try {
+                            cmd.run(message, args);
+                        } catch (Exception e) {
+                            reportError(message, e);
+                        }
+                    }).start();
                 } catch (Exception e) {
                     reportError(message, e);
                 }
@@ -179,7 +186,8 @@ public class Main extends ListenerAdapter {
     }
 
     public static void reportError(Message m, Exception e) {
-        String s = String.format("big ouchie! (%s)\n ", e.getMessage());
+        String s = String.format("big ouchie! ```%s```\n ", e.getLocalizedMessage()+"\n"+
+                Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.joining("\n")));
         m.getChannel().sendMessage(s).queue();
     }
 }
