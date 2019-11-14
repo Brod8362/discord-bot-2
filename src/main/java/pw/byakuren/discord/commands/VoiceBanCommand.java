@@ -55,6 +55,13 @@ public class VoiceBanCommand extends Command {
                 cmd_all(message, args);
             }
         });
+
+        subcommands.add(new Subcommand(new String[]{"cancel", "c"}, null, null, this) {
+            @Override
+            public void run(Message message, List<String> args) {
+                cmd_cancel(message, args);
+            }
+        });
     }
 
     private void cmd_all(Message message, List<String> args) {
@@ -87,11 +94,11 @@ public class VoiceBanCommand extends Command {
         long mid = message.getAuthor().getIdLong();
         String reason = "";
         if (args.size() > 2) {
-            reason = String.join(" ", args.subList(2, args.size()));
+            reason = String.join(" ", args.subList(banned.getEffectiveName().split(" ").length+1, args.size()));
         }
         if (reason.isEmpty()) reason=null;
         LocalDateTime start = LocalDateTime.now();
-        LocalDateTime end = parseTime(args.get(1));
+        LocalDateTime end = parseTime(args.get(banned.getEffectiveName().split(" ").length));
         VoiceBan vb = new VoiceBan(gid,uid,mid,start,end, reason);
         vb.write_state=PENDING_WRITE;
         ServerCache sc = c.getServerCache(message.getGuild());
@@ -120,6 +127,17 @@ public class VoiceBanCommand extends Command {
         b.setDescription(s.toString());
         b.setTitle("Current voice bans");
         message.getChannel().sendMessage(b.build()).queue();
+    }
+
+    private void cmd_cancel(Message message, List<String> args) {
+        ServerCache sc = c.getServerCache(message.getGuild());
+        VoiceBan vb = sc.getValidVoiceBan(message.getMentionedMembers().get(0));
+        if (vb == null) {
+            message.getChannel().sendMessage("User is not banned from voice.").queue();
+            return;
+        }
+        vb.cancel();
+        message.getChannel().sendMessage("Canceled voice ban for user <@"+vb.getMemberId()+">").queue();
     }
 
     private LocalDateTime parseTime(String t) {
