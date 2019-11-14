@@ -438,4 +438,28 @@ public class DatabaseManager {
         return null;
     }
 
+    public List<VoiceBan> getAllVoiceBans(long serverid) {
+        try {
+            return sql.getAllVoiceBans(serverid);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void addVoiceBan(VoiceBan voiceBan) {
+        try {
+            sql.addVoiceBan(voiceBan);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateVoiceBan(VoiceBan vb) {
+        try {
+            sql.updateVoiceBan(vb);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -5,9 +5,11 @@ import pw.byakuren.discord.objects.Triple;
 import pw.byakuren.discord.objects.cache.datatypes.LastMessage;
 import pw.byakuren.discord.objects.cache.datatypes.ServerParameter;
 import pw.byakuren.discord.objects.cache.datatypes.ServerSettings;
+import pw.byakuren.discord.objects.cache.datatypes.VoiceBan;
 
 import java.sql.*;
 import java.sql.Date;
+import java.time.ZoneOffset;
 import java.util.*;
 
 public class SQLConnection {
@@ -54,6 +56,11 @@ public class SQLConnection {
     private PreparedStatement getLastMessage;
     private PreparedStatement getLastMessages;
 
+    private PreparedStatement getVoiceBans;
+    private PreparedStatement addVoiceBan;
+    private PreparedStatement getMemberVoiceBans;
+    private PreparedStatement updateVoiceBan;
+
     public void initialize() throws SQLException {
         String dir = System.getProperty("user.dir");
         // intialize DB connection
@@ -88,7 +95,6 @@ public class SQLConnection {
         checkExcludedChannel = connection.prepareStatement("SELECT 1 FROM excluded_channels WHERE server=? AND channel=?");
         checkExcludedChannelSingle = connection.prepareStatement("SELECT 1 FROM excluded_channels WHERE channel=?");
 
-
         addWatchedUser = connection.prepareStatement("INSERT INTO watched_users VALUES (?, ?, ?)");
         removeWatchedUser = connection.prepareStatement("DELETE FROM watched_users WHERE server=? AND user=?");
         getWatchedUsers = connection.prepareStatement("SELECT * FROM watched_users WHERE server=?");
@@ -104,10 +110,14 @@ public class SQLConnection {
         checkServerSetting = connection.prepareStatement("SELECT 1 FROM server_settings WHERE server=? AND setting=?");
         getServerSetting = connection.prepareStatement("SELECT value FROM server_settings WHERE server=? AND setting=?");
         getAllServerSettings = connection.prepareStatement("SELECT setting, value FROM server_settings WHERE server=?");
+
+        addVoiceBan = connection.prepareStatement("INSERT INTO voice_bans VALUES (?, ?, ?, ?, ?, ?, 0)");
+        getVoiceBans = connection.prepareStatement("SELECT * FROM voice_bans WHERE server=? ORDER BY date(end) DESC");
+        updateVoiceBan = connection.prepareStatement("UPDATE voice_bans SET canceled=1 WHERE server=? AND user=? AND mod=? AND start=?");
     }
 
     private boolean verifyTables() {
-        return (getTables().size() == 7);
+        return (getTables().size() == 8);
     }
 
 
@@ -159,7 +169,9 @@ public class SQLConnection {
                 "CREATE TABLE user_chat_data (server INTEGER NOT NULL, user INTEGER NOT NULL, datapoint VARCHAR(50) NOT NULL, count INT NOT NULL, PRIMARY KEY(server, user, datapoint))",
                 "CREATE INDEX chat_idx ON user_chat_data(server)",
                 "CREATE TABLE server_settings (server INTEGER NOT NULL, setting VARCHAR(50) NOT NULL, value INTEGER NOT NULL)",
-                "CREATE INDEX settings_idx ON server_settings(server)"
+                "CREATE INDEX settings_idx ON server_settings(server)",
+                "CREATE TABLE voice_bans (server INTEGER NOT NULl, user INTEGER NOT NULL, mod INTEGER NOT NULL, reason TEXT, start DATETIME NOT NULL, end DATETIME, canceled TINYINT, PRIMARY KEY(server, user, mod, start, end))",
+                "CREATE INDEX ban_idx ON voice_bans(server)"
         };
         for (String s: queries) {
             try {
@@ -470,4 +482,37 @@ public class SQLConnection {
         return l;
     }
 
+    public void addVoiceBan(VoiceBan vb) throws SQLException {
+        addVoiceBan.setLong(1, vb.getGuildId());
+        addVoiceBan.setLong(2, vb.getMemberId());
+        addVoiceBan.setLong(3, vb.getModId());
+        addVoiceBan.setString(4, vb.getReason());
+        addVoiceBan.setTimestamp(5, Timestamp.from(vb.getStartTime().toInstant(ZoneOffset.UTC)));
+        addVoiceBan.setTimestamp(6, Timestamp.from(vb.getExpireTime().toInstant(ZoneOffset.UTC)));
+        addVoiceBan.execute();
+        addVoiceBan.clearParameters();
+    }
+
+    public List<VoiceBan> getAllVoiceBans(long serverid) throws SQLException {
+        getVoiceBans.setLong(1, serverid);
+        ResultSet r = getVoiceBans.executeQuery();
+        List<VoiceBan> l = new ArrayList<>();
+        while (r.next()) {
+            l.add(new VoiceBan(
+                    r.getLong("server"), r.getLong("user"), r.getLong("mod"),
+                    r.getTimestamp("start").toLocalDateTime(),
+                    r.getTimestamp("end").toLocalDateTime(), r.getString("reason")
+            ));
+        }
+        return l;
+    }
+
+    public void updateVoiceBan(VoiceBan vb) throws SQLException {
+        updateVoiceBan.setLong(1, vb.getGuildId());
+        updateVoiceBan.setLong(2, vb.getMemberId());
+        updateVoiceBan.setLong(3, vb.getModId());
+        updateVoiceBan.setTimestamp(4, Timestamp.from(vb.getStartTime().toInstant(ZoneOffset.UTC)));
+        updateVoiceBan.executeUpdate();
+        updateVoiceBan.clearParameters();
+    }
 }

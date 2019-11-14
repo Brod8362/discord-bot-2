@@ -6,13 +6,11 @@ import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import pw.byakuren.discord.DatabaseManager;
-import pw.byakuren.discord.commands.WatchRole;
 import pw.byakuren.discord.objects.cache.datatypes.*;
 import pw.byakuren.discord.objects.cache.factories.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static pw.byakuren.discord.objects.cache.WriteState.PENDING_DELETE;
 import static pw.byakuren.discord.objects.cache.WriteState.PENDING_WRITE;
@@ -28,9 +26,10 @@ public class ServerCache {
     private CacheObject<WatchedRole> watched_roles;
     private CacheObject<ExcludedChannel> excluded_channels;
     private CacheObject<LastMessage> last_messages;
+    private CacheObject<VoiceBan> voice_bans;
 
     ServerWriteThread write_thread;
-    CacheObject[] objects;
+    private CacheObject[] objects;
 
     ServerCache(long id, DatabaseManager dbmg, JDA jda) {
         this.id = id;
@@ -42,7 +41,9 @@ public class ServerCache {
         watched_roles = new CacheObject<>(id, dbmg, new WatchedRoleFactory(id, dbmg, jda));
         excluded_channels = new CacheObject<>(id, dbmg, new ExcludedChannelFactory(id, dbmg));
         last_messages = new CacheObject<>(id, dbmg, new LastMessageFactory(id, dbmg));
-        objects = new CacheObject[]{userdata, settings, regex_keys, watched_roles, watched_users, excluded_channels, last_messages};
+        voice_bans = new CacheObject<>(id, dbmg, new VoiceBanFactory(id, dbmg));
+        objects = new CacheObject[]{userdata, settings, regex_keys, watched_roles, watched_users, excluded_channels,
+                last_messages, voice_bans};
         write_thread = new ServerWriteThread(id, objects);
     }
 
@@ -77,6 +78,8 @@ public class ServerCache {
     public CacheObject<LastMessage> getLastMessages() {
         return last_messages;
     }
+
+    public CacheObject<VoiceBan> getVoiceBans() { return voice_bans; }
 
     public UserStats getStatsForUser(Member m) {
         return getStatsForUser(m.getGuild().getIdLong(), m.getUser());
@@ -199,5 +202,38 @@ public class ServerCache {
                 ex.write_state=PENDING_DELETE;
             }
         }
+    }
+
+    public List<VoiceBan> getValidVoiceBans() {
+        List<VoiceBan> a = new ArrayList<>(voice_bans.getData());
+        for (int i =0; i < a.size(); i++) {
+            if (!a.get(i).isValid()) {
+                a.remove(i);
+                i--;
+            }
+        }
+        return a;
+    }
+
+    public boolean userIsVoiceBanned(Member m) {
+        for (VoiceBan vb: voice_bans.getData()) {
+            if ((vb.getMemberId()==m.getIdLong()) && vb.isValid()) return true;
+        }
+        return false;
+    }
+
+    public VoiceBan getValidVoiceBan(Member m) {
+        for (VoiceBan vb: voice_bans.getData()) {
+            if ((vb.getMemberId()==m.getIdLong()) && vb.isValid()) return vb;
+        }
+        return null;
+    }
+
+    public List<VoiceBan> getPrevVoiceBans(int c) {
+        List<VoiceBan> l = new ArrayList<>();
+        for (int i = 0; i < c && i < voice_bans.getData().size(); i++) {
+            l.add(voice_bans.getData().get(i));
+        }
+        return l;
     }
 }

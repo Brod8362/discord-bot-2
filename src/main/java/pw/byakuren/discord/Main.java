@@ -93,6 +93,7 @@ public class Main extends ListenerAdapter {
         cmdhelp.registerCommand(new WatchUser(cache));
         cmdhelp.registerCommand(new WatchRole(cache));
         cmdhelp.registerCommand(new SetLogChannel(cache));
+        cmdhelp.registerCommand(new VoiceBanCommand(cache));
 
         System.out.println(String.format("Loaded %s commands.", cmdhelp.getCommandSet().size()));
     }
@@ -102,6 +103,7 @@ public class Main extends ListenerAdapter {
         mdhelp.registerModule(new RegexChecker(cache));
         mdhelp.registerModule(new VoiceWatchReporter(cache));
         mdhelp.registerModule(new RoleWatchReporter(cache));
+        mdhelp.registerModule(new VoiceBanWatcher(cache));
         System.out.println(String.format("Loaded %s modules.", mdhelp.getModules().size()));
     }
 
