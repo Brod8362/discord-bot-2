@@ -58,7 +58,7 @@ public class RegexKeys extends Command {
     }
 
     private void cmd_del(Message message, List<String> args) {
-        List<RegexKey> list = c.getServerCache(message.getGuild()).getAllValidRegexKeys();
+        List<RegexKey> list = c.getServerCache(message.getGuild()).getRegexKeys().getData();
         StringBuilder s = new StringBuilder();
         if (args.size() == 0) return;
         for (int i = 1; i < args.size()-1; i++) {
