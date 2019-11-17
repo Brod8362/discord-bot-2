@@ -1,14 +1,14 @@
 package pw.byakuren.discord;
 
-import com.sun.tools.javac.util.Pair;
+import net.dv8tion.jda.internal.utils.tuple.Pair;
 import pw.byakuren.discord.objects.Triple;
 import pw.byakuren.discord.objects.cache.datatypes.LastMessage;
 import pw.byakuren.discord.objects.cache.datatypes.ServerParameter;
 import pw.byakuren.discord.objects.cache.datatypes.ServerSettings;
 
 import java.sql.*;
-import java.sql.Date;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SQLConnection {
 
@@ -399,7 +399,7 @@ public class SQLConnection {
         ResultSet r = getAllDatapoints.executeQuery();
         List<Pair<String,Integer>> ps = new ArrayList<>();
         while (r.next()) {
-            ps.add(new Pair<>(r.getString(3), r.getInt(4)));
+            ps.add(Pair.of(r.getString(3), r.getInt(4)));
         }
         return ps;
     }

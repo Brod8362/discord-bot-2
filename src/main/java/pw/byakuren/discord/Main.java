@@ -93,7 +93,7 @@ public class Main extends ListenerAdapter {
         cmdhelp.registerCommand(new WatchUser(cache));
         cmdhelp.registerCommand(new WatchRole(cache));
         cmdhelp.registerCommand(new SetLogChannel(cache));
-
+        cmdhelp.registerCommand(new EightBall());
         System.out.println(String.format("Loaded %s commands.", cmdhelp.getCommandSet().size()));
     }
 

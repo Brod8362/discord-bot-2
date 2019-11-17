@@ -1,8 +1,8 @@
 package pw.byakuren.discord;
 
-import com.sun.tools.javac.util.Pair;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.internal.utils.tuple.Pair;
 import pw.byakuren.discord.objects.Statistic;
 import pw.byakuren.discord.objects.Triple;
 import pw.byakuren.discord.objects.cache.datatypes.*;
@@ -116,21 +116,21 @@ public class DatabaseManager {
         if (data==null) return null;
         int rec_rx = 0, rec_tx = 0, msg_sd = 0, msg_dl = 0, atc_sd = 0;
         for (Pair<String,Integer> t: data) {
-            switch (Objects.requireNonNull(Statistic.datapointToStatistic(t.fst))) {
+            switch (Objects.requireNonNull(Statistic.datapointToStatistic(t.getLeft()))) {
                 case MESSAGES_SENT:
-                    msg_sd = t.snd;
+                    msg_sd = t.getRight();
                     break;
                 case REACTIONS_SENT:
-                    rec_tx = t.snd;
+                    rec_tx = t.getRight();
                     break;
                 case ATTACHMENTS_SENT:
-                    atc_sd = t.snd;
+                    atc_sd = t.getRight();
                     break;
                 case MESSAGES_DELETED:
-                    msg_dl = t.snd;
+                    msg_dl = t.getRight();
                     break;
                 case REACTIONS_RECEIVED:
-                    rec_rx = t.snd;
+                    rec_rx = t.getRight();
                     break;
             }
         }
