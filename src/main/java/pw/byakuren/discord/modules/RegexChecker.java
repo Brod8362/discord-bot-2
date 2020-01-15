@@ -34,7 +34,7 @@ public class RegexChecker implements Module {
         int matched_count = 0;
         for (RegexKey k : keys) {
             m.usePattern(k.getPattern());
-            if (m.matches()) {
+            if (m.find()) {
                 matched_count++;
                 highlighted = highlighted.replace(m.group(), String.format("__%s__", m.group()));
             }
