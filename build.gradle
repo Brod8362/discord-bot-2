@@ -16,10 +16,6 @@ repositories {
     jcenter()
 }
 
-tasks.register("Main.main()") {
-
-}
-
 jar {
     manifest {
         attributes 'Main-Class' : "pw.byakuren.discord.Main"

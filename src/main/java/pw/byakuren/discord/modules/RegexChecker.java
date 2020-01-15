@@ -11,9 +11,8 @@ import pw.byakuren.discord.objects.cache.datatypes.RegexKey;
 
 import java.awt.*;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.regex.Matcher;
 
 public class RegexChecker implements Module {
 
@@ -29,42 +28,37 @@ public class RegexChecker implements Module {
         ServerCache sc = c.getServerCache(message.getGuild());
         if (sc.channelIsExcluded(message.getTextChannel())) return;
         List<RegexKey> keys = sc.getAllValidRegexKeys();
-        Set<String> matches = new HashSet<>();
-        Set<String> str_matches = new HashSet<>();
-        for (RegexKey k: keys) //match single words
-            for (String s: message.getContentDisplay().split(" "))
-                if (s.matches(k.getKey())) {
-                    matches.add(k.getKey());
-                    str_matches.add(s);
-                }
-        StringBuilder highlighted = new StringBuilder();
-        for (String s: message.getContentDisplay().split(" ")) {
-            if (str_matches.contains(s)) {
-                highlighted.append("__").append(s).append("__ ");
-            } else {
-                highlighted.append(s).append(" ");
+        if (keys.size() == 0) return;
+        String highlighted = message.getContentRaw();
+        Matcher m = keys.get(0).getPattern().matcher(message.getContentRaw());
+        int matched_count = 0;
+        for (RegexKey k : keys) {
+            m.usePattern(k.getPattern());
+            if (m.matches()) {
+                matched_count++;
+                highlighted = highlighted.replace(m.group(), String.format("__%s__", m.group()));
             }
         }
-        if (matches.size() > 0) {
-            TextChannel log = sc.getLogChannel(message.getJDA());
-            if (log==null) {
-                message.getGuild().getOwner().getUser().openPrivateChannel().complete()
-                        .sendMessageFormat("Tried to log a naughty user but you didn't set your log channel in %s!", message.getGuild().getName())
-                        .queue();
-            }
-            EmbedBuilder b = new EmbedBuilder();
-            b.setTitle("Message matches for keys");
-            b.setDescription(String.format("[Jump](%s)\n%s\n**Matched**: `%s`",
-                    message.getJumpUrl(), highlighted,
-                    String.join("`, `", matches)));
-            b.setColor(Color.RED);
-            b.setAuthor(message.getAuthor().getName(), message.getJumpUrl(), message.getAuthor().getAvatarUrl());
-            b.setTimestamp(LocalDateTime.now());
-            b.setFooter("#"+message.getTextChannel().getName(), null);
-            TextChannel lc = sc.getLogChannel(message.getJDA());
-            lc.sendMessage(b.build()).queue();
+
+        if (matched_count == 0) return;
+
+        TextChannel log = sc.getLogChannel(message.getJDA());
+        if (log == null) {
+            message.getGuild().getOwner().getUser().openPrivateChannel().complete()
+                    .sendMessageFormat("Tried to log a naughty user but you didn't set your log channel in %s!",
+                            message.getGuild().getName()).queue();
         }
+        EmbedBuilder b = new EmbedBuilder();
+        b.setTitle("Message matches for keys");
+        b.setDescription(String.format("[Jump](%s)\n%s", message.getJumpUrl(), message.getContentDisplay()));
+        b.setColor(Color.RED);
+        b.setAuthor(message.getAuthor().getName(), message.getJumpUrl(), message.getAuthor().getAvatarUrl());
+        b.setTimestamp(LocalDateTime.now());
+        b.setFooter("#" + message.getTextChannel().getName(), null);
+        TextChannel lc = sc.getLogChannel(message.getJDA());
+        lc.sendMessage(b.build()).queue();
     }
+
 
     @Override
     public void run(CommandHelper cmdhelp) {

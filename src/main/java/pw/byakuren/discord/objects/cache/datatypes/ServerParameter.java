@@ -6,7 +6,7 @@ public enum ServerParameter {
     SERVER_MODERATOR_ROLE("mod_role", "Server Moderator ROle", ServerSettingType.ROLE);
 
     enum ServerSettingType {
-        CHANNEL, ROLE, BOOLEAN, INTEGER;
+        CHANNEL, ROLE, BOOLEAN, INTEGER
     }
 
     public final String string;

@@ -468,7 +468,7 @@ public class SQLConnection {
         addServerSetting.setString(2, setting);
         addServerSetting.setLong(3, val);
         addServerSetting.execute();
-        addServerSetting.clearParameters();;
+        addServerSetting.clearParameters();
     }
 
     public List<ServerSettings> getAllServerSettings(long server) throws SQLException {
