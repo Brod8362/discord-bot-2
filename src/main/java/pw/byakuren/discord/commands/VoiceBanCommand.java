@@ -42,7 +42,8 @@ public class VoiceBanCommand extends Command {
             }
         });
 
-        subcommands.add(new Subcommand(new String[]{"current", "c"}, null, null, this) {
+        subcommands.add(new Subcommand(new String[]{"current", "c"}, null,
+                "@User [duration] {reason}", this) {
             @Override
             public void run(Message message, List<String> args) {
                 cmd_current(message, args);
@@ -78,6 +79,10 @@ public class VoiceBanCommand extends Command {
 
     private void cmd_view(Message message, List<String> args) {
         ServerCache sc = c.getServerCache(message.getGuild());
+        if (message.getMentionedMembers().isEmpty()) {
+            message.getChannel().sendMessage("You must mention a user.").queue();
+            return;
+        }
         VoiceBan vb = sc.getValidVoiceBan(message.getMentionedMembers().get(0));
         if (vb == null) {
             message.getChannel().sendMessage("User is not banned from voice.").queue();
@@ -131,6 +136,10 @@ public class VoiceBanCommand extends Command {
 
     private void cmd_cancel(Message message, List<String> args) {
         ServerCache sc = c.getServerCache(message.getGuild());
+        if (message.getMentionedMembers().isEmpty()) {
+            message.getChannel().sendMessage("You must mention a user.").queue();
+            return;
+        }
         VoiceBan vb = sc.getValidVoiceBan(message.getMentionedMembers().get(0));
         if (vb == null) {
             message.getChannel().sendMessage("User is not banned from voice.").queue();
