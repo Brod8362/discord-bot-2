@@ -49,12 +49,12 @@ public class RegexChecker implements Module {
                             message.getGuild().getName()).queue();
         }
         EmbedBuilder b = new EmbedBuilder();
-        b.setTitle("Message matches for keys");
-        b.setDescription(String.format("[Jump](%s)\n%s", message.getJumpUrl(), message.getContentDisplay()));
-        b.setColor(Color.RED);
-        b.setAuthor(message.getAuthor().getName(), message.getJumpUrl(), message.getAuthor().getAvatarUrl());
-        b.setTimestamp(LocalDateTime.now());
-        b.setFooter("#" + message.getTextChannel().getName(), null);
+        b.setTitle("Message matches for keys")
+                .setDescription(String.format("[Jump](%s)\n%s", message.getJumpUrl(), highlighted))
+                .setColor(Color.RED)
+                .setAuthor(message.getAuthor().getName(), message.getJumpUrl(), message.getAuthor().getAvatarUrl())
+                .setTimestamp(LocalDateTime.now())
+                .setFooter("#" + message.getTextChannel().getName(), null);
         TextChannel lc = sc.getLogChannel(message.getJDA());
         lc.sendMessage(b.build()).queue();
     }
