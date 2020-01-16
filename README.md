@@ -14,9 +14,11 @@ Features
 * Count messages, attachments, and reactions for each user
 * Exclude channels from being flagged by the regex keys
 * Flexible "modules" to ensure bot stability
+* Temporary Voice Ban
+* Ask the 8ball important questions
 
 ### Planned Features
-* Temporary Voice Ban
+
 * More "fun" features
 * Command enabling/disabling
 * More coming soon!
