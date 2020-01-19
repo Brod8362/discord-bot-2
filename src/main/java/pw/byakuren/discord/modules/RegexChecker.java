@@ -33,6 +33,7 @@ public class RegexChecker implements Module {
         Matcher m = keys.get(0).getPattern().matcher(message.getContentRaw());
         int matched_count = 0;
         for (RegexKey k : keys) {
+            m.reset();
             m.usePattern(k.getPattern());
             if (m.find()) {
                 matched_count++;
