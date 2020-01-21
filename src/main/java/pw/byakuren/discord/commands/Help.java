@@ -4,13 +4,10 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import pw.byakuren.discord.commands.permissions.CommandPermission;
 import pw.byakuren.discord.commands.subcommands.Subcommand;
-import pw.byakuren.discord.commands.subcommands.SubcommandList;
 import pw.byakuren.discord.objects.cache.Cache;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Help extends Command {
@@ -71,7 +68,7 @@ public class Help extends Command {
                cmd_not_found(message, args.get(0));
             } else {
                 /* Command found */
-                build_help_embed(message, c.getPrimaryName(), c);
+                sendHelpEmbed(message, c.getPrimaryName(), c);
             }
             return;
         }
@@ -88,7 +85,7 @@ public class Help extends Command {
             d = e;
         }
         if (d == null) return;
-        build_help_embed(message, name, d);
+        sendHelpEmbed(message, name, d);
     }
 
     private void cmd_not_found(Message message, String t) {
@@ -99,7 +96,7 @@ public class Help extends Command {
         message.getChannel().sendMessage(b.build()).queue();
     }
 
-    private void build_help_embed(Message message, String name, Command c) {
+    private void sendHelpEmbed(Message message, String name, Command c) {
         EmbedBuilder b = new EmbedBuilder();
         b.setTitle("**"+name+"** ("+c.minimumPermission().name+")");
         String help = c.getHelp();
@@ -108,14 +105,14 @@ public class Help extends Command {
         if (syntax == null) syntax = "No syntax defined.";
         b.addField("Help", help, false);
         b.addField("Syntax", syntax, false);
-        List<Subcommand> sub_cmds= c.getSubcommands();
-        String subcmds = "";
-        if (sub_cmds != null && sub_cmds.size() > 0 && sub_cmds.get(0).getPrimaryName().equals("")) {
-            sub_cmds = sub_cmds.subList(1, sub_cmds.size());
-            subcmds = sub_cmds.stream().map(Command::getPrimaryName).collect(Collectors.joining(", "));
+        List<Subcommand> sub_cmds_raw= c.getSubcommands();
+        String sub_commands_text = "";
+        if (sub_cmds_raw != null && sub_cmds_raw.size() > 0 && sub_cmds_raw.get(0).getPrimaryName().equals("")) {
+            sub_cmds_raw = sub_cmds_raw.subList(1, sub_cmds_raw.size());
+            sub_commands_text = sub_cmds_raw.stream().map(Command::getPrimaryName).collect(Collectors.joining(", "));
         }
-        if (subcmds.isEmpty()) subcmds = "None";
-        b.addField("Subcommands", subcmds, false);
+        if (sub_commands_text.isEmpty()) sub_commands_text = "None";
+        b.addField("Subcommands", sub_commands_text, false);
         b.setFooter("Aliases: "+String.join(", ", Arrays.asList(c.getNames())), null);
         message.getChannel().sendMessage(b.build()).queue();
     }
