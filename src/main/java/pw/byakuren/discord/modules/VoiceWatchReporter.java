@@ -11,9 +11,8 @@ import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
 import pw.byakuren.discord.commands.CommandHelper;
 import pw.byakuren.discord.objects.cache.Cache;
+import pw.byakuren.discord.util.BotEmbed;
 
-import java.awt.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class VoiceWatchReporter implements Module {
@@ -36,55 +35,47 @@ public class VoiceWatchReporter implements Module {
 
     @Override
     public void run(Event event) {
-        if (event instanceof GuildVoiceJoinEvent) {
+        if (event instanceof GuildVoiceJoinEvent)
             userJoinVoice((GuildVoiceJoinEvent) event);
-        } else if (event instanceof GuildVoiceLeaveEvent) {
+        else if (event instanceof GuildVoiceLeaveEvent)
             userLeaveVoice((GuildVoiceLeaveEvent) event);
-        } else if (event instanceof GuildVoiceMoveEvent) {
+        else if (event instanceof GuildVoiceMoveEvent)
             userMove((GuildVoiceMoveEvent) event);
-        }
     }
 
     private void userJoinVoice(GuildVoiceJoinEvent e) {
         Member m = e.getMember();
-        if (c.getServerCache(m.getGuild()).userIsWatched(m)) {
+        if (c.getServerCache(m.getGuild()).userIsWatched(m))
             reportUser(m, e.getChannelJoined(), true);
-        }
     }
 
     private void userLeaveVoice(GuildVoiceLeaveEvent e) {
         Member m = e.getMember();
-        if (c.getServerCache(m.getGuild()).userIsWatched(m)) {
+        if (c.getServerCache(m.getGuild()).userIsWatched(m))
             reportUser(m, e.getChannelLeft(), false);
-        }
     }
 
     private void userMove(GuildVoiceMoveEvent e) {
         Member m = e.getMember();
-        if (c.getServerCache(m.getGuild()).userIsWatched(m)) {
+        if (c.getServerCache(m.getGuild()).userIsWatched(m))
             reportUserMoved(m, e.getChannelLeft(), e.getChannelJoined());
-        }
     }
 
     private void reportUser(Member m, VoiceChannel chan, boolean joined) {
         TextChannel lc = c.getServerCache(m.getGuild()).getLogChannel(m.getJDA());
-        EmbedBuilder b = new EmbedBuilder();
-        b.setAuthor(m.getUser().getName(), null, m.getUser().getEffectiveAvatarUrl());
-        b.setTitle("Watched user voice activity");
-        b.setColor(joined ? Color.RED : Color.CYAN);
-        b.setDescription("User "+(joined ? "joined" : "left")+" voice channel #"+chan.getName());
-        b.setTimestamp(LocalDateTime.now());
+        EmbedBuilder b = BotEmbed.headerAuthor("Watched user voice activity", m.getUser())
+                .setColor(joined ? BotEmbed.BAD_COLOR : BotEmbed.OK_COLOR)
+                .setDescription("User " + (joined ? "joined" : "left") + " voice channel #" + chan.getName())
+                .setTimestamp(LocalDateTime.now());
         lc.sendMessage(b.build()).queue();
     }
 
     private void reportUserMoved(Member m, VoiceChannel f, VoiceChannel t) {
         TextChannel lc = c.getServerCache(m.getGuild()).getLogChannel(m.getJDA());
-        EmbedBuilder b = new EmbedBuilder();
-        b.setAuthor(m.getUser().getName(), null, m.getUser().getEffectiveAvatarUrl());
-        b.setTitle("Watched user voice activity");
-        b.setColor(Color.ORANGE);
-        b.setDescription("User moved from #"+f.getName()+" to #"+t.getName());
-        b.setTimestamp(LocalDateTime.now());
+        EmbedBuilder b = BotEmbed.headerAuthor("Watched user voice activity", m.getUser())
+                .setColor(BotEmbed.BAD_COLOR)
+                .setDescription("User moved from #" + f.getName() + " to #" + t.getName())
+                .setTimestamp(LocalDateTime.now());
         lc.sendMessage(b.build()).queue();
     }
 

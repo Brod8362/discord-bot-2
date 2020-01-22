@@ -8,6 +8,7 @@ import pw.byakuren.discord.commands.CommandHelper;
 import pw.byakuren.discord.objects.cache.Cache;
 import pw.byakuren.discord.objects.cache.ServerCache;
 import pw.byakuren.discord.objects.cache.datatypes.RegexKey;
+import pw.byakuren.discord.util.BotEmbed;
 
 import java.awt.*;
 import java.time.LocalDateTime;
@@ -49,11 +50,9 @@ public class RegexChecker implements Module {
                     .sendMessageFormat("Tried to log a naughty user but you didn't set your log channel in %s!",
                             message.getGuild().getName()).queue();
         }
-        EmbedBuilder b = new EmbedBuilder();
-        b.setTitle("Message matches for keys")
+        EmbedBuilder b = BotEmbed.headerAuthor("Message matched regex keys", message.getJumpUrl(),
+                message.getAuthor(), BotEmbed.BAD_COLOR)
                 .setDescription(String.format("[Jump](%s)\n%s", message.getJumpUrl(), highlighted))
-                .setColor(Color.RED)
-                .setAuthor(message.getAuthor().getName(), message.getJumpUrl(), message.getAuthor().getAvatarUrl())
                 .setTimestamp(LocalDateTime.now())
                 .setFooter("#" + message.getTextChannel().getName(), null);
         TextChannel lc = sc.getLogChannel(message.getJDA());

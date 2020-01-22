@@ -11,6 +11,7 @@ import pw.byakuren.discord.commands.subcommands.SubcommandList;
 import pw.byakuren.discord.objects.cache.Cache;
 import pw.byakuren.discord.objects.cache.ServerCache;
 import pw.byakuren.discord.objects.cache.datatypes.VoiceBan;
+import pw.byakuren.discord.util.BotEmbed;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,10 +23,10 @@ public class VoiceBanCommand extends Command {
     private Cache c;
 
     public VoiceBanCommand(Cache c) {
-        this.c=c;
-        names=new String[]{"voiceban", "vb"};
-        help="Ban a user from voice for a specified time.";
-        minimum_permission= CommandPermission.MOD_ROLE;
+        this.c = c;
+        names = new String[]{"voiceban", "vb"};
+        help = "Ban a user from voice for a specified time.";
+        minimum_permission = CommandPermission.MOD_ROLE;
 
         subcommands.add(new SubcommandList(this));
         subcommands.add(new Subcommand(new String[]{"view", "v"}, null, null, this) {
@@ -68,12 +69,10 @@ public class VoiceBanCommand extends Command {
     private void cmd_all(Message message, List<String> args) {
         ServerCache sc = c.getServerCache(message.getGuild());
         StringBuilder s = new StringBuilder();
-        for (VoiceBan vb: sc.getPrevVoiceBans(10)) {
+        for (VoiceBan vb : sc.getPrevVoiceBans(10)) {
             s.append(vb).append("\n\n");
         }
-        EmbedBuilder b = new EmbedBuilder();
-        b.setDescription(s.toString());
-        b.setTitle("Past 10 voice bans");
+        EmbedBuilder b = BotEmbed.neutral("Past 10 voice bans").setDescription(s.toString());
         message.getChannel().sendMessage(b.build()).queue();
     }
 
@@ -99,21 +98,20 @@ public class VoiceBanCommand extends Command {
         long mid = message.getAuthor().getIdLong();
         String reason = "";
         if (args.size() > 2) {
-            reason = String.join(" ", args.subList(banned.getEffectiveName().split(" ").length+1, args.size()));
+            reason = String.join(" ", args.subList(banned.getEffectiveName().split(" ").length + 1, args.size()));
         }
-        if (reason.isEmpty()) reason=null;
+        if (reason.isEmpty()) reason = null;
         LocalDateTime start = LocalDateTime.now();
         LocalDateTime end = parseTime(args.get(banned.getEffectiveName().split(" ").length));
-        VoiceBan vb = new VoiceBan(gid,uid,mid,start,end, reason);
-        vb.write_state=PENDING_WRITE;
+        VoiceBan vb = new VoiceBan(gid, uid, mid, start, end, reason);
+        vb.write_state = PENDING_WRITE;
         ServerCache sc = c.getServerCache(message.getGuild());
         sc.getVoiceBans().getData().add(vb);
-        EmbedBuilder b = new EmbedBuilder();
-        b.setTitle("Voice Banned "+banned.getUser().getName());
-        b.setDescription("Reason: `"+(reason == null ? "<None given>" : reason)+"`");
-        b.setAuthor(banned.getUser().getName(), null, banned.getUser().getEffectiveAvatarUrl());
-        b.setFooter("Banned by "+message.getAuthor().getName()+" | Expires");
-        b.setTimestamp(vb.getExpireTime());
+        EmbedBuilder b = BotEmbed.ok("Voice Banned " + banned.getUser().getName())
+                .setDescription("Reason: `" + (reason == null ? "<None given>" : reason) + "`")
+                .setAuthor(banned.getUser().getName(), null, banned.getUser().getEffectiveAvatarUrl())
+                .setFooter("Banned by " + message.getAuthor().getName() + " | Expires")
+                .setTimestamp(vb.getExpireTime());
         message.getChannel().sendMessage(b.build()).queue();
         if (!message.getGuild().getSelfMember().hasPermission(Permission.VOICE_MOVE_OTHERS)) {
             message.getChannel().sendMessage(
@@ -128,9 +126,7 @@ public class VoiceBanCommand extends Command {
         for (int i = 0; i < sc.getValidVoiceBans().size() && i < 10; i++) {
             s.append(sc.getValidVoiceBans().get(i)).append("\n\n");
         }
-        EmbedBuilder b = new EmbedBuilder();
-        b.setDescription(s.toString());
-        b.setTitle("Current voice bans");
+        EmbedBuilder b = BotEmbed.neutral("Current voice bans").setDescription(s.toString());
         message.getChannel().sendMessage(b.build()).queue();
     }
 
@@ -146,23 +142,23 @@ public class VoiceBanCommand extends Command {
             return;
         }
         vb.cancel();
-        message.getChannel().sendMessage("Canceled voice ban for user <@"+vb.getMemberId()+">").queue();
+        message.getChannel().sendMessage("Canceled voice ban for user <@" + vb.getMemberId() + ">").queue();
     }
 
     private LocalDateTime parseTime(String t) {
         LocalDateTime n = LocalDateTime.now();
         while (!t.isEmpty()) {
             String f = null;
-            for (int i =2; i <= t.length(); i++) {
+            for (int i = 2; i <= t.length(); i++) {
                 if (t.substring(0, i).matches("\\d*[A-z]")) {
                     f = t.substring(0, i);
-                    t=t.substring(i);
+                    t = t.substring(i);
                     break;
                 }
             }
-            if (f==null) break;
-            int l = Integer.parseInt(f.substring(0, f.length()-1));
-            char c = f.charAt(f.length()-1);
+            if (f == null) break;
+            int l = Integer.parseInt(f.substring(0, f.length() - 1));
+            char c = f.charAt(f.length() - 1);
             switch (c) {
                 case 'd':
                     n = n.plusDays(l);
@@ -181,15 +177,13 @@ public class VoiceBanCommand extends Command {
     }
 
     private void sendVoiceBanInfo(TextChannel c, VoiceBan vb) {
-        EmbedBuilder b = new EmbedBuilder();
-        b.setTitle("Voice ban");
-        b.setDescription(String.format(
+        EmbedBuilder b = BotEmbed.neutral("Voice ban").setDescription(String.format(
                 "Banned member: <@%d>\n" +
-                "Banned by:<@%d>\n" +
-                "Banned on:%s\n" +
-                "Expires on:%s\n" +
-                "Reason:%s",
-        vb.getMemberId(), vb.getModId(), VoiceBan.formatDateTime(vb.getStartTime()),
+                        "Banned by:<@%d>\n" +
+                        "Banned on:%s\n" +
+                        "Expires on:%s\n" +
+                        "Reason:%s",
+                vb.getMemberId(), vb.getModId(), VoiceBan.formatDateTime(vb.getStartTime()),
                 VoiceBan.formatDateTime(vb.getExpireTime()), vb.getReason()));
         c.sendMessage(b.build()).queue();
     }

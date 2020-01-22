@@ -7,6 +7,7 @@ import pw.byakuren.discord.commands.permissions.CommandPermission;
 import pw.byakuren.discord.objects.Statistic;
 import pw.byakuren.discord.objects.cache.Cache;
 import pw.byakuren.discord.objects.cache.datatypes.UserStats;
+import pw.byakuren.discord.util.BotEmbed;
 
 import java.util.List;
 
@@ -15,9 +16,9 @@ public class UserInfo extends Command {
     Cache c;
 
     public UserInfo(Cache c) {
-        names=new String[]{"userinfo", "uinfo", "ui"};
-        help="Find info about a user.";
-        minimum_permission=CommandPermission.REGULAR_USER;
+        names = new String[]{"userinfo", "uinfo", "ui"};
+        help = "Find info about a user.";
+        minimum_permission = CommandPermission.REGULAR_USER;
         this.c = c;
     }
 
@@ -29,17 +30,16 @@ public class UserInfo extends Command {
         } else {
             u = message.getMentionedMembers().get(0);
         }
-        EmbedBuilder embed = new EmbedBuilder();
-        embed.setTitle(String.format("%s#%s", u.getUser().getName(), u.getUser().getDiscriminator()));
-        embed.setThumbnail(u.getUser().getAvatarUrl());
-        embed.addField("Nickname", u.getNickname(), true);
-        embed.addField("ID", u.getUser().getId(), true);
-        embed.addField("Joined At", u.getTimeJoined().toString(), true);
-        embed.addField("Account Creation Date", u.getUser().getTimeCreated().toString(), true);
+        EmbedBuilder embed = BotEmbed.neutral(String.format("%s#%s", u.getUser().getName(), u.getUser().getDiscriminator()))
+                .setThumbnail(u.getUser().getAvatarUrl())
+                .addField("Nickname", u.getNickname(), true)
+                .addField("ID", u.getUser().getId(), true)
+                .addField("Joined At", u.getTimeJoined().toString(), true)
+                .addField("Account Creation Date", u.getUser().getTimeCreated().toString(), true);
         UserStats stats = c.getServerCache(u.getGuild()).getStatsForUser(u);
         if (stats != null) {
-            for (Statistic s: Statistic.values()) {
-                embed.addField(s.nice_name, stats.getStatistic(s)+"", true);
+            for (Statistic s : Statistic.values()) {
+                embed.addField(s.nice_name, stats.getStatistic(s) + "", true);
             }
         } else {
             embed.setFooter("User Statistics not available.", null);

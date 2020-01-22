@@ -2,3 +2,4 @@ token
 database.db
 prefix
 out/*
+/.idea/modules/

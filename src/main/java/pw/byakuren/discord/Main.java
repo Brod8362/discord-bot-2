@@ -15,6 +15,7 @@ import pw.byakuren.discord.commands.*;
 import pw.byakuren.discord.modules.Module;
 import pw.byakuren.discord.modules.*;
 import pw.byakuren.discord.objects.cache.Cache;
+import pw.byakuren.discord.util.BotEmbed;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
@@ -186,8 +187,6 @@ public class Main extends ListenerAdapter {
     }
 
     public static void reportError(Message m, Exception e) {
-        String s = String.format("big ouchie! ```%s```\n ", e.getLocalizedMessage()+"\n"+
-                Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.joining("\n")));
-        m.getChannel().sendMessage(s).queue();
+        m.getChannel().sendMessage(BotEmbed.error(e).build()).queue();
     }
 }

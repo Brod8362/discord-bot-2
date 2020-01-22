@@ -3,6 +3,7 @@ package pw.byakuren.discord.commands;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import pw.byakuren.discord.commands.permissions.CommandPermission;
+import pw.byakuren.discord.util.BotEmbed;
 
 import java.awt.*;
 import java.util.List;
@@ -25,10 +26,7 @@ public class EightBall extends Command {
 
     @Override
     public void run(Message message, List<String> args) {
-        EmbedBuilder b = new EmbedBuilder();
-        b.setColor(Color.CYAN);
-        b.setDescription(getRandomPhrase());
-        message.getChannel().sendMessage(b.build()).queue();
+        message.getChannel().sendMessage(BotEmbed.information(getRandomPhrase()).build()).queue();
     }
 
     private String getRandomPhrase() {

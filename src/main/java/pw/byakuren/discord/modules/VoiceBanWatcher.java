@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import pw.byakuren.discord.commands.CommandHelper;
 import pw.byakuren.discord.objects.cache.Cache;
 import pw.byakuren.discord.objects.cache.datatypes.VoiceBan;
+import pw.byakuren.discord.util.BotEmbed;
 
 public class VoiceBanWatcher implements Module {
 
@@ -20,10 +21,12 @@ public class VoiceBanWatcher implements Module {
     }
 
     @Override
-    public void run(Message message) {}
+    public void run(Message message) {
+    }
 
     @Override
-    public void run(CommandHelper cmdhelp) {}
+    public void run(CommandHelper cmdhelp) {
+    }
 
     @Override
     public void run(Event event) {
@@ -44,21 +47,20 @@ public class VoiceBanWatcher implements Module {
             ev.getGuild().kickVoiceMember(m).queue();
         } catch (InsufficientPermissionException e) {
             c.getServerCache(ev.getGuild()).getLogChannel(ev.getJDA()).sendMessage(
-                    "Tried to disconnect banned voice user "+m.getAsMention()+", but missing permission "+e.getPermission())
+                    "Tried to disconnect banned voice user " + m.getAsMention() + ", but missing permission " + e.getPermission())
                     .queue();
             return;
         }
 
         PrivateChannel ch = m.getUser().openPrivateChannel().complete();
         VoiceBan vb = c.getServerCache(ev.getGuild()).getValidVoiceBan(m);
-        EmbedBuilder b = new EmbedBuilder();
-        b.setTitle("Voice banned");
-        b.setDescription(String.format("You were removed from #%s because you were voice banned by <@%d>.\nReason: `%s`",
-                ev.getChannelJoined().getName(), vb.getModId(),
-                (vb.getReason() != null ? vb.getReason() : "<None provided>"))
-                );
-        b.setFooter("Voice ban will expire at");
-        b.setTimestamp(vb.getExpireTime());
+        EmbedBuilder b = BotEmbed.neutral("Voice banned")
+                .setDescription(String.format("You were removed from #%s because you were voice banned by <@%d>.\nReason: `%s`",
+                        ev.getChannelJoined().getName(), vb.getModId(),
+                        (vb.getReason() != null ? vb.getReason() : "<None provided>"))
+                )
+                .setFooter("Voice ban will expire at")
+                .setTimestamp(vb.getExpireTime());
         ch.sendMessage(b.build()).queue();
     }
 

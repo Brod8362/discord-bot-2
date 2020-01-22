@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.events.Event;
 import pw.byakuren.discord.commands.CommandHelper;
 import pw.byakuren.discord.objects.cache.Cache;
 import pw.byakuren.discord.objects.cache.ServerCache;
+import pw.byakuren.discord.util.BotEmbed;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class RoleWatchReporter implements Module {
         ServerCache sc = c.getServerCache(message.getGuild());
         if (sc.channelIsExcluded(message.getTextChannel())) return;
         List<Role> roles = new ArrayList<>();
-        for (Role r: message.getMentionedRoles()) {
+        for (Role r : message.getMentionedRoles()) {
             if (sc.roleIsWatched(r)) {
                 roles.add(r);
             }
@@ -50,12 +51,11 @@ public class RoleWatchReporter implements Module {
     private void alert(Message m, List<Role> rs) {
         TextChannel lc = c.getServerCache(m.getGuild()).getLogChannel(m.getJDA());
         if (lc == null) return;
-        EmbedBuilder b = new EmbedBuilder();
-        b.setTitle("Watched role"+(rs.size() > 1 ? "s":"")+" pinged");
-        b.setAuthor(m.getMember().getUser().getName(), null, m.getAuthor().getEffectiveAvatarUrl());
-        b.setDescription(m.getContentRaw());
-        b.setTimestamp(LocalDateTime.now());
-        b.setFooter("#"+m.getChannel().getName(), null);
+        EmbedBuilder b = BotEmbed.headerAuthor("Watched role" + (rs.size() > 1 ? "s" : "") + " pinged",
+                m.getMember().getUser())
+                .setDescription(m.getContentRaw())
+                .setTimestamp(LocalDateTime.now())
+                .setFooter("#" + m.getChannel().getName(), null);
         lc.sendMessage(b.build()).queue();
     }
 
