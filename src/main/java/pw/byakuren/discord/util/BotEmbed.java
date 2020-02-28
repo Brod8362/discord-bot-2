@@ -48,7 +48,7 @@ public abstract class BotEmbed {
     }
 
     public static EmbedBuilder headerAuthor(String msg, String url, User u) {
-        return neutral(msg).setAuthor(u.getName(), url, u.getEffectiveAvatarUrl());
+        return neutral(msg).setAuthor(String.format("%s (%d)", u.getName(), u.getIdLong()), url, u.getEffectiveAvatarUrl());
     }
 
     public static EmbedBuilder headerAuthor(String msg, User u) {
