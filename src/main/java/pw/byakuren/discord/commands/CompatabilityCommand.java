@@ -5,6 +5,7 @@ import pw.byakuren.discord.commands.permissions.CommandPermission;
 import pw.byakuren.discord.util.BotEmbed;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CompatabilityCommand extends Command {
     public CompatabilityCommand() {
@@ -15,13 +16,12 @@ public class CompatabilityCommand extends Command {
 
     @Override
     public void run(Message message, List<String> args) {
-        if (args.size() != 1) {
-            message.getChannel().sendMessage("You need to give a thing!").queue();
+        if (args.isEmpty())
             return;
-        }
-        int compat = (args.get(0).toLowerCase().hashCode()+message.getAuthor().getId().hashCode())%101;
-        message.getChannel().sendMessage(BotEmbed.information("Compatability").setDescription(String.format(
-                "%s and %s\n**%d%%** Compatible", message.getAuthor().getAsMention(), args.get(0), compat)
+        String obj = String.join(" ", args);
+        int compat = (obj.toLowerCase().hashCode()+message.getAuthor().getId().hashCode())%101;
+        message.getChannel().sendMessage(BotEmbed.information("Compatibility").setDescription(String.format(
+                "%s and %s\n**%d%%** Compatible", obj, args.get(0), compat)
         ).build()).queue();
     }
 }
