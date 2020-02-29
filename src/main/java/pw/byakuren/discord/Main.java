@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import pw.byakuren.discord.commands.*;
+import pw.byakuren.discord.commands.CompatabilityCommand;
 import pw.byakuren.discord.modules.Module;
 import pw.byakuren.discord.modules.*;
 import pw.byakuren.discord.objects.cache.Cache;
@@ -25,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 
 public class Main extends ListenerAdapter {
@@ -97,6 +97,7 @@ public class Main extends ListenerAdapter {
         cmdhelp.registerCommand(new SetLogChannel(cache));
         cmdhelp.registerCommand(new VoiceBanCommand(cache));
         cmdhelp.registerCommand(new EightBall());
+        cmdhelp.registerCommand(new CompatabilityCommand());
         System.out.println(String.format("Loaded %s commands.", cmdhelp.getCommandSet().size()));
     }
 
