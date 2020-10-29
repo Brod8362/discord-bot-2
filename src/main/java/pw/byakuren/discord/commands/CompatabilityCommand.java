@@ -21,7 +21,7 @@ public class CompatabilityCommand extends Command {
         String obj = String.join(" ", args);
         int compat = (obj.toLowerCase().hashCode()+message.getAuthor().getId().hashCode())%101;
         message.getChannel().sendMessage(BotEmbed.information("Compatibility").setDescription(String.format(
-                "%s and %s\n**%d%%** Compatible", obj, args.get(0), compat)
+                "%s and %s\n**%d%%** Compatible", message.getAuthor().getAsMention(), obj, compat)
         ).build()).queue();
     }
 }
