@@ -40,7 +40,7 @@ public class Main extends ListenerAdapter {
     public static void main(String[] args) {
         String token = getToken();
         try {
-            JDA jda = new JDABuilder(token).build();
+            JDA jda = JDABuilder.createLight(token).build();
             jda.addEventListener(new Main());
         } catch (LoginException e) {
             e.printStackTrace();
