@@ -28,6 +28,6 @@ public class SubcommandList extends Subcommand {
         t+="Available options: `";
         t+=cmds.stream().map(Command::getPrimaryName).collect(Collectors.joining("`, `"));
         t+="`";
-        message.getChannel().sendMessage(t).queue();
+        message.reply(t).mentionRepliedUser(false).queue();
     }
 }

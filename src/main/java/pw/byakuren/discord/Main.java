@@ -188,6 +188,6 @@ public class Main extends ListenerAdapter {
     }
 
     public static void reportError(Message m, Exception e) {
-        m.getChannel().sendMessage(BotEmbed.error(e).build()).queue();
+        m.reply(BotEmbed.error(e).build()).queue();
     }
 }

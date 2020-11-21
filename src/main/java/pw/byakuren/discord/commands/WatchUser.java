@@ -76,6 +76,6 @@ public class WatchUser extends Command {
         StringBuilder s = new StringBuilder();
         s.append("Watched users:\n");
         s.append(list.stream().map(WatchedUser::getUserMention).collect(Collectors.joining(", ")));
-        message.getChannel().sendMessage(s.toString()).queue();
+        message.reply(s.toString()).mentionRepliedUser(false).queue();
     }
 }

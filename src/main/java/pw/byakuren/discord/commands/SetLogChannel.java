@@ -45,13 +45,13 @@ public class SetLogChannel extends Command {
         ServerSettings s = new ServerSettings(message.getGuild(), ServerParameter.SERVER_LOG_CHANNEL, message.getChannel().getIdLong());
         s.write_state=PENDING_WRITE;
         sc.getSettings().getData().add(s);
-        message.getChannel().sendMessageFormat("Set log channel to current channel (%s)",
-                message.getTextChannel().getAsMention()).queue();
+        message.replyFormat("Set log channel to current channel (%s)",
+                message.getTextChannel().getAsMention()).mentionRepliedUser(false).queue();
     }
 
     private void view(Message message, List<String> args) {
         TextChannel chan = c.getServerCache(message.getGuild()).getLogChannel(message.getJDA());
-        message.getChannel().sendMessage(chan != null ? "Log channel is currently set to "+chan.getAsMention() :
-                "Log channel is not set.").queue();
+        message.reply(chan != null ? "Log channel is currently set to "+chan.getAsMention() :
+                "Log channel is not set.").mentionRepliedUser(false).queue();
     }
 }

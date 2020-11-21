@@ -80,7 +80,7 @@ public class RegexKeys extends Command {
                 break;
         }
         if (pos == list.size()) {
-            message.getChannel().sendMessage("Key not found.").queue();
+            message.reply("Key not found.").mentionRepliedUser(false).queue();
             return;
         }
         c.getServerCache(message.getGuild()).getRegexKeys().getData().get(pos).write_state = PENDING_DELETE;
@@ -91,7 +91,7 @@ public class RegexKeys extends Command {
         List<RegexKey> list = c.getServerCache(message.getGuild()).getAllValidRegexKeys();
         StringBuilder s = new StringBuilder();
         if (list.size() == 0) {
-            message.getChannel().sendMessage("You have no regex keys, use `add [key]` to add some!").queue();
+            message.reply("You have no regex keys, use `add [key]` to add some!").mentionRepliedUser(false).queue();
             return;
         }
         s.append("Keys:\n");
@@ -99,7 +99,7 @@ public class RegexKeys extends Command {
             s.append("`").append(list.get(i).getKey()).append("`, ");
         }
         s.append("`").append(list.get(list.size() - 1).getKey()).append("`");
-        message.getChannel().sendMessage(s.toString()).queue();
+        message.reply(s.toString()).mentionRepliedUser(false).queue();
     }
 
     private void cmd_update(Message message, List<String> args) {
@@ -116,7 +116,7 @@ public class RegexKeys extends Command {
             }
         }
         sc.getRegexKeys().getData().addAll(new_keys);
-        message.getChannel().sendMessage("Updated " + new_keys.size() + " keys.").queue();
+        message.reply("Updated " + new_keys.size() + " keys.").mentionRepliedUser(false).queue();
     }
 
     private boolean needsUpdating(RegexKey p) {

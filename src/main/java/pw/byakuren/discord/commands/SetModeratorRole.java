@@ -51,12 +51,12 @@ public class SetModeratorRole extends Command {
             sc.removeModeratorRole();
             sc.getSettings().getData().add(setting);
         }
-        message.getChannel().sendMessage("Moderator role set to "+r.getAsMention()).queue();
+        message.reply("Moderator role set to "+r.getAsMention()).mentionRepliedUser(false).queue();
     }
 
     private void view(Message message, List<String> args) {
         Role r = c.getServerCache(message.getGuild()).getModeratorRole(message.getJDA());
-        message.getChannel().sendMessage(r != null ? "Moderator role is currently set to "+r.getAsMention() :
-                "Moderator role is not set.").queue();
+        message.reply(r != null ? "Moderator role is currently set to "+r.getAsMention() :
+                "Moderator role is not set.").mentionRepliedUser(false).queue();
     }
 }

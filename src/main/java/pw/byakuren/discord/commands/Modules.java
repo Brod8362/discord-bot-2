@@ -43,12 +43,12 @@ public class Modules extends Command {
     }
 
     private void cmd_enable(Message message, List<String> args) {
-        mdhelp.disable(mdhelp.getModule(args.get(1)));
+        mdhelp.enable(mdhelp.getModule(args.get(0)));
         message.addReaction("✅").queue();
     }
 
     private void cmd_disable(Message message, List<String> args) {
-        mdhelp.enable(mdhelp.getModule(args.get(1)));
+        mdhelp.disable(mdhelp.getModule(args.get(0)));
         message.addReaction("✅").queue();
     }
 
@@ -64,6 +64,6 @@ public class Modules extends Command {
         if (mdhelp.getModules().keySet().size() == 0) {
             embed.addField("No modules found.", "", false);
         }
-        message.getChannel().sendMessage(embed.build()).queue();
+        message.reply(embed.build()).mentionRepliedUser(false).queue();
     }
 }

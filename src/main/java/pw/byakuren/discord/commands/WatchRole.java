@@ -82,6 +82,6 @@ public class WatchRole extends Command {
             s = new StringBuilder();
             s.append("No watched roles. Use 'add' to add some.");
         }
-        message.getChannel().sendMessage(s.toString()).queue();
+        message.reply(s.toString()).mentionRepliedUser(false).queue();
     }
 }

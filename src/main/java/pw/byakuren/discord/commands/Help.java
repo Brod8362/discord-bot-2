@@ -56,7 +56,7 @@ public class Help extends Command {
         b.setDescription(desc);
         b.setFooter("Use the help command with a command name to see more information. " +
                 "Run with -a to see all commands.", null);
-        message.getChannel().sendMessage(b.build()).queue();
+        message.reply(b.build()).mentionRepliedUser(false).queue();
     }
 
     private void cmd_details(Message message, List<String> args) {
@@ -93,7 +93,7 @@ public class Help extends Command {
         EmbedBuilder b = new EmbedBuilder();
         b.setDescription("Unknown command '"+t+"'");
         b.setFooter("Use the help command with no arguments to see all commands.", null);
-        message.getChannel().sendMessage(b.build()).queue();
+        message.reply(b.build()).mentionRepliedUser(false).queue();
     }
 
     private void sendHelpEmbed(Message message, String name, Command c) {
@@ -114,6 +114,6 @@ public class Help extends Command {
         if (sub_commands_text.isEmpty()) sub_commands_text = "None";
         b.addField("Subcommands", sub_commands_text, false);
         b.setFooter("Aliases: "+String.join(", ", Arrays.asList(c.getNames())), null);
-        message.getChannel().sendMessage(b.build()).queue();
+        message.reply(b.build()).mentionRepliedUser(false).queue();
     }
 }

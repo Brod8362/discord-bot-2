@@ -70,7 +70,7 @@ public abstract class Command {
 
     public void run(Message message, List<String> args) {
         if (subcommands.size() == 0) {
-            message.getChannel().sendMessage("big ouchie: this command cannot be run, it's not implemented yet.").queue();
+            message.reply("big ouchie: this command cannot be run, it's not implemented yet.").mentionRepliedUser(false).queue();
             return;
         }
         if (args.size() == 0){

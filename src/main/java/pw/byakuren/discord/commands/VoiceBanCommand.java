@@ -73,18 +73,18 @@ public class VoiceBanCommand extends Command {
             s.append(vb).append("\n\n");
         }
         EmbedBuilder b = BotEmbed.neutral("Past 10 voice bans").setDescription(s.toString());
-        message.getChannel().sendMessage(b.build()).queue();
+        message.reply(b.build()).mentionRepliedUser(false).queue();
     }
 
     private void cmd_view(Message message, List<String> args) {
         ServerCache sc = c.getServerCache(message.getGuild());
         if (message.getMentionedMembers().isEmpty()) {
-            message.getChannel().sendMessage("You must mention a user.").queue();
+            message.reply("You must mention a user.").mentionRepliedUser(false).queue();
             return;
         }
         VoiceBan vb = sc.getValidVoiceBan(message.getMentionedMembers().get(0));
         if (vb == null) {
-            message.getChannel().sendMessage("User is not banned from voice.").queue();
+            message.reply("User is not banned from voice.").mentionRepliedUser(false).queue();
             return;
         }
         sendVoiceBanInfo(message.getTextChannel(), vb);
@@ -112,11 +112,11 @@ public class VoiceBanCommand extends Command {
                 .setAuthor(banned.getUser().getName(), null, banned.getUser().getEffectiveAvatarUrl())
                 .setFooter("Banned by " + message.getAuthor().getName() + " | Expires")
                 .setTimestamp(vb.getExpireTime());
-        message.getChannel().sendMessage(b.build()).queue();
+        message.reply(b.build()).mentionRepliedUser(false).queue();
         if (!message.getGuild().getSelfMember().hasPermission(Permission.VOICE_MOVE_OTHERS)) {
-            message.getChannel().sendMessage(
+            message.reply(
                     "Note:Bot lacks VOICE_MOVE_OTHERS permission, removing banned users from voice will NOT work.")
-                    .queue();
+                    .mentionRepliedUser(false).queue();
         }
     }
 
@@ -127,22 +127,22 @@ public class VoiceBanCommand extends Command {
             s.append(sc.getValidVoiceBans().get(i)).append("\n\n");
         }
         EmbedBuilder b = BotEmbed.neutral("Current voice bans").setDescription(s.toString());
-        message.getChannel().sendMessage(b.build()).queue();
+        message.reply(b.build()).mentionRepliedUser(false).queue();
     }
 
     private void cmd_cancel(Message message, List<String> args) {
         ServerCache sc = c.getServerCache(message.getGuild());
         if (message.getMentionedMembers().isEmpty()) {
-            message.getChannel().sendMessage("You must mention a user.").queue();
+            message.reply("You must mention a user.").mentionRepliedUser(false).queue();
             return;
         }
         VoiceBan vb = sc.getValidVoiceBan(message.getMentionedMembers().get(0));
         if (vb == null) {
-            message.getChannel().sendMessage("User is not banned from voice.").queue();
+            message.reply("User is not banned from voice.").mentionRepliedUser(false).queue();
             return;
         }
         vb.cancel();
-        message.getChannel().sendMessage("Canceled voice ban for user <@" + vb.getMemberId() + ">").queue();
+        message.reply("Canceled voice ban for user <@" + vb.getMemberId() + ">").mentionRepliedUser(false).queue();
     }
 
     private LocalDateTime parseTime(String t) {

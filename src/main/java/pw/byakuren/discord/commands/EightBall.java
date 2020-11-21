@@ -26,7 +26,7 @@ public class EightBall extends Command {
 
     @Override
     public void run(Message message, List<String> args) {
-        message.getChannel().sendMessage(BotEmbed.information(getRandomPhrase()).build()).queue();
+        message.reply(BotEmbed.information(getRandomPhrase()).build()).mentionRepliedUser(false).queue();
     }
 
     private String getRandomPhrase() {

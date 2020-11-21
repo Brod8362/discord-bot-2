@@ -45,13 +45,13 @@ public class ExcludedChannels extends Command {
         ServerCache sc = c.getServerCache(message.getGuild());
         List<ExcludedChannel> list = sc.getAllValidExcludedChannels();
         if (list.size() == 0) {
-            message.getChannel().sendMessage("You don't have any excluded channels. Call this command with " +
-                    "`here` to toggle the current channel as excluded.").queue();
+            message.reply("You don't have any excluded channels. Call this command with " +
+                    "`here` to toggle the current channel as excluded.").mentionRepliedUser(false).queue();
             return;
         }
         String s = "Channels:\n" +
                 list.stream().map(ExcludedChannel::getChannelMention).collect(Collectors.joining(", "));
-        message.getChannel().sendMessage(s).queue();
+        message.reply(s).mentionRepliedUser(false).queue();
     }
 
     private void add_cmd(Message message, List<String> args) {

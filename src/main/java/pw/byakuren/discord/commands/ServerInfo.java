@@ -27,6 +27,6 @@ public class ServerInfo extends Command {
                 .addField("Channel Count", Integer.toString(s.getChannels().size()), true)
                 .addField("Role Count", Integer.toString(s.getRoles().size()), true)
                 .addField("Default Channel", s.getDefaultChannel().getAsMention(), true);
-        message.getChannel().sendMessage(embed.build()).queue();
+        message.reply(embed.build()).mentionRepliedUser(false).queue();
     }
 }

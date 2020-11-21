@@ -26,7 +26,7 @@ public class Stop extends Command {
     @Override
     public void run(Message message, List<String> args) {
         JDA jda = message.getJDA();
-        Message m = message.getChannel().sendMessage("Waiting for write threads...").complete();
+        Message m = message.reply("Waiting for write threads...").mentionRepliedUser(false).complete();
         try {
             c.writeAllAndQuit();
         } catch (Exception e) {

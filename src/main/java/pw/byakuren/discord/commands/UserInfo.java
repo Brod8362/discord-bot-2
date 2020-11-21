@@ -44,6 +44,6 @@ public class UserInfo extends Command {
         } else {
             embed.setFooter("User Statistics not available.", null);
         }
-        message.getChannel().sendMessage(embed.build()).queue();
+        message.reply(embed.build()).mentionRepliedUser(false).queue();
     }
 }
