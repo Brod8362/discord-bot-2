@@ -11,6 +11,7 @@ import pw.byakuren.discord.objects.cache.factories.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static pw.byakuren.discord.objects.cache.WriteState.PENDING_DELETE;
 import static pw.byakuren.discord.objects.cache.WriteState.PENDING_WRITE;
@@ -242,7 +243,7 @@ public class ServerCache {
     }
 
     public MessageFilterAction getFilterActionByName(String name) {
-        for (MessageFilterAction mfa: message_filters.getData()) {
+        for (MessageFilterAction mfa: getAllFilterActions()) {
             if (mfa.getName().equals(name)) {
                 return mfa;
             }
@@ -251,6 +252,6 @@ public class ServerCache {
     }
 
     public List<MessageFilterAction> getAllFilterActions() {
-        return message_filters.getData();
+        return message_filters.getData().stream().filter(CacheEntry::exists).collect(Collectors.toList());
     }
 }

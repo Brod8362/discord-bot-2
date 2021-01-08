@@ -1,5 +1,7 @@
 package pw.byakuren.discord.filteraction.result;
 
+import pw.byakuren.discord.util.MiscUtil;
+
 public class ActionResult {
 
     public final boolean success;
@@ -10,5 +12,10 @@ public class ActionResult {
         this.success = success;
         this.name = name;
         this.exception = exception;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s %s : %s", MiscUtil.booleanToEmoji(success), name, exception == null ? "OK" : exception.getMessage());
     }
 }

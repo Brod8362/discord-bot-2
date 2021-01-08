@@ -27,4 +27,8 @@ public abstract class CacheEntry {
     protected abstract void write(DatabaseManager dbmg);
 
     protected abstract void delete(DatabaseManager dbmg);
+
+    public boolean exists() {
+        return write_state!=WriteState.PENDING_DELETE;
+    }
 }

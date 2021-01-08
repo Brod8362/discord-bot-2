@@ -26,7 +26,7 @@ public class PingFilter extends MessageFilter {
 
     @Override
     public FilterResult apply(Message obj) {
-        boolean trigger = obj.getMentionedRoles().size()>=count;
+        boolean trigger = obj.getMentionedUsers().size()>=count;
         String reason = trigger ? null : String.format("the user did not ping %d or more users", count);
         return new FilterResult(trigger, getDisplay(), reason);
     }

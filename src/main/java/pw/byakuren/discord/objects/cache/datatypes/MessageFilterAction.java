@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.entities.Message;
 import pw.byakuren.discord.DatabaseManager;
 import pw.byakuren.discord.filteraction.Action;
 import pw.byakuren.discord.filteraction.Filter;
+import pw.byakuren.discord.filteraction.result.ActionResult;
 import pw.byakuren.discord.filteraction.result.FilterActionResult;
 import pw.byakuren.discord.filteraction.result.FilterResult;
 import pw.byakuren.discord.util.ScalaReplacements;
@@ -24,7 +25,7 @@ public class MessageFilterAction extends CacheEntry {
 
     public MessageFilterAction(long guild, String name, List<Filter<Message>> filters, List<Action<Message>> actions) {
         this.guild = guild;
-        this.name=name;
+        this.name = name;
         this.filters = filters;
         this.actions = actions;
     }
@@ -38,27 +39,28 @@ public class MessageFilterAction extends CacheEntry {
     }
 
     public FilterActionResult check(Message msg) {
-        List<FilterResult> results = new ArrayList<>();
+        List<FilterResult> filterResults = new ArrayList<>();
+        List<ActionResult> actionResults = new ArrayList<>();
         int applied_count = 0;
 
-        for (Filter<Message> f: filters) {
+        for (Filter<Message> f : filters) {
             FilterResult fr = f.apply(msg);
             if (fr.triggered) {
                 applied_count++;
             }
-            results.add(fr);
+            filterResults.add(fr);
         }
 
         //todo just scan the list and make sure all are true
         boolean trigger = applied_count == filters.size();
 
         if (trigger) {
-            for (Action<Message> a: actions) {
-                a.execute(msg);
+            for (Action<Message> a : actions) {
+                actionResults.add(a.execute(msg));
             }
         }
 
-        return new FilterActionResult(this, msg, trigger, results);
+        return new FilterActionResult(this, msg, trigger, filterResults, actionResults);
     }
 
     @Override
@@ -87,5 +89,13 @@ public class MessageFilterAction extends CacheEntry {
     @Override
     public String toString() {
         return prettyPrint();
+    }
+
+    public List<Action<Message>> getActions() {
+        return actions;
+    }
+
+    public List<Filter<Message>> getFilters() {
+        return filters;
     }
 }
