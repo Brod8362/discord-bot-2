@@ -28,7 +28,7 @@ public class ReplyAction extends MessageAction {
     }
 
     @Override
-    public String getRepresentation() {
+    public String getName() {
         return "reply";
     }
 

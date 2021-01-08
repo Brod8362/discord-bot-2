@@ -2,15 +2,20 @@ package pw.byakuren.discord.filteraction;
 
 import net.dv8tion.jda.api.entities.Message;
 import pw.byakuren.discord.filteraction.arguments.Argument;
-import pw.byakuren.discord.filteraction.result.ActionResult;
+import pw.byakuren.discord.util.ScalaReplacements;
+
+import java.util.Arrays;
 
 public abstract class MessageAction implements Action<Message> {
 
-    public abstract String getRepresentation();
+    public abstract String getName();
 
-    // todo include arguments
     public String getDisplay() {
-        return getRepresentation()+"<>";
+        return String.format("%s<%s>", getName(), getArgumentsDisplay());
+    }
+
+    private String getArgumentsDisplay() {
+        return ScalaReplacements.mkString(Arrays.asList(getArguments().clone()), ",");
     }
 
     public abstract Argument[] getExpectedArguments();
@@ -20,7 +25,7 @@ public abstract class MessageAction implements Action<Message> {
     protected abstract MessageAction parseFromString(String s);
 
     public final MessageAction fromString(String s) {
-        return parseFromString(s.substring(getRepresentation().length()+1, s.lastIndexOf(">")));
+        return parseFromString(s.substring(getName().length() + 1, s.lastIndexOf(">")));
     }
 
     @Override

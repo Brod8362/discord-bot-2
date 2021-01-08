@@ -21,7 +21,7 @@ public abstract class MessageFilter extends CacheEntry implements Filter<Message
     }
 
     public String getDisplay() {
-        return String.format("%s(%s)", getRepresentation(), getArgumentsDisplay());
+        return String.format("%s(%s)", getName(), getArgumentsDisplay());
     }
 
     public String getArgumentsDisplay() {
@@ -35,7 +35,7 @@ public abstract class MessageFilter extends CacheEntry implements Filter<Message
     protected abstract MessageFilter parseFromString(String s);
 
     public final MessageFilter fromString(String s) {
-        return parseFromString(s.substring(getRepresentation().length()+1, s.lastIndexOf(")")));
+        return parseFromString(s.substring(getName().length()+1, s.lastIndexOf(")")));
     }
 
     abstract public Argument[] getExpectedArguments();

@@ -23,7 +23,7 @@ public abstract class MessageFilterParser {
 
     static {
         for (MessageFilter example : exampleFilters) {
-            filterMap.put(example.getRepresentation(), example);
+            filterMap.put(example.getName(), example);
         }
     }
 

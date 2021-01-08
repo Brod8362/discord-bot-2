@@ -20,7 +20,7 @@ public class DeleteAction extends MessageAction {
     }
 
     @Override
-    public String getRepresentation() {
+    public String getName() {
         return "delete";
     }
 

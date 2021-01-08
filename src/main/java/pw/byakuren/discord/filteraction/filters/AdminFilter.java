@@ -8,7 +8,7 @@ import pw.byakuren.discord.filteraction.result.FilterResult;
 
 public class AdminFilter extends MessageFilter {
     @Override
-    public String getRepresentation() {
+    public String getName() {
         return "isAdmin";
     }
 

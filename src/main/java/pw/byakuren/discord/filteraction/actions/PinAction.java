@@ -20,7 +20,7 @@ public class PinAction extends MessageAction {
     }
 
     @Override
-    public String getRepresentation() {
+    public String getName() {
         return "pin";
     }
 

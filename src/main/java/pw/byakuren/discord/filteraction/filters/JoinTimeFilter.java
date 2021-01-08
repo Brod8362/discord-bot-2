@@ -18,7 +18,7 @@ public class JoinTimeFilter extends MessageFilter {
     }
 
     @Override
-    public String getRepresentation() {
+    public String getName() {
         return "hereFor";
     }
 
@@ -29,7 +29,7 @@ public class JoinTimeFilter extends MessageFilter {
 
     @Override
     public String getArgumentsDisplay() {
-        return minutes+" minutes";
+        return minutes+"";
     }
 
     @Override

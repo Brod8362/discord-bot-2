@@ -16,11 +16,11 @@ public class KickAction extends MessageAction {
         } catch (Exception e) {
             ex = e;
         }
-        return new ActionResult(success, getRepresentation(), ex);
+        return new ActionResult(success, getName(), ex);
     }
 
     @Override
-    public String getRepresentation() {
+    public String getName() {
         return "kick";
     }
 

@@ -19,7 +19,7 @@ public class PositiveRoleFilter extends MessageFilter {
     }
 
     @Override
-    public String getRepresentation() {
+    public String getName() {
         return "hasRole";
     }
 

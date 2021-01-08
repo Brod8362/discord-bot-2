@@ -22,7 +22,7 @@ public abstract class MessageActionParser {
 
     static {
         for (MessageAction example: exampleActions) {
-            actionMap.put(example.getRepresentation(), example);
+            actionMap.put(example.getName(), example);
         }
     }
 

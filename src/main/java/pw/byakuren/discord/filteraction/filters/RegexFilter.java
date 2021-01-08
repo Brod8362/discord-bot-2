@@ -15,7 +15,7 @@ public class RegexFilter extends MessageFilter {
     }
 
     @Override
-    public String getRepresentation() {
+    public String getName() {
         return "matchesRegex";
     }
 

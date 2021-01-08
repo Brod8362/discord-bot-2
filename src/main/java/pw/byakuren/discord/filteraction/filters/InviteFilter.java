@@ -10,7 +10,7 @@ public class InviteFilter extends MessageFilter {
     private final String regex = "(https?://)?(www.)?(discord.(gg|io|me|li)|discordapp.com/invite)/[^\\s/]+?(?=\\b)";
 
     @Override
-    public String getRepresentation() {
+    public String getName() {
         return "hasInvite";
     }
 

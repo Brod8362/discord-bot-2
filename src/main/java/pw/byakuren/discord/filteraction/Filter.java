@@ -4,7 +4,7 @@ import pw.byakuren.discord.filteraction.result.FilterResult;
 
 public interface Filter<T> {
 
-    public String getRepresentation();
+    public String getName();
 
     public String[] getArguments();
 
