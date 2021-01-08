@@ -2,9 +2,7 @@ package pw.byakuren.discord.util;
 
 import net.dv8tion.jda.api.entities.Message;
 import pw.byakuren.discord.filteraction.Action;
-import pw.byakuren.discord.filteraction.Filter;
 import pw.byakuren.discord.filteraction.MessageAction;
-import pw.byakuren.discord.filteraction.MessageFilter;
 import pw.byakuren.discord.filteraction.actions.*;
 
 import java.util.HashMap;
@@ -36,4 +34,7 @@ public abstract class MessageActionParser {
         return null; //the filter does not exist
     }
 
+    public static MessageAction[] getExamples() {
+        return exampleActions;
+    }
 }
