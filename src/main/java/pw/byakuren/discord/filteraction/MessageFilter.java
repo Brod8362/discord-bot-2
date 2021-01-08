@@ -20,11 +20,6 @@ public abstract class MessageFilter extends CacheEntry implements Filter<Message
         //TODO implement
     }
 
-    /**
-     * This method should return a string that can be parsed back into another Filter with identical behavior,
-     * e.g. passing the output of getDisplay() into parseFromString() should work and behave the same.
-     * @return string representation of this filter
-     */
     public String getDisplay() {
         return String.format("%s(%s)", getName(), getArgumentsDisplay());
     }
