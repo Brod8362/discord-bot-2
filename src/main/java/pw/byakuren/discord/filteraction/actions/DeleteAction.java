@@ -14,7 +14,7 @@ public class DeleteAction extends MessageAction {
             obj.delete().queue();
             success = true;
         } catch (Exception e) {
-            e = ex;
+            ex = e;
         }
         return new ActionResult(success, getDisplay(), ex);
     }
