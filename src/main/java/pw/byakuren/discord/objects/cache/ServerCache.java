@@ -83,6 +83,8 @@ public class ServerCache {
 
     public CacheObject<VoiceBan> getVoiceBans() { return voice_bans; }
 
+    public CacheObject<MessageFilterAction> getMessageFilterActions() { return message_filters; }
+
     public UserStats getStatsForUser(Member m) {
         return getStatsForUser(m.getGuild().getIdLong(), m.getUser());
     }
@@ -241,7 +243,7 @@ public class ServerCache {
 
     public MessageFilterAction getFilterActionByName(String name) {
         for (MessageFilterAction mfa: message_filters.getData()) {
-            if (mfa.getName()==name) {
+            if (mfa.getName().equals(name)) {
                 return mfa;
             }
         }

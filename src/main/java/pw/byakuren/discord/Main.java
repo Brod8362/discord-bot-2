@@ -98,6 +98,7 @@ public class Main extends ListenerAdapter {
         cmdhelp.registerCommand(new VoiceBanCommand(cache));
         cmdhelp.registerCommand(new EightBall());
         cmdhelp.registerCommand(new CompatabilityCommand());
+        cmdhelp.registerCommand(new FilterActionCommand(cache));
         System.out.println(String.format("Loaded %s commands.", cmdhelp.getCommandSet().size()));
     }
 

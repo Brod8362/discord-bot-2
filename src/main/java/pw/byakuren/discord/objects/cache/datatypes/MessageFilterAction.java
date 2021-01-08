@@ -5,6 +5,7 @@ import pw.byakuren.discord.DatabaseManager;
 import pw.byakuren.discord.filteraction.Action;
 import pw.byakuren.discord.filteraction.Filter;
 import pw.byakuren.discord.filteraction.FilterActionResult;
+import pw.byakuren.discord.util.ScalaReplacements;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,11 +29,11 @@ public class MessageFilterAction extends CacheEntry {
     }
 
     public void addFilter(Filter<Message> filter) {
-
+        filters.add(filter);
     }
 
     public void addAction(Action<Message> action) {
-
+        actions.add(action);
     }
 
     public FilterActionResult check(Message msg) {
@@ -69,5 +70,15 @@ public class MessageFilterAction extends CacheEntry {
 
     public String getName() {
         return name;
+    }
+
+    public String prettyPrint() {
+        return String.format("%s: filters [%s], actions [%s]", name, ScalaReplacements.mkString(filters, ","),
+                ScalaReplacements.mkString(actions, ","));
+    }
+
+    @Override
+    public String toString() {
+        return prettyPrint();
     }
 }

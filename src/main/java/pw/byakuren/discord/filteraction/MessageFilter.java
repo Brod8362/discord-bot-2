@@ -3,6 +3,7 @@ package pw.byakuren.discord.filteraction;
 import net.dv8tion.jda.api.entities.Message;
 import pw.byakuren.discord.DatabaseManager;
 import pw.byakuren.discord.objects.cache.datatypes.CacheEntry;
+import pw.byakuren.discord.util.ScalaReplacements;
 
 import java.util.Arrays;
 
@@ -24,7 +25,10 @@ public abstract class MessageFilter extends CacheEntry implements Filter<Message
     }
 
     public String getArgumentsDisplay() {
-        return Arrays.toString(getArguments());
+        return ScalaReplacements.mkString(Arrays.asList(getArguments().clone()),",");
     }
 
+    public String toString() {
+        return getDisplay();
+    }
 }
