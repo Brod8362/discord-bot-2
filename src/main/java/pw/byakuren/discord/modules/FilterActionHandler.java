@@ -3,6 +3,7 @@ package pw.byakuren.discord.modules;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.Event;
 import pw.byakuren.discord.commands.CommandHelper;
+import pw.byakuren.discord.filteraction.result.FilterActionResult;
 import pw.byakuren.discord.objects.cache.Cache;
 import pw.byakuren.discord.objects.cache.ServerCache;
 import pw.byakuren.discord.objects.cache.datatypes.MessageFilterAction;
@@ -19,7 +20,7 @@ public class FilterActionHandler implements Module {
     public void run(Message message) {
         ServerCache sc = c.getServerCache(message.getGuild());
         for (MessageFilterAction mfa : sc.getAllFilterActions()) {
-            mfa.check(message);
+            FilterActionResult far = mfa.check(message);
         }
     }
 
@@ -35,6 +36,6 @@ public class FilterActionHandler implements Module {
 
     @Override
     public ModuleInfo getInfo() {
-        return new ModuleInfo("Filter Action Handler", "Brod8362", "v0.1b", ModuleType.MESSAGE_MODULE);
+        return new ModuleInfo("FAHandler", "Brod8362", "v0.1b", ModuleType.MESSAGE_MODULE);
     }
 }

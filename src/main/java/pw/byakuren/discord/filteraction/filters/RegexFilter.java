@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.entities.Message;
 import pw.byakuren.discord.filteraction.MessageFilter;
 import pw.byakuren.discord.filteraction.arguments.Argument;
 import pw.byakuren.discord.filteraction.arguments.ArgumentType;
+import pw.byakuren.discord.filteraction.result.FilterResult;
 
 public class RegexFilter extends MessageFilter {
 
@@ -34,7 +35,9 @@ public class RegexFilter extends MessageFilter {
     }
 
     @Override
-    public boolean apply(Message obj) {
-        return obj.getContentRaw().matches(pattern);
+    public FilterResult apply(Message obj) {
+        boolean trigger = obj.getContentRaw().matches(pattern);
+        String reason = trigger ? null : "the message does not match the regex `"+pattern+"`";
+        return new FilterResult(trigger, getDisplay(), reason);
     }
 }

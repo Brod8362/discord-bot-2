@@ -4,7 +4,8 @@ import net.dv8tion.jda.api.entities.Message;
 import pw.byakuren.discord.DatabaseManager;
 import pw.byakuren.discord.filteraction.Action;
 import pw.byakuren.discord.filteraction.Filter;
-import pw.byakuren.discord.filteraction.FilterActionResult;
+import pw.byakuren.discord.filteraction.result.FilterActionResult;
+import pw.byakuren.discord.filteraction.result.FilterResult;
 import pw.byakuren.discord.util.ScalaReplacements;
 
 import java.util.ArrayList;
@@ -37,13 +38,19 @@ public class MessageFilterAction extends CacheEntry {
     }
 
     public FilterActionResult check(Message msg) {
-        List<Filter<Message>> triggered = new ArrayList<>();
+        List<FilterResult> results = new ArrayList<>();
+        int applied_count = 0;
 
         for (Filter<Message> f: filters) {
-            if (f.apply(msg)) triggered.add(f);
+            FilterResult fr = f.apply(msg);
+            if (fr.triggered) {
+                applied_count++;
+            }
+            results.add(fr);
         }
 
-        boolean trigger = triggered.size() == filters.size();
+        //todo just scan the list and make sure all are true
+        boolean trigger = applied_count == filters.size();
 
         if (trigger) {
             for (Action<Message> a: actions) {
@@ -51,7 +58,7 @@ public class MessageFilterAction extends CacheEntry {
             }
         }
 
-        return new FilterActionResult(this, msg, trigger, triggered);
+        return new FilterActionResult(this, msg, trigger, results);
     }
 
     @Override

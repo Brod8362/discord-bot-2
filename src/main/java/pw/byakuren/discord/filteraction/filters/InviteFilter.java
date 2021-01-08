@@ -3,8 +3,7 @@ package pw.byakuren.discord.filteraction.filters;
 import net.dv8tion.jda.api.entities.Message;
 import pw.byakuren.discord.filteraction.MessageFilter;
 import pw.byakuren.discord.filteraction.arguments.Argument;
-
-import java.util.regex.Pattern;
+import pw.byakuren.discord.filteraction.result.FilterResult;
 
 public class InviteFilter extends MessageFilter {
 
@@ -21,8 +20,10 @@ public class InviteFilter extends MessageFilter {
     }
 
     @Override
-    public boolean apply(Message obj) {
-        return obj.getContentRaw().matches(regex);
+    public FilterResult apply(Message obj) {
+        boolean trigger = obj.getContentRaw().matches(regex);
+        String reason = trigger ? null : "the message does not have an invite in it";
+        return new FilterResult(trigger, getDisplay(), reason);
     }
 
     @Override

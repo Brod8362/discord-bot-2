@@ -4,8 +4,7 @@ import net.dv8tion.jda.api.entities.Message;
 import pw.byakuren.discord.commands.permissions.CommandPermission;
 import pw.byakuren.discord.commands.subcommands.Subcommand;
 import pw.byakuren.discord.filteraction.Filter;
-import pw.byakuren.discord.filteraction.FilterActionResult;
-import pw.byakuren.discord.filteraction.MessageFilter;
+import pw.byakuren.discord.filteraction.result.FilterActionResult;
 import pw.byakuren.discord.objects.cache.Cache;
 import pw.byakuren.discord.objects.cache.ServerCache;
 import pw.byakuren.discord.objects.cache.WriteState;
@@ -45,11 +44,10 @@ public class FilterActionCommand extends Command {
     }
 
     private void cmd_test(Message msg, List<String> args) {
-        //Note that this expects a message ID.
         ServerCache sc = c.getServerCache(msg.getGuild());
         MessageFilterAction mfa = sc.getFilterActionByName(args.get(0));
-        //TODO blah blah finish this
-        //FilterActionResult result = mfa.check(fs);
+        FilterActionResult far = mfa.check(msg);
+        msg.reply(far.embedReport()).queue();
     }
 
     private void cmd_add(Message msg, List<String> args) {

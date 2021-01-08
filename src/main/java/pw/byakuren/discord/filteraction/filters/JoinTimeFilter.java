@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.entities.Message;
 import pw.byakuren.discord.filteraction.MessageFilter;
 import pw.byakuren.discord.filteraction.arguments.Argument;
 import pw.byakuren.discord.filteraction.arguments.ArgumentType;
+import pw.byakuren.discord.filteraction.result.FilterResult;
 
 import java.time.OffsetDateTime;
 
@@ -37,11 +38,13 @@ public class JoinTimeFilter extends MessageFilter {
     }
 
     @Override
-    public boolean apply(Message obj) {
+    public FilterResult apply(Message obj) {
+        boolean trigger = false;
         Member m = obj.getMember();
         if (m != null) {
-            return (OffsetDateTime.now().toEpochSecond()-m.getTimeJoined().toEpochSecond())/(60) <= minutes;
+            trigger = (OffsetDateTime.now().toEpochSecond()-m.getTimeJoined().toEpochSecond())/(60) <= minutes;
         }
-        return false;
+        String reason = trigger ? null : String.format("the user has been here for more than %d minutes", minutes);
+        return new FilterResult(trigger, getDisplay(), reason);
     }
 }

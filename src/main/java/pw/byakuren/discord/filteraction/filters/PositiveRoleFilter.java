@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.entities.Role;
 import pw.byakuren.discord.filteraction.MessageFilter;
 import pw.byakuren.discord.filteraction.arguments.Argument;
 import pw.byakuren.discord.filteraction.arguments.ArgumentType;
+import pw.byakuren.discord.filteraction.result.FilterResult;
 
 import java.util.List;
 
@@ -38,17 +39,23 @@ public class PositiveRoleFilter extends MessageFilter {
     }
 
     @Override
-    public boolean apply(Message msg) {
-        if (!msg.isFromGuild()) return false;
+    public FilterResult apply(Message msg) {
+        boolean trigger = false;
+        String reason = null;
         Member m = msg.getMember();
         if (m != null) {
             List<Role> roles = m.getRoles();
             for (Role r: roles) {
                 if (r.getIdLong()==roleId) {
-                    return true;
+                    trigger = true;
                 }
             }
+        } else {
+            reason = "this user has no member associated";
         }
-        return false;
+        if (!trigger && reason != null) {
+            reason = "this user does not have the role with id "+roleId;
+        }
+        return new FilterResult(trigger, getDisplay(), reason);
     }
 }
