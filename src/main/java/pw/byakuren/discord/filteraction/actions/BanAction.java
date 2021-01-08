@@ -29,7 +29,7 @@ public class BanAction extends MessageAction {
 
     @Override
     public String getRepresentation() {
-        return "kick";
+        return "ban";
     }
 
     @Override

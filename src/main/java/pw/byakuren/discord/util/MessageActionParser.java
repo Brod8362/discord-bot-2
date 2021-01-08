@@ -27,9 +27,10 @@ public abstract class MessageActionParser {
     }
 
     public static Action<Message> fromString(String s) {
+        if (!s.contains("<")) return null;
         String name = s.substring(0, s.indexOf("<"));
         if (actionMap.containsKey(name)) {
-            return actionMap.get(name);
+            return actionMap.get(name).fromString(s);
         }
         return null; //the filter does not exist
     }

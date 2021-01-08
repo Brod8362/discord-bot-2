@@ -8,6 +8,7 @@ public abstract class MessageAction implements Action<Message> {
 
     public abstract String getRepresentation();
 
+    // todo include arguments
     public String getDisplay() {
         return getRepresentation()+"<>";
     }
@@ -20,5 +21,10 @@ public abstract class MessageAction implements Action<Message> {
 
     public final MessageAction fromString(String s) {
         return parseFromString(s.substring(getRepresentation().length()+1, s.lastIndexOf(">")));
+    }
+
+    @Override
+    public String toString() {
+        return getDisplay();
     }
 }

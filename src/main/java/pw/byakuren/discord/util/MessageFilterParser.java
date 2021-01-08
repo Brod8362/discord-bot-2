@@ -28,9 +28,10 @@ public abstract class MessageFilterParser {
     }
 
     public static Filter<Message> fromString(String s) {
+        if (!s.contains("(")) return null;
         String name = s.substring(0, s.indexOf("("));
         if (filterMap.containsKey(name)) {
-            return filterMap.get(name);
+            return filterMap.get(name).fromString(s);
         }
         return null; //the filter does not exist
     }
