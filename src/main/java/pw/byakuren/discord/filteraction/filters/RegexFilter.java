@@ -2,6 +2,8 @@ package pw.byakuren.discord.filteraction.filters;
 
 import net.dv8tion.jda.api.entities.Message;
 import pw.byakuren.discord.filteraction.MessageFilter;
+import pw.byakuren.discord.filteraction.arguments.Argument;
+import pw.byakuren.discord.filteraction.arguments.ArgumentType;
 
 public class RegexFilter extends MessageFilter {
 
@@ -24,6 +26,11 @@ public class RegexFilter extends MessageFilter {
     @Override
     public String getArgumentsDisplay() {
         return pattern;
+    }
+
+    @Override
+    public Argument[] getExpectedArguments() {
+        return new Argument[]{new Argument("regex",  ArgumentType.STRING, "regex to match against")};
     }
 
     @Override

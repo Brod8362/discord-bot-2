@@ -2,6 +2,7 @@ package pw.byakuren.discord.filteraction.filters;
 
 import net.dv8tion.jda.api.entities.Message;
 import pw.byakuren.discord.filteraction.MessageFilter;
+import pw.byakuren.discord.filteraction.arguments.Argument;
 
 import java.util.regex.Pattern;
 
@@ -22,5 +23,10 @@ public class InviteFilter extends MessageFilter {
     @Override
     public boolean apply(Message obj) {
         return obj.getContentRaw().matches(regex);
+    }
+
+    @Override
+    public Argument[] getExpectedArguments() {
+        return new Argument[0];
     }
 }

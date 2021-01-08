@@ -3,8 +3,9 @@ package pw.byakuren.discord.filteraction.filters;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import pw.byakuren.discord.filteraction.MessageFilter;
+import pw.byakuren.discord.filteraction.arguments.Argument;
 
-public class AdminFilter extends MessageFilter  {
+public class AdminFilter extends MessageFilter {
     @Override
     public String getRepresentation() {
         return "isAdmin";
@@ -21,5 +22,10 @@ public class AdminFilter extends MessageFilter  {
             return obj.getMember().hasPermission(Permission.ADMINISTRATOR);
         }
         return false;
+    }
+
+    @Override
+    public Argument[] getExpectedArguments() {
+        return new Argument[0];
     }
 }

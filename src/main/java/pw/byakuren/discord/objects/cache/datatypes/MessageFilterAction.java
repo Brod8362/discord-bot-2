@@ -14,8 +14,8 @@ public class MessageFilterAction extends CacheEntry {
 
     private final long guild;
     private final String name;
-    private List<Filter<Message>> filters;
-    private List<Action<Message>> actions;
+    private final List<Filter<Message>> filters;
+    private final List<Action<Message>> actions;
 
     public MessageFilterAction(long guild, String name) {
         this(guild, name, new ArrayList<>(), new ArrayList<>());

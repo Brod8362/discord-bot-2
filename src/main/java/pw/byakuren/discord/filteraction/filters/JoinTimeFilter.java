@@ -3,6 +3,8 @@ package pw.byakuren.discord.filteraction.filters;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import pw.byakuren.discord.filteraction.MessageFilter;
+import pw.byakuren.discord.filteraction.arguments.Argument;
+import pw.byakuren.discord.filteraction.arguments.ArgumentType;
 
 import java.time.OffsetDateTime;
 
@@ -27,6 +29,11 @@ public class JoinTimeFilter extends MessageFilter {
     @Override
     public String getArgumentsDisplay() {
         return minutes+" minutes";
+    }
+
+    @Override
+    public Argument[] getExpectedArguments() {
+        return new Argument[]{new Argument("minutes", ArgumentType.NUMBER, "minutes since the user joined")};
     }
 
     @Override

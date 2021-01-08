@@ -4,6 +4,8 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
 import pw.byakuren.discord.filteraction.MessageFilter;
+import pw.byakuren.discord.filteraction.arguments.Argument;
+import pw.byakuren.discord.filteraction.arguments.ArgumentType;
 
 import java.util.List;
 
@@ -28,6 +30,11 @@ public class PositiveRoleFilter extends MessageFilter {
     @Override
     public String getArgumentsDisplay() {
         return String.format("<@&%d>", roleId);
+    }
+
+    @Override
+    public Argument[] getExpectedArguments() {
+        return new Argument[]{new Argument("role", ArgumentType.ROLE_ID, "role needed to trigger this filter")};
     }
 
     @Override
