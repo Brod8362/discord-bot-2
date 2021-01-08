@@ -32,6 +32,11 @@ public class PingFilter extends MessageFilter {
     }
 
     @Override
+    protected MessageFilter parseFromString(String s) {
+        return new PingFilter(Integer.parseInt(s));
+    }
+
+    @Override
     public Argument[] getExpectedArguments() {
         return new Argument[]{new Argument("pings", ArgumentType.NUMBER, "how many pings the message must have to trigger this filter")};
     }

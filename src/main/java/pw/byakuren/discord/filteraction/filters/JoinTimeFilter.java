@@ -33,6 +33,11 @@ public class JoinTimeFilter extends MessageFilter {
     }
 
     @Override
+    protected MessageFilter parseFromString(String s) {
+        return new JoinTimeFilter(Integer.parseInt(s));
+    }
+
+    @Override
     public Argument[] getExpectedArguments() {
         return new Argument[]{new Argument("minutes", ArgumentType.NUMBER, "minutes since the user joined")};
     }

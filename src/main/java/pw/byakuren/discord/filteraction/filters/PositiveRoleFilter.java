@@ -34,6 +34,11 @@ public class PositiveRoleFilter extends MessageFilter {
     }
 
     @Override
+    protected MessageFilter parseFromString(String s) {
+        return new PositiveRoleFilter(Long.parseLong(s));
+    }
+
+    @Override
     public Argument[] getExpectedArguments() {
         return new Argument[]{new Argument("role", ArgumentType.ROLE_ID, "role needed to trigger this filter")};
     }

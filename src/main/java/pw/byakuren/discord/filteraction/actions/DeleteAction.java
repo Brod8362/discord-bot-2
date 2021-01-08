@@ -20,7 +20,7 @@ public class DeleteAction extends MessageAction {
     }
 
     @Override
-    protected String getRepresentation() {
+    public String getRepresentation() {
         return "delete";
     }
 
@@ -32,5 +32,10 @@ public class DeleteAction extends MessageAction {
     @Override
     protected String[] getArguments() {
         return new String[0];
+    }
+
+    @Override
+    protected MessageAction parseFromString(String s) {
+        return new DeleteAction();
     }
 }

@@ -30,6 +30,11 @@ public class RegexFilter extends MessageFilter {
     }
 
     @Override
+    protected MessageFilter parseFromString(String s) {
+        return new RegexFilter(s);
+    }
+
+    @Override
     public Argument[] getExpectedArguments() {
         return new Argument[]{new Argument("regex",  ArgumentType.STRING, "regex to match against")};
     }

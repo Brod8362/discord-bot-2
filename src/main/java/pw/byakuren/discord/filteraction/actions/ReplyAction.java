@@ -28,7 +28,7 @@ public class ReplyAction extends MessageAction {
     }
 
     @Override
-    protected String getRepresentation() {
+    public String getRepresentation() {
         return "reply";
     }
 
@@ -40,6 +40,11 @@ public class ReplyAction extends MessageAction {
     @Override
     protected String[] getArguments() {
         return new String[]{replyMessage};
+    }
+
+    @Override
+    protected MessageAction parseFromString(String s) {
+        return new ReplyAction(s);
     }
 
 }

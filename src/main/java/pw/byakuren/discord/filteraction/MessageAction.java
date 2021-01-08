@@ -6,7 +6,7 @@ import pw.byakuren.discord.filteraction.result.ActionResult;
 
 public abstract class MessageAction implements Action<Message> {
 
-    protected abstract String getRepresentation();
+    public abstract String getRepresentation();
 
     public String getDisplay() {
         return getRepresentation()+"<>";
@@ -15,4 +15,10 @@ public abstract class MessageAction implements Action<Message> {
     public abstract Argument[] getExpectedArguments();
 
     protected abstract String[] getArguments();
+
+    protected abstract MessageAction parseFromString(String s);
+
+    public final MessageAction fromString(String s) {
+        return parseFromString(s.substring(getRepresentation().length()+1, s.lastIndexOf(">")));
+    }
 }

@@ -27,6 +27,11 @@ public class InviteFilter extends MessageFilter {
     }
 
     @Override
+    protected MessageFilter parseFromString(String s) {
+        return new InviteFilter();
+    }
+
+    @Override
     public Argument[] getExpectedArguments() {
         return new Argument[0];
     }

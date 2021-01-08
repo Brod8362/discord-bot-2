@@ -32,5 +32,11 @@ public abstract class MessageFilter extends CacheEntry implements Filter<Message
         return getDisplay();
     }
 
+    protected abstract MessageFilter parseFromString(String s);
+
+    public final MessageFilter fromString(String s) {
+        return parseFromString(s.substring(getRepresentation().length()+1, s.lastIndexOf(")")));
+    }
+
     abstract public Argument[] getExpectedArguments();
 }

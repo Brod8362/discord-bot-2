@@ -29,6 +29,11 @@ public class AdminFilter extends MessageFilter {
     }
 
     @Override
+    protected MessageFilter parseFromString(String s) {
+        return new AdminFilter();
+    }
+
+    @Override
     public Argument[] getExpectedArguments() {
         return new Argument[0];
     }

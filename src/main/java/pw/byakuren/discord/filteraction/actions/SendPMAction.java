@@ -28,7 +28,7 @@ public class SendPMAction extends MessageAction {
     }
 
     @Override
-    protected String getRepresentation() {
+    public String getRepresentation() {
         return "sendPM";
     }
 
@@ -40,5 +40,10 @@ public class SendPMAction extends MessageAction {
     @Override
     protected String[] getArguments() {
         return new String[]{};
+    }
+
+    @Override
+    protected MessageAction parseFromString(String s) {
+        return new SendPMAction(s);
     }
 }

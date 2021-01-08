@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.entities.Message;
 import pw.byakuren.discord.commands.permissions.CommandPermission;
 import pw.byakuren.discord.commands.subcommands.Subcommand;
 import pw.byakuren.discord.filteraction.Filter;
+import pw.byakuren.discord.filteraction.MessageFilter;
 import pw.byakuren.discord.filteraction.result.FilterActionResult;
 import pw.byakuren.discord.objects.cache.Cache;
 import pw.byakuren.discord.objects.cache.ServerCache;
@@ -13,6 +14,7 @@ import pw.byakuren.discord.util.BotEmbed;
 import pw.byakuren.discord.util.MessageFilterParser;
 import pw.byakuren.discord.util.ScalaReplacements;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class FilterActionCommand extends Command {
@@ -20,9 +22,9 @@ public class FilterActionCommand extends Command {
     private Cache c;
 
     public FilterActionCommand(Cache c) {
-        this.c=c;
-        names=new String[]{"filteraction", "fa"};
-        minimum_permission= CommandPermission.MOD_ROLE;
+        this.c = c;
+        names = new String[]{"filteraction", "fa"};
+        minimum_permission = CommandPermission.MOD_ROLE;
         subcommands.add(new Subcommand(new String[]{"test", "t"}, null, null, this) {
             @Override
             public void run(Message message, List<String> args) {
@@ -41,6 +43,18 @@ public class FilterActionCommand extends Command {
                 cmd_list(message, args);
             }
         });
+        subcommands.add(new Subcommand(new String[]{"availableFilters", "af"}, null, null, this) {
+            @Override
+            public void run(Message message, List<String> args) {
+                cmd_af(message, args);
+            }
+        });
+    }
+
+    private void cmd_af(Message message, List<String> args) {
+
+
+        message.reply(String.format("```%s```", ScalaReplacements.mkString(Arrays.asList(MessageFilterParser.getExamples().clone()), "\n"))).queue();
     }
 
     private void cmd_test(Message msg, List<String> args) {
@@ -75,6 +89,6 @@ public class FilterActionCommand extends Command {
 
     private void cmd_list(Message msg, List<String> args) {
         ServerCache sc = c.getServerCache(msg.getGuild());
-        msg.reply(String.format("```%s```", ScalaReplacements.mkString(sc.getAllFilterActions(),"\n"))).queue();
+        msg.reply(String.format("```%s```", ScalaReplacements.mkString(sc.getAllFilterActions(), "\n"))).queue();
     }
 }

@@ -30,6 +30,11 @@ public class MessageLengthFilter extends MessageFilter {
     }
 
     @Override
+    protected MessageFilter parseFromString(String s) {
+        return new MessageLengthFilter(Integer.parseInt(s));
+    }
+
+    @Override
     public Argument[] getExpectedArguments() {
         return new Argument[]{new Argument("length",  ArgumentType.NUMBER, "minimum length of message needed to trigger")};
     }

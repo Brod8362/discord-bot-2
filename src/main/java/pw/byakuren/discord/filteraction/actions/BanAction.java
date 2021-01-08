@@ -28,7 +28,7 @@ public class BanAction extends MessageAction {
     }
 
     @Override
-    protected String getRepresentation() {
+    public String getRepresentation() {
         return "kick";
     }
 
@@ -40,5 +40,10 @@ public class BanAction extends MessageAction {
     @Override
     protected String[] getArguments() {
         return new String[]{delDays+""};
+    }
+
+    @Override
+    protected MessageAction parseFromString(String s) {
+        return new BanAction(Integer.parseInt(s));
     }
 }
