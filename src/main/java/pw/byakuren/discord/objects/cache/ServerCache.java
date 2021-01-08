@@ -44,9 +44,9 @@ public class ServerCache {
         excluded_channels = new CacheObject<>(id, dbmg, new ExcludedChannelFactory(id, dbmg));
         last_messages = new CacheObject<>(id, dbmg, new LastMessageFactory(id, dbmg));
         voice_bans = new CacheObject<>(id, dbmg, new VoiceBanFactory(id, dbmg));
-        objects = new CacheObject[]{userdata, settings, regex_keys, watched_roles, watched_users, excluded_channels,
-                last_messages, voice_bans};
         message_filters = new CacheObject<>(id, dbmg, new MessageFilterActionFactory(id, dbmg));
+        objects = new CacheObject[]{userdata, settings, regex_keys, watched_roles, watched_users, excluded_channels,
+                last_messages, voice_bans, message_filters};
         write_thread = new ServerWriteThread(id, objects);
     }
 

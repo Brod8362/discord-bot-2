@@ -39,7 +39,7 @@ public class SendPMAction extends MessageAction {
 
     @Override
     protected String[] getArguments() {
-        return new String[]{};
+        return new String[]{msgContent};
     }
 
     @Override

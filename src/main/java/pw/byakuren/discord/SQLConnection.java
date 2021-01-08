@@ -566,22 +566,8 @@ public class SQLConnection {
         ResultSet r = getAllFilterActions.executeQuery();
         ArrayList<MessageFilterAction> ar = new ArrayList<>();
         while (r.next()) {
-            List<String> filtersRaw = MiscUtil.deserializeList(r.getBytes(3));
-            List<String> actionsRaw = MiscUtil.deserializeList(r.getBytes(4));
-            ArrayList<Filter<Message>> filters = new ArrayList<>();
-            ArrayList<Action<Message>> actions = new ArrayList<>();
-            for (String s: filtersRaw) {
-                Filter<Message> mf = MessageFilterParser.fromString(s);
-                if (mf != null) {
-                    filters.add(mf);
-                }
-            }
-            for (String s: actionsRaw) {
-                Action<Message> ma = MessageActionParser.fromString(s);
-                if (ma != null) {
-                    actions.add(ma);
-                }
-            }
+            List<Filter<Message>> filters = MiscUtil.deserializeList(r.getBytes(3));
+            List<Action<Message>> actions = MiscUtil.deserializeList(r.getBytes(4));
             ar.add(new MessageFilterAction(guild, r.getString(2), filters, actions));
         }
         return ar;

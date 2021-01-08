@@ -65,12 +65,12 @@ public class MessageFilterAction extends CacheEntry {
 
     @Override
     protected void write(DatabaseManager dbmg) {
-
+        dbmg.addFilterAction(guild, this);
     }
 
     @Override
     protected void delete(DatabaseManager dbmg) {
-
+        dbmg.removeFilterAction(guild, this);
     }
 
     public long getGuildId() {

@@ -4,9 +4,10 @@ import net.dv8tion.jda.api.entities.Message;
 import pw.byakuren.discord.filteraction.arguments.Argument;
 import pw.byakuren.discord.util.ScalaReplacements;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public abstract class MessageAction implements Action<Message> {
+public abstract class MessageAction implements Action<Message>, Serializable {
 
     public abstract String getName();
 

@@ -6,9 +6,10 @@ import pw.byakuren.discord.filteraction.arguments.Argument;
 import pw.byakuren.discord.objects.cache.datatypes.CacheEntry;
 import pw.byakuren.discord.util.ScalaReplacements;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public abstract class MessageFilter extends CacheEntry implements Filter<Message> {
+public abstract class MessageFilter extends CacheEntry implements Filter<Message>, Serializable {
 
     @Override
     protected void write(DatabaseManager dbmg) {
@@ -39,4 +40,6 @@ public abstract class MessageFilter extends CacheEntry implements Filter<Message
     }
 
     abstract public Argument[] getExpectedArguments();
+
+
 }
