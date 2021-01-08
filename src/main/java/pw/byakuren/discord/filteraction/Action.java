@@ -8,4 +8,6 @@ public interface Action<T> {
 
     public void execute(T obj);
 
+    //TODO Actions to have: Delete, Reply, SendMessage, Pin, Alert, Kick, Ban (?)
+
 }

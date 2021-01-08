@@ -22,6 +22,11 @@ public class RegexFilter extends MessageFilter {
     }
 
     @Override
+    public String getArgumentsDisplay() {
+        return pattern;
+    }
+
+    @Override
     public boolean apply(Message obj) {
         return obj.getContentRaw().matches(pattern);
     }

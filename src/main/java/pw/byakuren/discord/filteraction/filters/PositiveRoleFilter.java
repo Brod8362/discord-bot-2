@@ -26,6 +26,11 @@ public class PositiveRoleFilter extends MessageFilter {
     }
 
     @Override
+    public String getArgumentsDisplay() {
+        return String.format("<@&%d>", roleId);
+    }
+
+    @Override
     public boolean apply(Message msg) {
         if (!msg.isFromGuild()) return false;
         Member m = msg.getMember();

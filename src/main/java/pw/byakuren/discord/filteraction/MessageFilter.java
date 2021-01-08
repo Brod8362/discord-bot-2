@@ -20,7 +20,11 @@ public abstract class MessageFilter extends CacheEntry implements Filter<Message
     }
 
     public String getDisplay() {
-        return String.format("%s(%s)", getRepresentation(), Arrays.toString(getArguments()));
+        return String.format("%s(%s)", getRepresentation(), getArgumentsDisplay());
+    }
+
+    public String getArgumentsDisplay() {
+        return Arrays.toString(getArguments());
     }
 
 }
