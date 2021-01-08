@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class Main extends ListenerAdapter {
@@ -34,6 +36,7 @@ public class Main extends ListenerAdapter {
     private CommandHelper cmdhelp = new CommandHelper();
     private ModuleHelper mdhelp = new ModuleHelper();
     private DatabaseManager dbmg;
+    private ExecutorService threadPool = Executors.newFixedThreadPool(32);
 
     private Cache cache;
 
@@ -127,7 +130,7 @@ public class Main extends ListenerAdapter {
     public void onGenericEvent(GenericEvent event) {
         for (Module md: mdhelp.getModules().keySet()) {
             if (md.getInfo().type== ModuleType.EVENT_MODULE && mdhelp.isEnabled(md)) {
-                new Thread(() -> md.run((Event)event)).start();
+                threadPool.execute(() -> md.run((Event)event));
             }
         }
     }
@@ -148,7 +151,7 @@ public class Main extends ListenerAdapter {
 
         for (Module md: mdhelp.getModules().keySet()) {
             if (md.getInfo().type==ModuleType.MESSAGE_MODULE && mdhelp.isEnabled(md)) {
-                new Thread(() -> md.run(message)).start();
+                threadPool.execute(() -> md.run(message));
             }
         }
 
@@ -163,13 +166,13 @@ public class Main extends ListenerAdapter {
             /* Command permission checking */
             if (cmd.canRun(message.getMember(), cache)) {
                 try {
-                    new Thread(() -> {
+                    threadPool.execute(() -> {
                         try {
                             cmd.run(message, args);
                         } catch (Exception e) {
                             reportError(message, e);
                         }
-                    }).start();
+                    });
                 } catch (Exception e) {
                     reportError(message, e);
                 }
