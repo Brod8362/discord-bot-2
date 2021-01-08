@@ -12,17 +12,17 @@ import java.util.List;
 public class MessageFilterAction extends CacheEntry {
 
     private final long guild;
+    private final String name;
     private List<Filter<Message>> filters;
     private List<Action<Message>> actions;
 
-    public MessageFilterAction(long guild) {
-        this.guild = guild;
-        filters = new ArrayList<>();
-        actions = new ArrayList<>();
+    public MessageFilterAction(long guild, String name) {
+        this(guild, name, new ArrayList<>(), new ArrayList<>());
     }
 
-    public MessageFilterAction(long guild, List<Filter<Message>> filters, List<Action<Message>> actions) {
+    public MessageFilterAction(long guild, String name, List<Filter<Message>> filters, List<Action<Message>> actions) {
         this.guild = guild;
+        this.name=name;
         this.filters = filters;
         this.actions = actions;
     }
@@ -63,5 +63,11 @@ public class MessageFilterAction extends CacheEntry {
 
     }
 
+    public long getGuildId() {
+        return guild;
+    }
 
+    public String getName() {
+        return name;
+    }
 }

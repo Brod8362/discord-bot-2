@@ -27,6 +27,7 @@ public class ServerCache {
     private CacheObject<ExcludedChannel> excluded_channels;
     private CacheObject<LastMessage> last_messages;
     private CacheObject<VoiceBan> voice_bans;
+    private CacheObject<MessageFilterAction> message_filters;
 
     ServerWriteThread write_thread;
     private CacheObject[] objects;
@@ -44,6 +45,7 @@ public class ServerCache {
         voice_bans = new CacheObject<>(id, dbmg, new VoiceBanFactory(id, dbmg));
         objects = new CacheObject[]{userdata, settings, regex_keys, watched_roles, watched_users, excluded_channels,
                 last_messages, voice_bans};
+        message_filters = new CacheObject<>(id, dbmg, new MessageFilterActionFactory(id, dbmg));
         write_thread = new ServerWriteThread(id, objects);
     }
 
@@ -235,5 +237,18 @@ public class ServerCache {
             l.add(voice_bans.getData().get(i));
         }
         return l;
+    }
+
+    public MessageFilterAction getFilterActionByName(String name) {
+        for (MessageFilterAction mfa: message_filters.getData()) {
+            if (mfa.getName()==name) {
+                return mfa;
+            }
+        }
+        return null;
+    }
+
+    public List<MessageFilterAction> getAllFilterActions() {
+        return message_filters.getData();
     }
 }
