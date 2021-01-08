@@ -7,6 +7,7 @@ import pw.byakuren.discord.objects.Statistic;
 import pw.byakuren.discord.objects.Triple;
 import pw.byakuren.discord.objects.cache.datatypes.*;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -461,5 +462,39 @@ public class DatabaseManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public void addFilterAction(long guild, MessageFilterAction messageFilterAction) {
+        try {
+            sql.executeAddFilterAction(guild, messageFilterAction);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void removeFilterAction(long guild, MessageFilterAction messageFilterAction) {
+        try {
+            sql.executeRemoveFilterAction(guild, messageFilterAction);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public MessageFilterAction getFilterAction(long guild, String name) {
+        try {
+            return sql.getFilterAction(guild, name);
+        } catch (SQLException | IOException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<MessageFilterAction> getAllFilterActions(long guild) {
+        try {
+            return sql.getAllFilterActions(guild);
+        } catch (SQLException | ClassNotFoundException | IOException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
     }
 }

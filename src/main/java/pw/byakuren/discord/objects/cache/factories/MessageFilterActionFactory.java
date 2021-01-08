@@ -13,13 +13,14 @@ public class MessageFilterActionFactory extends DatatypeFactory<MessageFilterAct
 
     @Override
     public List<MessageFilterAction> getAll() {
-        // TODO implement this
-        return new ArrayList<MessageFilterAction>();
+        return dbmg.getAllFilterActions(serverid);
     }
 
     @Override
     public MessageFilterAction get(Object... qualifiers) {
-        // TODO implement this
-        return null;
+        if (qualifiers.length != 2 || !(qualifiers[0] instanceof Long) || !(qualifiers[1] instanceof String)) {
+            return null;
+        }
+        return dbmg.getFilterAction((long)qualifiers[0], (String)qualifiers[1]);
     }
 }
