@@ -189,7 +189,7 @@ public class FilterActionCommand extends Command {
 
         Action<Message> action = MessageActionParser.fromString(qString);
         if (action != null) {
-            mfa.removeFilter(action.getName());
+            mfa.removeAction(action.getName());
             msg.addReaction(BotEmoji.TRASH.toString()).queue();
         }
     }
