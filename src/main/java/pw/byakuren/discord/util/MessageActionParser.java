@@ -2,10 +2,13 @@ package pw.byakuren.discord.util;
 
 import net.dv8tion.jda.api.entities.Message;
 import pw.byakuren.discord.filteraction.Action;
+import pw.byakuren.discord.filteraction.Filter;
 import pw.byakuren.discord.filteraction.MessageAction;
 import pw.byakuren.discord.filteraction.actions.*;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class MessageActionParser {
 
@@ -37,5 +40,9 @@ public abstract class MessageActionParser {
 
     public static MessageAction[] getExamples() {
         return exampleActions;
+    }
+
+    public static List<Action<Message>> parseMany(List<String> strs) {
+        return strs.stream().map(MessageActionParser::fromString).collect(Collectors.toList());
     }
 }

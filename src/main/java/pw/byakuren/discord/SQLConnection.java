@@ -11,6 +11,7 @@ import pw.byakuren.discord.objects.cache.datatypes.*;
 import pw.byakuren.discord.util.MessageActionParser;
 import pw.byakuren.discord.util.MessageFilterParser;
 import pw.byakuren.discord.util.MiscUtil;
+import pw.byakuren.discord.util.ScalaReplacements;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -539,9 +540,8 @@ public class SQLConnection {
     public void executeAddFilterAction(long guild, MessageFilterAction messageFilterAction) throws SQLException, IOException {
         addFilterAction.setLong(1, guild);
         addFilterAction.setString(2, messageFilterAction.getName());
-        //TODO serialize the arraylists as strings
-        addFilterAction.setBytes(3, MiscUtil.serializeList(messageFilterAction.getFilters()));
-        addFilterAction.setBytes(4, MiscUtil.serializeList(messageFilterAction.getActions()));
+        addFilterAction.setBytes(3, MiscUtil.serializeList(MiscUtil.stringMap(messageFilterAction.getFilters())));
+        addFilterAction.setBytes(4, MiscUtil.serializeList(MiscUtil.stringMap(messageFilterAction.getActions())));
         addFilterAction.execute();
         addFilterAction.clearParameters();
     }
@@ -566,8 +566,8 @@ public class SQLConnection {
         ResultSet r = getAllFilterActions.executeQuery();
         ArrayList<MessageFilterAction> ar = new ArrayList<>();
         while (r.next()) {
-            List<Filter<Message>> filters = MiscUtil.deserializeList(r.getBytes(3));
-            List<Action<Message>> actions = MiscUtil.deserializeList(r.getBytes(4));
+            List<Filter<Message>> filters = MessageFilterParser.parseMany(MiscUtil.deserializeList(r.getBytes(3)));
+            List<Action<Message>> actions = MessageActionParser.parseMany(MiscUtil.deserializeList(r.getBytes(4)));
             ar.add(new MessageFilterAction(guild, r.getString(2), filters, actions));
         }
         return ar;

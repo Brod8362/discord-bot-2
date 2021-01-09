@@ -6,6 +6,8 @@ import pw.byakuren.discord.filteraction.MessageFilter;
 import pw.byakuren.discord.filteraction.filters.*;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class MessageFilterParser {
 
@@ -40,5 +42,9 @@ public abstract class MessageFilterParser {
 
     public static MessageFilter[] getExamples() {
         return exampleFilters;
+    }
+
+    public static List<Filter<Message>> parseMany(List<String> strs) {
+        return strs.stream().map(MessageFilterParser::fromString).collect(Collectors.toList());
     }
 }

@@ -3,6 +3,7 @@ package pw.byakuren.discord.util;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class MiscUtil {
 
@@ -43,6 +44,10 @@ public abstract class MiscUtil {
     public static <T> T which(T a, T b) {
         if (a!=null) return a;
         return b; //this will return either null or b.
+    }
+
+    public static <T> List<String> stringMap(List<T> t) {
+        return t.stream().map(Object::toString).collect(Collectors.toList());
     }
 
 }
