@@ -6,6 +6,8 @@ import pw.byakuren.discord.filteraction.arguments.Argument;
 import pw.byakuren.discord.filteraction.arguments.ArgumentType;
 import pw.byakuren.discord.filteraction.result.FilterResult;
 
+import java.util.regex.Pattern;
+
 public class RegexFilter extends MessageFilter {
 
     private final String pattern;
@@ -31,6 +33,7 @@ public class RegexFilter extends MessageFilter {
 
     @Override
     protected MessageFilter parseFromString(String s) {
+        Pattern.compile(s); //this will throw an exception that will be caught if the regex is invalid
         return new RegexFilter(s);
     }
 

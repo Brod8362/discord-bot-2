@@ -152,8 +152,20 @@ public class FilterActionCommand extends Command {
         String mfaName = args.get(0);
         ServerCache sc = c.getServerCache(msg.getGuild());
         String qString = ScalaReplacements.mkString(args.subList(1, args.size()));
-        Filter<Message> filter = MessageFilterParser.fromString(qString);
-        Action<Message> action = MessageActionParser.fromString(qString);
+        Filter<Message> filter = null;
+        Action<Message> action = null;
+        String errorDetail = "filter";
+        try {
+            filter = MessageFilterParser.fromString(qString);
+            errorDetail = "action";
+            action = MessageActionParser.fromString(qString);
+        } catch (Exception e) {
+            msg.reply(
+                    BotEmbed.bad("There was an exception handling your "+errorDetail)
+                    .setDescription(e.getMessage()).build()
+            ).mentionRepliedUser(false).queue();
+            return;
+        }
 
         if (!syntaxCheck(qString)) {
             msg.reply(
@@ -212,7 +224,7 @@ public class FilterActionCommand extends Command {
             msg.addReaction(BotEmoji.CHECK.unicode).queue();
         } else {
             msg.reply(String.format("Invalid inputs: `%s`. %d/%d completed correctly.",
-                    ScalaReplacements.mkString(invalid), invalid.size(), args.size()-1))
+                    ScalaReplacements.mkString(invalid, ","), invalid.size(), args.size()-1))
                     .mentionRepliedUser(false).queue();
         }
     }
