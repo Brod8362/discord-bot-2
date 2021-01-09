@@ -13,6 +13,9 @@ public abstract class MessageFilterParser {
 
     private static final MessageFilter[] exampleFilters = new MessageFilter[]{
             new AdminFilter(),
+            new ContainsFilter("stuff"),
+            new EveryoneFilter(),
+            new MentionsRoleFilter(123456),
             new PingFilter(3),
             new InviteFilter(),
             new JoinTimeFilter(10),
