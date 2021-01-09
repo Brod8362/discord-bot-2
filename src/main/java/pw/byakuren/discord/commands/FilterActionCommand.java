@@ -14,6 +14,7 @@ import pw.byakuren.discord.objects.cache.datatypes.MessageFilterAction;
 import pw.byakuren.discord.util.*;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class FilterActionCommand extends Command {
@@ -69,6 +70,18 @@ public class FilterActionCommand extends Command {
                 cmd_remove(message, args);
             }
         });
+        subcommands.add(new Subcommand(new String[]{"primer"}, "See a primer on how to use filter actions", null, this) {
+            @Override
+            public void run(Message message, List<String> args) {
+                message.reply(
+                        BotEmbed.information("Filter Action primer")
+                                .setDescription("'Filter Actions' are a powerful way to customize your server moderating.\n\n" +
+                                        "As the name suggests, they rely on the use of one or more filters to select which messages " +
+                                        "you want to act on, and apply any number of actions to them.\n\n" +
+                                        "[Learn more on the wiki](https://github.com/Brod8362/discord-bot-2/wiki/Filter-Action-Primer)").build()
+                ).mentionRepliedUser(false).queue();
+            }
+        });
     }
 
     private void cmd_trash(Message message, List<String> args) {
@@ -77,7 +90,7 @@ public class FilterActionCommand extends Command {
             if (sc.getFilterActionByName(args.get(0)) == null) {
                 message.reply(
                         BotEmbed.bad("Cannot find FA with name " + args.get(0)).build()
-                ).queue();
+                ).mentionRepliedUser(false).queue();
             } else {
                 for (MessageFilterAction mfa : sc.getAllFilterActions()) {
                     if (mfa.getName().equals(args.get(0))) {
@@ -89,36 +102,38 @@ public class FilterActionCommand extends Command {
         } else {
             message.reply(
                     BotEmbed.bad("Please provide the name of one FA to delete.").build()
-            ).queue();
+            ).mentionRepliedUser(false).queue();
         }
     }
 
     private void cmd_af(Message message, List<String> args) {
-        message.reply(String.format("```%s```", ScalaReplacements.mkString(Arrays.asList(MessageFilterParser.getExamples().clone()), "\n"))).queue();
+        message.reply(String.format("```%s```", ScalaReplacements.mkString(Arrays.asList(MessageFilterParser.getExamples().clone()), "\n")))
+                .mentionRepliedUser(false).queue();
     }
 
     private void cmd_aa(Message message, List<String> args) {
-        message.reply(String.format("```%s```", ScalaReplacements.mkString(Arrays.asList(MessageActionParser.getExamples().clone()), "\n"))).queue();
+        message.reply(String.format("```%s```", ScalaReplacements.mkString(Arrays.asList(MessageActionParser.getExamples().clone()), "\n")))
+                .mentionRepliedUser(false).queue();
     }
 
     private void cmd_test(Message msg, List<String> args) {
         if (args.isEmpty()) {
             msg.reply(
                     BotEmbed.bad("You didn't provide an FA to test.").build()
-            ).queue();
+            ).mentionRepliedUser(false).queue();
             return;
         }
         ServerCache sc = c.getServerCache(msg.getGuild());
         MessageFilterAction mfa = sc.getFilterActionByName(args.get(0));
         FilterActionResult far = mfa.check(msg);
-        msg.reply(far.embedReport()).queue();
+        msg.reply(far.embedReport()).mentionRepliedUser(false).queue();
     }
 
     private void cmd_add(Message msg, List<String> args) {
         if (args.isEmpty()) {
             msg.reply(
                     BotEmbed.bad("You didn't provide an FA to add to.").build()
-            ).queue();
+            ).mentionRepliedUser(false).queue();
             return;
         }
         String mfaName = args.get(0);
@@ -131,7 +146,7 @@ public class FilterActionCommand extends Command {
             msg.reply(
                     BotEmbed.bad("Looks like your query couldn't be parsed. Check you spelled everything right and try again. " +
                             "Note that filters use () and actions use <>.").build()
-            ).queue();
+            ).mentionRepliedUser(false).queue();
             return;
         }
 
@@ -147,7 +162,7 @@ public class FilterActionCommand extends Command {
         } else {
             msg.reply(
                     BotEmbed.bad("Your filter/action doesn't exist. Check your spelling and the examples list, and try again.").build()
-            ).queue();
+            ).mentionRepliedUser(false).queue();
             return;
         }
         mfa.write_state = WriteState.PENDING_WRITE;
@@ -159,28 +174,29 @@ public class FilterActionCommand extends Command {
         if (sc.getAllFilterActions().size() == 0) {
             msg.reply(
                     BotEmbed.information("You haven't configured any filteractions yet.").build()
-            ).queue();
+            ).mentionRepliedUser(false).queue();
             return;
         }
         if (args.size() == 0) {
             //generic list of all
-            msg.reply(String.format("```%s```", ScalaReplacements.mkString(sc.getAllFilterActions(), "\n"))).queue();
+            msg.reply(String.format("```%s```", ScalaReplacements.mkString(sc.getAllFilterActions(), "\n")))
+                    .allowedMentions(Collections.emptySet()).mentionRepliedUser(false).queue();
         } else if (args.size() == 1) {
             //specific instance of a filter action
             MessageFilterAction mfa = sc.getFilterActionByName(args.get(0));
             if (mfa == null) {
                 msg.reply(
                         BotEmbed.bad(String.format("The FA \"%s\" doesn't exist. Check your spelling and try again.", args.get(0))).build()
-                ).queue();
+                ).mentionRepliedUser(false).queue();
             } else {
                 //todo make this the "info" embed
-                msg.reply("`" + mfa.prettyPrint() + "`").queue();
+                msg.reply("`" + mfa.prettyPrint() + "`").allowedMentions(Collections.emptySet()).mentionRepliedUser(false).queue();
             }
         } else {
             //too many arguments
             msg.reply(
                     BotEmbed.bad("Too many arguments, expected 0-1 but got " + args.size()).build()
-            ).queue();
+            ).mentionRepliedUser(false).queue();
         }
     }
 
@@ -188,7 +204,7 @@ public class FilterActionCommand extends Command {
         if (args.isEmpty()) {
             msg.reply(
                     BotEmbed.bad("You didn't provide an FA to remove from.").build()
-            ).queue();
+            ).mentionRepliedUser(false).queue();
             return;
         }
         String mfaName = args.get(0);
@@ -200,7 +216,7 @@ public class FilterActionCommand extends Command {
         if (mfa == null) {
             msg.reply(
                     BotEmbed.bad("No FA by the name " + mfaName + " exists.").build()
-            ).queue();
+            ).mentionRepliedUser(false).queue();
             return;
         }
 

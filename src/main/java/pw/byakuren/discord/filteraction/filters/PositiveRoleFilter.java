@@ -30,7 +30,7 @@ public class PositiveRoleFilter extends MessageFilter {
 
     @Override
     public String getArgumentsDisplay() {
-        return String.format("<@&%d>", roleId);
+        return roleId+"";
     }
 
     @Override
