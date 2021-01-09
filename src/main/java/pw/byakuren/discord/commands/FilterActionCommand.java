@@ -13,6 +13,7 @@ import pw.byakuren.discord.objects.cache.WriteState;
 import pw.byakuren.discord.objects.cache.datatypes.MessageFilterAction;
 import pw.byakuren.discord.util.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -37,6 +38,12 @@ public class FilterActionCommand extends Command {
             @Override
             public void run(Message message, List<String> args) {
                 cmd_add(message, args);
+            }
+        });
+        subcommands.add(new Subcommand(new String[]{"multiadd", "ma"}, "Like add, but for multiple filters or actions. Incompatible with spaces, making it unsuitable for actions with string inputs.", "<faName> <filterOrAction>...", this) {
+            @Override
+            public void run(Message message, List<String> args) {
+                cmd_multiadd(message, args);
             }
         });
         subcommands.add(new Subcommand(new String[]{"list", "l"}, "List all FAs on the server, or see the config of a specific one.",
@@ -167,6 +174,41 @@ public class FilterActionCommand extends Command {
         }
         mfa.write_state = WriteState.PENDING_WRITE;
         msg.addReaction(BotEmoji.OK.toString()).queue();
+    }
+
+    private void cmd_multiadd(Message msg, List<String> args) {
+        if (args.size()<2) {
+            msg.reply("Insufficient arguments (need 2 or more)").mentionRepliedUser(false).queue();
+            return;
+        }
+        ServerCache sc = c.getServerCache(msg.getGuild());
+        MessageFilterAction mfa = sc.getFilterActionByName(args.get(0));
+
+        if (mfa == null) {
+            mfa = new MessageFilterAction(msg.getGuild().getIdLong(), args.get(0));
+            sc.getMessageFilterActions().getData().add(mfa);
+        }
+
+        ArrayList<String> invalid = new ArrayList<>();
+        for (String s: args.subList(1,args.size())) {
+            Filter<Message> filter = MessageFilterParser.fromString(s);
+            Action<Message> action = MessageActionParser.fromString(s);
+
+            if (filter != null) {
+                mfa.addFilter(filter);
+            } else if (action != null) {
+                mfa.addAction(action);
+            } else {
+                invalid.add(s);
+            }
+        }
+        if (invalid.isEmpty()) {
+            msg.addReaction(BotEmoji.CHECK.unicode).queue();
+        } else {
+            msg.reply(String.format("Invalid inputs: `%s`. %d/%d completed correctly.",
+                    ScalaReplacements.mkString(invalid), invalid.size(), args.size()-1))
+                    .mentionRepliedUser(false).queue();
+        }
     }
 
     private void cmd_list(Message msg, List<String> args) {
