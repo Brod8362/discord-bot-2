@@ -59,7 +59,7 @@ public class FilterActionCommand extends Command {
                 cmd_trash(message, args);
             }
         });
-        subcommands.add(new Subcommand(new String[]{"availableFilters", "af"}, "See available fitlers.", null, this) {
+        subcommands.add(new Subcommand(new String[]{"availableFilters", "af"}, "See available filters.", null, this) {
             @Override
             public void run(Message message, List<String> args) {
                 cmd_af(message, args);
