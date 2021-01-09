@@ -537,7 +537,11 @@ public class SQLConnection {
         updateVoiceBan.clearParameters();
     }
 
-    public void executeAddFilterAction(long guild, MessageFilterAction messageFilterAction) throws SQLException, IOException {
+    public void executeAddFilterAction(long guild, MessageFilterAction messageFilterAction) throws SQLException, IOException, ClassNotFoundException {
+        if (getFilterAction(guild,messageFilterAction.getName()) != null) {
+            //TODO replace this with a proper replace instead of deleting first
+            executeRemoveFilterAction(guild, messageFilterAction);
+        }
         addFilterAction.setLong(1, guild);
         addFilterAction.setString(2, messageFilterAction.getName());
         addFilterAction.setBytes(3, MiscUtil.serializeList(MiscUtil.stringMap(messageFilterAction.getFilters())));
