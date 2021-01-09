@@ -25,7 +25,7 @@ public class FilterActionCommand extends Command {
         names = new String[]{"filteraction", "fa"};
         minimum_permission = CommandPermission.MOD_ROLE;
         subcommands.add(new SubcommandList(this));
-        subcommands.add(new Subcommand(new String[]{"test", "t"}, "Test a given FA on your message, with verbose results.",
+        subcommands.add(new Subcommand(new String[]{"test"}, "Test a given FA on your message, with verbose results.",
                 "<faName> [more message content to test]", this) {
             @Override
             public void run(Message message, List<String> args) {
@@ -102,6 +102,12 @@ public class FilterActionCommand extends Command {
     }
 
     private void cmd_test(Message msg, List<String> args) {
+        if (args.isEmpty()) {
+            msg.reply(
+                    BotEmbed.bad("You didn't provide an FA to test.").build()
+            ).queue();
+            return;
+        }
         ServerCache sc = c.getServerCache(msg.getGuild());
         MessageFilterAction mfa = sc.getFilterActionByName(args.get(0));
         FilterActionResult far = mfa.check(msg);
@@ -109,6 +115,12 @@ public class FilterActionCommand extends Command {
     }
 
     private void cmd_add(Message msg, List<String> args) {
+        if (args.isEmpty()) {
+            msg.reply(
+                    BotEmbed.bad("You didn't provide an FA to add to.").build()
+            ).queue();
+            return;
+        }
         String mfaName = args.get(0);
         ServerCache sc = c.getServerCache(msg.getGuild());
         String qString = ScalaReplacements.mkString(args.subList(1, args.size()));
@@ -173,6 +185,12 @@ public class FilterActionCommand extends Command {
     }
 
     private void cmd_remove(Message msg, List<String> args) {
+        if (args.isEmpty()) {
+            msg.reply(
+                    BotEmbed.bad("You didn't provide an FA to remove from.").build()
+            ).queue();
+            return;
+        }
         String mfaName = args.get(0);
         ServerCache sc = c.getServerCache(msg.getGuild());
         String qString = ScalaReplacements.mkString(args.subList(1, args.size()));
