@@ -10,4 +10,6 @@ public interface Action<T> {
 
     public ActionResult execute(T obj);
 
+    public String getName();
+
 }

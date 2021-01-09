@@ -10,10 +10,7 @@ import pw.byakuren.discord.objects.cache.Cache;
 import pw.byakuren.discord.objects.cache.ServerCache;
 import pw.byakuren.discord.objects.cache.WriteState;
 import pw.byakuren.discord.objects.cache.datatypes.MessageFilterAction;
-import pw.byakuren.discord.util.BotEmbed;
-import pw.byakuren.discord.util.MessageActionParser;
-import pw.byakuren.discord.util.MessageFilterParser;
-import pw.byakuren.discord.util.ScalaReplacements;
+import pw.byakuren.discord.util.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -62,6 +59,12 @@ public class FilterActionCommand extends Command {
                 cmd_aa(message, args);
             }
         });
+        subcommands.add(new Subcommand(new String[]{"remove", "r"}, null, null, this) {
+            @Override
+            public void run(Message message, List<String> args) {
+                cmd_remove(message, args);
+            }
+        });
     }
 
     private void cmd_trash(Message message, List<String> args) {
@@ -75,6 +78,7 @@ public class FilterActionCommand extends Command {
                 for (MessageFilterAction mfa : sc.getAllFilterActions()) {
                     if (mfa.getName().equals(args.get(0))) {
                         mfa.write_state = WriteState.PENDING_DELETE;
+                        message.addReaction(BotEmoji.TRASH.unicode).queue();
                     }
                 }
             }
@@ -131,7 +135,7 @@ public class FilterActionCommand extends Command {
             return;
         }
         mfa.write_state = WriteState.PENDING_WRITE;
-        msg.reply("200").queue();
+        msg.addReaction(BotEmoji.OK.toString()).queue();
     }
 
     private void cmd_list(Message msg, List<String> args) {
@@ -161,6 +165,32 @@ public class FilterActionCommand extends Command {
             msg.reply(
                     BotEmbed.bad("Too many arguments, expected 0-1 but got " + args.size()).build()
             ).queue();
+        }
+    }
+
+    private void cmd_remove(Message msg, List<String> args) {
+        String mfaName = args.get(0);
+        ServerCache sc = c.getServerCache(msg.getGuild());
+        String qString = ScalaReplacements.mkString(args.subList(1, args.size()));
+        MessageFilterAction mfa = sc.getFilterActionByName(mfaName);
+
+        if (mfa == null) {
+            msg.reply(
+                    BotEmbed.bad("No FA by the name " + mfaName + " exists.").build()
+            ).queue();
+            return;
+        }
+
+        Filter<Message> filter = MessageFilterParser.fromString(qString);
+        if (filter != null) {
+            mfa.removeFilter(filter.getName());
+            msg.addReaction(BotEmoji.TRASH.toString()).queue();
+        }
+
+        Action<Message> action = MessageActionParser.fromString(qString);
+        if (action != null) {
+            mfa.removeFilter(action.getName());
+            msg.addReaction(BotEmoji.TRASH.toString()).queue();
         }
     }
 

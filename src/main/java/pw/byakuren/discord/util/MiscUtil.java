@@ -32,4 +32,17 @@ public abstract class MiscUtil {
         return ar;
     }
 
+    /**
+     * A rather questionable function that returns a or b, depending on which exists.
+     * If they both exist, a will be returned, and if either exists, null will be returned.
+     * @param a Object #1
+     * @param b Object #2
+     * @param <T> Type of objects
+     * @return which object exists. null if neither exists.
+     */
+    public static <T> T which(T a, T b) {
+        if (a!=null) return a;
+        return b; //this will return either null or b.
+    }
+
 }

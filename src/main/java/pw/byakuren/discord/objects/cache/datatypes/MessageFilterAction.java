@@ -7,6 +7,7 @@ import pw.byakuren.discord.filteraction.Filter;
 import pw.byakuren.discord.filteraction.result.ActionResult;
 import pw.byakuren.discord.filteraction.result.FilterActionResult;
 import pw.byakuren.discord.filteraction.result.FilterResult;
+import pw.byakuren.discord.objects.cache.WriteState;
 import pw.byakuren.discord.util.ScalaReplacements;
 
 import java.util.ArrayList;
@@ -97,5 +98,25 @@ public class MessageFilterAction extends CacheEntry {
 
     public List<Filter<Message>> getFilters() {
         return filters;
+    }
+
+    public void removeFilter(String name) {
+        for (int i = 0; i < filters.size(); i++) {
+            if (filters.get(i).getName().equals(name)) {
+                filters.remove(i);
+                this.write_state= WriteState.PENDING_WRITE;
+                break;
+            }
+        }
+    }
+
+    public void removeAction(String name) {
+        for (int i = 0; i < actions.size(); i++) {
+            if (actions.get(i).getName().equals(name)) {
+                actions.remove(i);
+                this.write_state= WriteState.PENDING_WRITE;
+                break;
+            }
+        }
     }
 }

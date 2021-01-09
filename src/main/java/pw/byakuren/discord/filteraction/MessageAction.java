@@ -9,8 +9,6 @@ import java.util.Arrays;
 
 public abstract class MessageAction implements Action<Message>, Serializable {
 
-    public abstract String getName();
-
     public String getDisplay() {
         return String.format("%s<%s>", getName(), getArgumentsDisplay());
     }
