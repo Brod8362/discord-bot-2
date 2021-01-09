@@ -23,43 +23,45 @@ public class FilterActionCommand extends Command {
         this.c = c;
         names = new String[]{"filteraction", "fa"};
         minimum_permission = CommandPermission.MOD_ROLE;
-        subcommands.add(new Subcommand(new String[]{"test", "t"}, null, null, this) {
+        subcommands.add(new Subcommand(new String[]{"test", "t"}, "Test a given FA on your message, with verbose results.",
+                "<faName> [more message content to test]", this) {
             @Override
             public void run(Message message, List<String> args) {
                 cmd_test(message, args);
             }
         });
-        subcommands.add(new Subcommand(new String[]{"add", "a"}, null, null, this) {
+        subcommands.add(new Subcommand(new String[]{"add", "a"}, "Add a new filter or action", "<faName> <filterOrAction>", this) {
             @Override
             public void run(Message message, List<String> args) {
                 cmd_add(message, args);
             }
         });
-        subcommands.add(new Subcommand(new String[]{"list", "l"}, null, null, this) {
+        subcommands.add(new Subcommand(new String[]{"list", "l"}, "List all FAs on the server, or see the config of a specific one.",
+                "<faName>", this) {
             @Override
             public void run(Message message, List<String> args) {
                 cmd_list(message, args);
             }
         });
-        subcommands.add(new Subcommand(new String[]{"trash", "t"}, null, null, this) {
+        subcommands.add(new Subcommand(new String[]{"trash", "t"}, "Delete an entire FA.", "<faName>", this) {
             @Override
             public void run(Message message, List<String> args) {
                 cmd_trash(message, args);
             }
         });
-        subcommands.add(new Subcommand(new String[]{"availableFilters", "af"}, null, null, this) {
+        subcommands.add(new Subcommand(new String[]{"availableFilters", "af"}, "See available fitlers.", null, this) {
             @Override
             public void run(Message message, List<String> args) {
                 cmd_af(message, args);
             }
         });
-        subcommands.add(new Subcommand(new String[]{"availableActions", "aa"}, null, null, this) {
+        subcommands.add(new Subcommand(new String[]{"availableActions", "aa"}, "See available actions", null, this) {
             @Override
             public void run(Message message, List<String> args) {
                 cmd_aa(message, args);
             }
         });
-        subcommands.add(new Subcommand(new String[]{"remove", "r"}, null, null, this) {
+        subcommands.add(new Subcommand(new String[]{"remove", "r"}, "Remove a filter or action", "<faName> <filterOrAction>", this) {
             @Override
             public void run(Message message, List<String> args) {
                 cmd_remove(message, args);
@@ -173,6 +175,7 @@ public class FilterActionCommand extends Command {
         ServerCache sc = c.getServerCache(msg.getGuild());
         String qString = ScalaReplacements.mkString(args.subList(1, args.size()));
         MessageFilterAction mfa = sc.getFilterActionByName(mfaName);
+        String removeName = qString.split("[(<]")[0];
 
         if (mfa == null) {
             msg.reply(
@@ -181,16 +184,8 @@ public class FilterActionCommand extends Command {
             return;
         }
 
-        Filter<Message> filter = MessageFilterParser.fromString(qString);
-        if (filter != null) {
-            mfa.removeFilter(filter.getName());
-            msg.addReaction(BotEmoji.TRASH.toString()).queue();
-        }
-
-        Action<Message> action = MessageActionParser.fromString(qString);
-        if (action != null) {
-            mfa.removeAction(action.getName());
-            msg.addReaction(BotEmoji.TRASH.toString()).queue();
+        if (mfa.removeAction(removeName) || mfa.removeFilter(removeName)) {
+            msg.addReaction(BotEmoji.TRASH.unicode).queue();
         }
     }
 

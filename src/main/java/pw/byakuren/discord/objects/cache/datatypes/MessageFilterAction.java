@@ -100,23 +100,25 @@ public class MessageFilterAction extends CacheEntry {
         return filters;
     }
 
-    public void removeFilter(String name) {
+    public boolean removeFilter(String name) {
         for (int i = 0; i < filters.size(); i++) {
             if (filters.get(i).getName().equals(name)) {
                 filters.remove(i);
                 this.write_state= WriteState.PENDING_WRITE;
-                break;
+                return true;
             }
         }
+        return false;
     }
 
-    public void removeAction(String name) {
+    public boolean removeAction(String name) {
         for (int i = 0; i < actions.size(); i++) {
             if (actions.get(i).getName().equals(name)) {
                 actions.remove(i);
                 this.write_state= WriteState.PENDING_WRITE;
-                break;
+                return true;
             }
         }
+        return false;
     }
 }
