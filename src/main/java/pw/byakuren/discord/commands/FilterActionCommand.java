@@ -132,6 +132,12 @@ public class FilterActionCommand extends Command {
         }
         ServerCache sc = c.getServerCache(msg.getGuild());
         MessageFilterAction mfa = sc.getFilterActionByName(args.get(0));
+        if (mfa == null) {
+            msg.reply(
+                    BotEmbed.bad("No FA found by the name "+args.get(0)).build()
+            ).mentionRepliedUser(false).queue();
+            return;
+        }
         FilterActionResult far = mfa.check(msg);
         msg.reply(far.embedReport()).mentionRepliedUser(false).queue();
     }
