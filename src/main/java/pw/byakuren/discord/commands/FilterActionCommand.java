@@ -204,6 +204,7 @@ public class FilterActionCommand extends Command {
 
         if (mfa == null) {
             mfa = new MessageFilterAction(msg.getGuild().getIdLong(), args.get(0));
+            mfa.write_state = WriteState.PENDING_WRITE;
             sc.getMessageFilterActions().getData().add(mfa);
         }
 
@@ -214,8 +215,10 @@ public class FilterActionCommand extends Command {
 
             if (filter != null) {
                 mfa.addFilter(filter);
+                mfa.write_state = WriteState.PENDING_WRITE;
             } else if (action != null) {
                 mfa.addAction(action);
+                mfa.write_state = WriteState.PENDING_WRITE;
             } else {
                 invalid.add(s);
             }

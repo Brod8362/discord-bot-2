@@ -4,18 +4,13 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.internal.utils.tuple.Pair;
 import pw.byakuren.discord.filteraction.Action;
 import pw.byakuren.discord.filteraction.Filter;
-import pw.byakuren.discord.filteraction.MessageAction;
-import pw.byakuren.discord.filteraction.MessageFilter;
 import pw.byakuren.discord.objects.Triple;
 import pw.byakuren.discord.objects.cache.datatypes.*;
 import pw.byakuren.discord.util.MessageActionParser;
 import pw.byakuren.discord.util.MessageFilterParser;
 import pw.byakuren.discord.util.MiscUtil;
-import pw.byakuren.discord.util.ScalaReplacements;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.sql.*;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -74,6 +69,8 @@ public class SQLConnection {
     private PreparedStatement getAllFilterActions;
     private PreparedStatement addFilterAction;
     private PreparedStatement removeFilterAction;
+    private PreparedStatement checkFilterAction;
+    private PreparedStatement replaceFilterAction;
 
     public void initialize() throws SQLException {
         String dir = System.getProperty("user.dir");
@@ -133,6 +130,8 @@ public class SQLConnection {
         getAllFilterActions = connection.prepareStatement("SELECT * FROM filter_actions WHERE server=?");
         addFilterAction = connection.prepareStatement("INSERT INTO filter_actions VALUES (?,?,?,?)");
         removeFilterAction = connection.prepareStatement("DELETE FROM filter_actions WHERE server=? AND name=?");
+        checkFilterAction = connection.prepareStatement("SELECT 1 FROM filter_actions WHERE server=? AND name=?");
+        replaceFilterAction = connection.prepareStatement("UPDATE filter_actions SET filters=?, actions=? WHERE server=? AND name=?");
     }
 
     private boolean verifyTables() {
@@ -537,10 +536,10 @@ public class SQLConnection {
         updateVoiceBan.clearParameters();
     }
 
-    public void executeAddFilterAction(long guild, MessageFilterAction messageFilterAction) throws SQLException, IOException, ClassNotFoundException {
-        if (getFilterAction(guild,messageFilterAction.getName()) != null) {
-            //TODO replace this with a proper replace instead of deleting first
-            executeRemoveFilterAction(guild, messageFilterAction);
+    public void executeAddFilterAction(long guild, MessageFilterAction messageFilterAction) throws SQLException, IOException {
+        if (checkFilterActionExists(guild, messageFilterAction.getName())) {
+            executeUpdateFilterAction(guild, messageFilterAction);
+            return;
         }
         addFilterAction.setLong(1, guild);
         addFilterAction.setString(2, messageFilterAction.getName());
@@ -561,8 +560,9 @@ public class SQLConnection {
         getFilterAction.setLong(1, guild);
         getFilterAction.setString(2, name);
         ResultSet r = getFilterAction.executeQuery();
+        MessageFilterAction mfa = new MessageFilterAction(guild, name, MiscUtil.deserializeList(r.getBytes(3)), MiscUtil.deserializeList(r.getBytes(4)));
         getFilterAction.clearParameters();
-        return new MessageFilterAction(guild, name, MiscUtil.deserializeList(r.getBytes(3)), MiscUtil.deserializeList(r.getBytes(4)));
+        return mfa;
     }
 
     public List<MessageFilterAction> getAllFilterActions(long guild) throws SQLException, IOException, ClassNotFoundException {
@@ -575,5 +575,23 @@ public class SQLConnection {
             ar.add(new MessageFilterAction(guild, r.getString(2), filters, actions));
         }
         return ar;
+    }
+
+    public boolean checkFilterActionExists(long guild, String name) throws SQLException {
+        checkFilterAction.setLong(1, guild);
+        checkFilterAction.setString(2, name);
+        ResultSet r = checkFilterAction.executeQuery();
+        boolean sto = r.next();
+        checkFilterAction.clearParameters();
+        return sto;
+    }
+
+    private void executeUpdateFilterAction(long guild, MessageFilterAction mfa) throws SQLException, IOException {
+        replaceFilterAction.setBytes(1, MiscUtil.serializeList(MiscUtil.stringMap(mfa.getFilters())));
+        replaceFilterAction.setBytes(2, MiscUtil.serializeList(MiscUtil.stringMap(mfa.getActions())));
+        replaceFilterAction.setLong(3, guild);
+        replaceFilterAction.setString(4, mfa.getName());
+        replaceFilterAction.executeUpdate();
+        replaceFilterAction.clearParameters();
     }
 }
