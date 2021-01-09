@@ -5,11 +5,10 @@ import pw.byakuren.discord.filteraction.MessageFilter;
 import pw.byakuren.discord.filteraction.arguments.Argument;
 import pw.byakuren.discord.filteraction.result.FilterResult;
 
-public class InviteFilter extends MessageFilter {
-
+public class TrueFilter extends MessageFilter {
     @Override
     public String getName() {
-        return "hasInvite";
+        return "true";
     }
 
     @Override
@@ -19,14 +18,12 @@ public class InviteFilter extends MessageFilter {
 
     @Override
     public FilterResult apply(Message obj) {
-        boolean trigger = !obj.getInvites().isEmpty();
-        String reason = trigger ? null : "the message does not have an invite in it";
-        return new FilterResult(trigger, getDisplay(), reason);
+        return new FilterResult(true, getDisplay(), null);
     }
 
     @Override
     protected MessageFilter parseFromString(String s) {
-        return new InviteFilter();
+        return new TrueFilter();
     }
 
     @Override

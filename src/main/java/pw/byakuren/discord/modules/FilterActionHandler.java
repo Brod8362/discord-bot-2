@@ -20,7 +20,8 @@ public class FilterActionHandler implements Module {
     public void run(Message message) {
         ServerCache sc = c.getServerCache(message.getGuild());
         for (MessageFilterAction mfa : sc.getAllFilterActions()) {
-            FilterActionResult far = mfa.check(message);
+            if (!mfa.getFilters().isEmpty())
+                mfa.check(message);
         }
     }
 

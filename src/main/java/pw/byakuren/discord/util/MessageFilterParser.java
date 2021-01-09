@@ -16,7 +16,9 @@ public abstract class MessageFilterParser {
             new JoinTimeFilter(10),
             new PositiveRoleFilter(123456),
             new RegexFilter(".*"),
-            new MessageLengthFilter(100)
+            new MessageLengthFilter(100),
+            new TrueFilter(),
+            new RolePingFilter(3)
     };
 
     private static final HashMap<String, MessageFilter> filterMap = new HashMap<>();

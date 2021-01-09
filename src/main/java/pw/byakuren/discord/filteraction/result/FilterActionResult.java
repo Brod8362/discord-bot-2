@@ -46,6 +46,11 @@ public class FilterActionResult {
 
     public MessageEmbed embedReport() {
         EmbedBuilder eb = BotEmbed.information(mfa.getName());
+        if (filterResults.size()==0) {
+            eb.addField("NOTICE",
+                    "**As a safety mechanism, actions will naturally not occur unless the FA has at least one filter. " +
+                            "To bypass this, you can add the true() filter which always returns true.**", false);
+        }
         String filterTitle = String.format("Filter Results (%d/%d)", countFiltersPassed(), filterResults.size());
         String actionTitle = String.format("Actions Taken (%d/%d)", countActionsTaken(), mfa.getActions().size());
         eb.addField("Message Contents", message.getContentRaw(), false);

@@ -14,8 +14,8 @@ public abstract class MessageActionParser {
             new DeleteAction(),
             new KickAction(),
             new PinAction(),
-            new ReplyAction(""),
-            new SendPMAction("")
+            new ReplyAction("content"),
+            new SendPMAction("content")
     };
 
     private static final HashMap<String, MessageAction> actionMap = new HashMap<>();

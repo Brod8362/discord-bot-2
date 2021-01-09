@@ -3,6 +3,7 @@ package pw.byakuren.discord.commands;
 import net.dv8tion.jda.api.entities.Message;
 import pw.byakuren.discord.commands.permissions.CommandPermission;
 import pw.byakuren.discord.commands.subcommands.Subcommand;
+import pw.byakuren.discord.commands.subcommands.SubcommandList;
 import pw.byakuren.discord.filteraction.Action;
 import pw.byakuren.discord.filteraction.Filter;
 import pw.byakuren.discord.filteraction.result.FilterActionResult;
@@ -23,6 +24,7 @@ public class FilterActionCommand extends Command {
         this.c = c;
         names = new String[]{"filteraction", "fa"};
         minimum_permission = CommandPermission.MOD_ROLE;
+        subcommands.add(new SubcommandList(this));
         subcommands.add(new Subcommand(new String[]{"test", "t"}, "Test a given FA on your message, with verbose results.",
                 "<faName> [more message content to test]", this) {
             @Override

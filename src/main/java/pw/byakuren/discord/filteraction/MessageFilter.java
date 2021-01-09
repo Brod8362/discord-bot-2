@@ -9,17 +9,7 @@ import pw.byakuren.discord.util.ScalaReplacements;
 import java.io.Serializable;
 import java.util.Arrays;
 
-public abstract class MessageFilter extends CacheEntry implements Filter<Message>, Serializable {
-
-    @Override
-    protected void write(DatabaseManager dbmg) {
-        //TODO implement
-    }
-
-    @Override
-    protected void delete(DatabaseManager dbmg) {
-        //TODO implement
-    }
+public abstract class MessageFilter implements Filter<Message>, Serializable {
 
     public String getDisplay() {
         return String.format("%s(%s)", getName(), getArgumentsDisplay());
@@ -40,6 +30,5 @@ public abstract class MessageFilter extends CacheEntry implements Filter<Message
     }
 
     abstract public Argument[] getExpectedArguments();
-
 
 }
