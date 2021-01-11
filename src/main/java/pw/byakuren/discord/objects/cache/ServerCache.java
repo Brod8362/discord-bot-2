@@ -11,6 +11,7 @@ import pw.byakuren.discord.objects.cache.factories.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static pw.byakuren.discord.objects.cache.WriteState.PENDING_DELETE;
 import static pw.byakuren.discord.objects.cache.WriteState.PENDING_WRITE;
@@ -27,6 +28,7 @@ public class ServerCache {
     private CacheObject<ExcludedChannel> excluded_channels;
     private CacheObject<LastMessage> last_messages;
     private CacheObject<VoiceBan> voice_bans;
+    private CacheObject<MessageFilterAction> message_filters;
 
     ServerWriteThread write_thread;
     private CacheObject[] objects;
@@ -42,8 +44,9 @@ public class ServerCache {
         excluded_channels = new CacheObject<>(id, dbmg, new ExcludedChannelFactory(id, dbmg));
         last_messages = new CacheObject<>(id, dbmg, new LastMessageFactory(id, dbmg));
         voice_bans = new CacheObject<>(id, dbmg, new VoiceBanFactory(id, dbmg));
+        message_filters = new CacheObject<>(id, dbmg, new MessageFilterActionFactory(id, dbmg));
         objects = new CacheObject[]{userdata, settings, regex_keys, watched_roles, watched_users, excluded_channels,
-                last_messages, voice_bans};
+                last_messages, voice_bans, message_filters};
         write_thread = new ServerWriteThread(id, objects);
     }
 
@@ -80,6 +83,8 @@ public class ServerCache {
     }
 
     public CacheObject<VoiceBan> getVoiceBans() { return voice_bans; }
+
+    public CacheObject<MessageFilterAction> getMessageFilterActions() { return message_filters; }
 
     public UserStats getStatsForUser(Member m) {
         return getStatsForUser(m.getGuild().getIdLong(), m.getUser());
@@ -235,5 +240,18 @@ public class ServerCache {
             l.add(voice_bans.getData().get(i));
         }
         return l;
+    }
+
+    public MessageFilterAction getFilterActionByName(String name) {
+        for (MessageFilterAction mfa: getAllFilterActions()) {
+            if (mfa.getName().equals(name)) {
+                return mfa;
+            }
+        }
+        return null;
+    }
+
+    public List<MessageFilterAction> getAllFilterActions() {
+        return message_filters.getData().stream().filter(CacheEntry::exists).collect(Collectors.toList());
     }
 }

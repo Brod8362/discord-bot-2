@@ -101,6 +101,7 @@ public class Main extends ListenerAdapter {
         cmdhelp.registerCommand(new VoiceBanCommand(cache));
         cmdhelp.registerCommand(new EightBall());
         cmdhelp.registerCommand(new CompatabilityCommand());
+        cmdhelp.registerCommand(new FilterActionCommand(cache));
         System.out.println(String.format("Loaded %s commands.", cmdhelp.getCommandSet().size()));
     }
 
@@ -110,6 +111,7 @@ public class Main extends ListenerAdapter {
         mdhelp.registerModule(new VoiceWatchReporter(cache));
         mdhelp.registerModule(new RoleWatchReporter(cache));
         mdhelp.registerModule(new VoiceBanWatcher(cache));
+        mdhelp.registerModule(new FilterActionHandler(cache));
         System.out.println(String.format("Loaded %s modules.", mdhelp.getModules().size()));
     }
 
@@ -149,6 +151,7 @@ public class Main extends ListenerAdapter {
 
         dbmg.updateLastMessage(event.getMessage());
 
+        /* TODO: use a thread pool instead of just spawning a lot of threads */
         for (Module md: mdhelp.getModules().keySet()) {
             if (md.getInfo().type==ModuleType.MESSAGE_MODULE && mdhelp.isEnabled(md)) {
                 threadPool.execute(() -> md.run(message));

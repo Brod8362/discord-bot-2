@@ -1,12 +1,16 @@
 package pw.byakuren.discord;
 
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.internal.utils.tuple.Pair;
+import pw.byakuren.discord.filteraction.Action;
+import pw.byakuren.discord.filteraction.Filter;
 import pw.byakuren.discord.objects.Triple;
-import pw.byakuren.discord.objects.cache.datatypes.LastMessage;
-import pw.byakuren.discord.objects.cache.datatypes.ServerParameter;
-import pw.byakuren.discord.objects.cache.datatypes.ServerSettings;
-import pw.byakuren.discord.objects.cache.datatypes.VoiceBan;
+import pw.byakuren.discord.objects.cache.datatypes.*;
+import pw.byakuren.discord.util.MessageActionParser;
+import pw.byakuren.discord.util.MessageFilterParser;
+import pw.byakuren.discord.util.MiscUtil;
 
+import java.io.IOException;
 import java.sql.*;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -61,6 +65,13 @@ public class SQLConnection {
     private PreparedStatement getMemberVoiceBans;
     private PreparedStatement updateVoiceBan;
 
+    private PreparedStatement getFilterAction;
+    private PreparedStatement getAllFilterActions;
+    private PreparedStatement addFilterAction;
+    private PreparedStatement removeFilterAction;
+    private PreparedStatement checkFilterAction;
+    private PreparedStatement replaceFilterAction;
+
     public void initialize() throws SQLException {
         String dir = System.getProperty("user.dir");
         // intialize DB connection
@@ -114,10 +125,17 @@ public class SQLConnection {
         addVoiceBan = connection.prepareStatement("INSERT INTO voice_bans VALUES (?, ?, ?, ?, ?, ?, 0)");
         getVoiceBans = connection.prepareStatement("SELECT * FROM voice_bans WHERE server=? ORDER BY date(end) DESC");
         updateVoiceBan = connection.prepareStatement("UPDATE voice_bans SET canceled=1 WHERE server=? AND user=? AND mod=? AND start=?");
+
+        getFilterAction = connection.prepareStatement("SELECT * FROM filter_actions WHERE server=? AND name=?");
+        getAllFilterActions = connection.prepareStatement("SELECT * FROM filter_actions WHERE server=?");
+        addFilterAction = connection.prepareStatement("INSERT INTO filter_actions VALUES (?,?,?,?)");
+        removeFilterAction = connection.prepareStatement("DELETE FROM filter_actions WHERE server=? AND name=?");
+        checkFilterAction = connection.prepareStatement("SELECT 1 FROM filter_actions WHERE server=? AND name=?");
+        replaceFilterAction = connection.prepareStatement("UPDATE filter_actions SET filters=?, actions=? WHERE server=? AND name=?");
     }
 
     private boolean verifyTables() {
-        return (getTables().size() == 8);
+        return (getTables().size() == 9);
     }
 
 
@@ -171,7 +189,9 @@ public class SQLConnection {
                 "CREATE TABLE server_settings (server INTEGER NOT NULL, setting VARCHAR(50) NOT NULL, value INTEGER NOT NULL)",
                 "CREATE INDEX settings_idx ON server_settings(server)",
                 "CREATE TABLE voice_bans (server INTEGER NOT NULl, user INTEGER NOT NULL, mod INTEGER NOT NULL, reason TEXT, start DATETIME NOT NULL, end DATETIME, canceled TINYINT, PRIMARY KEY(server, user, mod, start, end))",
-                "CREATE INDEX ban_idx ON voice_bans(server)"
+                "CREATE INDEX ban_idx ON voice_bans(server)",
+                "CREATE TABLE filter_actions (server INTEGER NOT NULL, name STRING NOT NULL, filters BLOB, actions BLOB, PRIMARY KEY(server,name))",
+                "CREATE INDEX filter_action_idx ON filter_actions(server)"
         };
         for (String s: queries) {
             try {
@@ -514,5 +534,64 @@ public class SQLConnection {
         updateVoiceBan.setTimestamp(4, Timestamp.from(vb.getStartTime().toInstant(ZoneOffset.UTC)));
         updateVoiceBan.executeUpdate();
         updateVoiceBan.clearParameters();
+    }
+
+    public void executeAddFilterAction(long guild, MessageFilterAction messageFilterAction) throws SQLException, IOException {
+        if (checkFilterActionExists(guild, messageFilterAction.getName())) {
+            executeUpdateFilterAction(guild, messageFilterAction);
+            return;
+        }
+        addFilterAction.setLong(1, guild);
+        addFilterAction.setString(2, messageFilterAction.getName());
+        addFilterAction.setBytes(3, MiscUtil.serializeList(MiscUtil.stringMap(messageFilterAction.getFilters())));
+        addFilterAction.setBytes(4, MiscUtil.serializeList(MiscUtil.stringMap(messageFilterAction.getActions())));
+        addFilterAction.execute();
+        addFilterAction.clearParameters();
+    }
+
+    public void executeRemoveFilterAction(long guild, MessageFilterAction messageFilterAction) throws SQLException {
+        removeFilterAction.setLong(1, guild);
+        removeFilterAction.setString(2, messageFilterAction.getName());
+        removeFilterAction.executeUpdate();
+        removeFilterAction.clearParameters();
+    }
+
+    public MessageFilterAction getFilterAction(long guild, String name) throws SQLException, IOException, ClassNotFoundException {
+        getFilterAction.setLong(1, guild);
+        getFilterAction.setString(2, name);
+        ResultSet r = getFilterAction.executeQuery();
+        MessageFilterAction mfa = new MessageFilterAction(guild, name, MiscUtil.deserializeList(r.getBytes(3)), MiscUtil.deserializeList(r.getBytes(4)));
+        getFilterAction.clearParameters();
+        return mfa;
+    }
+
+    public List<MessageFilterAction> getAllFilterActions(long guild) throws SQLException, IOException, ClassNotFoundException {
+        getAllFilterActions.setLong(1, guild);
+        ResultSet r = getAllFilterActions.executeQuery();
+        ArrayList<MessageFilterAction> ar = new ArrayList<>();
+        while (r.next()) {
+            List<Filter<Message>> filters = MessageFilterParser.parseMany(MiscUtil.deserializeList(r.getBytes(3)));
+            List<Action<Message>> actions = MessageActionParser.parseMany(MiscUtil.deserializeList(r.getBytes(4)));
+            ar.add(new MessageFilterAction(guild, r.getString(2), filters, actions));
+        }
+        return ar;
+    }
+
+    public boolean checkFilterActionExists(long guild, String name) throws SQLException {
+        checkFilterAction.setLong(1, guild);
+        checkFilterAction.setString(2, name);
+        ResultSet r = checkFilterAction.executeQuery();
+        boolean sto = r.next();
+        checkFilterAction.clearParameters();
+        return sto;
+    }
+
+    private void executeUpdateFilterAction(long guild, MessageFilterAction mfa) throws SQLException, IOException {
+        replaceFilterAction.setBytes(1, MiscUtil.serializeList(MiscUtil.stringMap(mfa.getFilters())));
+        replaceFilterAction.setBytes(2, MiscUtil.serializeList(MiscUtil.stringMap(mfa.getActions())));
+        replaceFilterAction.setLong(3, guild);
+        replaceFilterAction.setString(4, mfa.getName());
+        replaceFilterAction.executeUpdate();
+        replaceFilterAction.clearParameters();
     }
 }
