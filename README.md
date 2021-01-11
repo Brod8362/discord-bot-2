@@ -16,6 +16,7 @@ Features
 * Flexible "modules" to ensure bot stability
 * Temporary Voice Ban
 * Ask the 8ball important questions
+* Fully extensible/customizable message filter system
 
 ### Planned Features
 

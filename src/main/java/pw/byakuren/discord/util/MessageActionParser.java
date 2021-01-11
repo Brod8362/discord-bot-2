@@ -20,6 +20,7 @@ public abstract class MessageActionParser {
             new ReplyAction("content"),
             new SendPMAction("content"),
             new NullAction(),
+            new AssignRoleAction(0L)
     };
 
     private static final HashMap<String, MessageAction> actionMap = new HashMap<>();
