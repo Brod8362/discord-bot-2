@@ -17,10 +17,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class FilterActionCommand extends Command {
 
     private Cache c;
+
+    private Pattern syntaxPattern = Pattern.compile("!?[A-z]+((\\()|(<)).*((\\))|(>))", Pattern.DOTALL);
 
     public FilterActionCommand(Cache c) {
         this.c = c;
@@ -169,7 +172,7 @@ public class FilterActionCommand extends Command {
 
         if (!syntaxCheck(qString)) {
             msg.reply(
-                    BotEmbed.bad("Looks like your query couldn't be parsed. Check you spelled everything right and try again. " +
+                    BotEmbed.bad("Seems like you have a syntax error. Check you spelled everything right and try again. " +
                             "Note that filters use () and actions use <>.").build()
             ).mentionRepliedUser(false).queue();
             return;
@@ -289,7 +292,6 @@ public class FilterActionCommand extends Command {
     }
 
     private boolean syntaxCheck(String s) {
-        String pattern = "!?[A-z]+((\\()|(<)).*((\\))|(>))";
-        return s.matches(pattern);
+        return syntaxPattern.matcher(s).find();
     }
 }
