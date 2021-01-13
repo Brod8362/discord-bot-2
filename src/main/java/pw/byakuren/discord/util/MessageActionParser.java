@@ -21,7 +21,8 @@ public abstract class MessageActionParser {
             new SendPMAction("content"),
             new NullAction(),
             new AssignRoleAction(0L),
-            new SendAction(12345L, "content")
+            new SendAction(12345L, "content"),
+            new RevokeRoleAction(0L)
     };
 
     private static final HashMap<String, MessageAction> actionMap = new HashMap<>();
