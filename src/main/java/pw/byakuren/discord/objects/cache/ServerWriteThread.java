@@ -25,11 +25,11 @@ public class ServerWriteThread {
         t.start();
     }
 
-    void stop() {
+    void stop(long start) {
         System.out.printf("Stopping write thread %s...\n", t.getName());
         run = false;
         t.interrupt();
-        System.out.printf("Write thread %s stopped.\n", t.getName());
+        System.out.printf("Write thread %s stopped. [took %dms]\n", t.getName(), System.currentTimeMillis()-start);
     }
 
     void disableRun() {
@@ -37,7 +37,7 @@ public class ServerWriteThread {
     }
 
     void restart() {
-        stop();
+        stop(System.currentTimeMillis());
         start();
     }
 
@@ -50,10 +50,11 @@ public class ServerWriteThread {
     }
 
     void writeAllAndQuit() {
+        long time = System.currentTimeMillis();
         System.out.printf("Writing data for %s...\n", t.getName());
         run=false;
         writeAll();
-        stop();
+        stop(time);
     }
 
     private Runnable getRunnable() {

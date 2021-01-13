@@ -151,7 +151,6 @@ public class Main extends ListenerAdapter {
 
         dbmg.updateLastMessage(event.getMessage());
 
-        /* TODO: use a thread pool instead of just spawning a lot of threads */
         for (Module md: mdhelp.getModules().keySet()) {
             if (md.getInfo().type==ModuleType.MESSAGE_MODULE && mdhelp.isEnabled(md)) {
                 threadPool.execute(() -> md.run(message));
