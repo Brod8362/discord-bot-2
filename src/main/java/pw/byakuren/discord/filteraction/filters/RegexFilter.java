@@ -10,10 +10,10 @@ import java.util.regex.Pattern;
 
 public class RegexFilter extends MessageFilter {
 
-    private final String pattern;
+    private final Pattern pattern;
 
     public RegexFilter(String pattern) {
-        this.pattern = pattern;
+        this.pattern = Pattern.compile(pattern);
     }
 
     @Override
@@ -23,12 +23,12 @@ public class RegexFilter extends MessageFilter {
 
     @Override
     public String[] getArguments() {
-        return new String[]{pattern};
+        return new String[]{pattern.pattern()};
     }
 
     @Override
     public String getArgumentsDisplay() {
-        return pattern;
+        return pattern.pattern();
     }
 
     @Override
@@ -44,8 +44,8 @@ public class RegexFilter extends MessageFilter {
 
     @Override
     public FilterResult apply(Message obj) {
-        boolean trigger = obj.getContentRaw().matches(pattern);
-        String reason = trigger ? null : "the message does not match the regex `"+pattern+"`";
+        boolean trigger = pattern.matcher(obj.getContentRaw()).find();
+        String reason = trigger ? null : "the message does not match the regex `"+pattern.pattern()+"`";
         return new FilterResult(trigger, inverted, getDisplay(), reason);
     }
 }
