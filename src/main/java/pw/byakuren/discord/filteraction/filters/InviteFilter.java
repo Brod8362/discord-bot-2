@@ -21,7 +21,7 @@ public class InviteFilter extends MessageFilter {
     public FilterResult apply(Message obj) {
         boolean trigger = !obj.getInvites().isEmpty();
         String reason = trigger ? null : "the message does not have an invite in it";
-        return new FilterResult(trigger, getDisplay(), reason);
+        return new FilterResult(trigger, inverted, getDisplay(), reason);
     }
 
     @Override

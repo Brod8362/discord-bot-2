@@ -43,6 +43,6 @@ public class MessageLengthFilter extends MessageFilter {
     public FilterResult apply(Message obj) {
         boolean trigger = obj.getContentRaw().length() >= length;
         String reason = trigger ? null : "the message is not at least "+length+" characters long";
-        return new FilterResult(trigger, getDisplay(), reason);
+        return new FilterResult(trigger, inverted, getDisplay(), reason);
     }
 }

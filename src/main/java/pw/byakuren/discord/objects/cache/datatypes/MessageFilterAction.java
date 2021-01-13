@@ -46,7 +46,7 @@ public class MessageFilterAction extends CacheEntry {
 
         for (Filter<Message> f : filters) {
             FilterResult fr = f.apply(msg);
-            if (fr.triggered) {
+            if (fr.functionName()) {
                 applied_count++;
             }
             filterResults.add(fr);

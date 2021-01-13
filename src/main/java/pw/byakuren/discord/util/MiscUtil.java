@@ -50,4 +50,11 @@ public abstract class MiscUtil {
         return t.stream().map(Object::toString).collect(Collectors.toList());
     }
 
+    public static boolean flip(boolean input, boolean should) {
+        if (should) {
+            return !input;
+        }
+        return input;
+    }
+
 }

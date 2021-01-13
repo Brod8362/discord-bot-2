@@ -37,8 +37,15 @@ public abstract class MessageFilterParser {
     public static Filter<Message> fromString(String s) {
         if (!s.contains("(")) return null;
         String name = s.substring(0, s.indexOf("("));
+        boolean not = s.startsWith("!");
+        if (not) {
+            name=name.substring(1);
+            s=s.substring(1);
+        }
         if (filterMap.containsKey(name)) {
-            return filterMap.get(name).fromString(s);
+            MessageFilter mf = filterMap.get(name).fromString(s);
+            mf.setInverted(not);
+            return mf;
         }
         return null; //the filter does not exist
     }

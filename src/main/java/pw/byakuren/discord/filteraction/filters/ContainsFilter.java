@@ -28,7 +28,7 @@ public class ContainsFilter extends MessageFilter {
     public FilterResult apply(Message obj) {
         boolean apply = obj.getContentRaw().contains(containText);
         String reason = apply ? null : "the message does not contain the sequence specified";
-        return new FilterResult(apply, getDisplay(), reason);
+        return new FilterResult(apply, inverted, getDisplay(), reason);
     }
 
     @Override

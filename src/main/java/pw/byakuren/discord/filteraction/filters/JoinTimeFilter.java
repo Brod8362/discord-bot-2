@@ -50,6 +50,6 @@ public class JoinTimeFilter extends MessageFilter {
             trigger = (OffsetDateTime.now().toEpochSecond()-m.getTimeJoined().toEpochSecond())/(60) <= minutes;
         }
         String reason = trigger ? null : String.format("the user has been here for more than %d minutes", minutes);
-        return new FilterResult(trigger, getDisplay(), reason);
+        return new FilterResult(trigger, inverted,  getDisplay(), reason);
     }
 }

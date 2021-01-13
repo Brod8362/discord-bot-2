@@ -28,7 +28,7 @@ public class RolePingFilter extends MessageFilter {
     public FilterResult apply(Message obj) {
         boolean trigger = obj.getMentionedRoles().size()>=count;
         String reason = trigger ? null : String.format("the user did not ping %d or more roles", count);
-        return new FilterResult(trigger, getDisplay(), reason);
+        return new FilterResult(trigger, inverted, getDisplay(), reason);
     }
 
     @Override

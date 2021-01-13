@@ -289,7 +289,7 @@ public class FilterActionCommand extends Command {
     }
 
     private boolean syntaxCheck(String s) {
-        String pattern = "[A-z]+((\\()|(<)).*((\\))|(>))";
+        String pattern = "!?[A-z]+((\\()|(<)).*((\\))|(>))";
         return s.matches(pattern);
     }
 }

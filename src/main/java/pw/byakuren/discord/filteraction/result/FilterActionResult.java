@@ -31,7 +31,7 @@ public class FilterActionResult {
     public int countFiltersPassed() {
         int i = 0;
         for (FilterResult fa: filterResults) {
-            if (fa.triggered) i++;
+            if (fa.functionName()) i++;
         }
         return i;
     }

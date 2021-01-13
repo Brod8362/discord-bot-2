@@ -25,7 +25,7 @@ public class AdminFilter extends MessageFilter {
             trigger = obj.getMember().hasPermission(Permission.ADMINISTRATOR);
             if (trigger) reason = null;
         }
-        return new FilterResult(trigger, getDisplay(), reason);
+        return new FilterResult(trigger, inverted, getDisplay(), reason);
     }
 
     @Override

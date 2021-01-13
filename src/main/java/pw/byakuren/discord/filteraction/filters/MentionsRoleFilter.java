@@ -28,7 +28,7 @@ public class MentionsRoleFilter extends MessageFilter {
     public FilterResult apply(Message obj) {
         boolean apply = obj.getMentionedRoles().contains(obj.getJDA().getRoleById(roleId));
         String reason = apply ? null : "the message does not contain a mention to the role <@&"+roleId+">";
-        return new FilterResult(apply, getDisplay(), reason);
+        return new FilterResult(apply, inverted, getDisplay(), reason);
     }
 
     @Override

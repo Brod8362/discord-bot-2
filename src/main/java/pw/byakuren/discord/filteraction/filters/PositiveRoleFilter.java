@@ -61,6 +61,6 @@ public class PositiveRoleFilter extends MessageFilter {
         if (!trigger && reason != null) {
             reason = "this user does not have the role with id "+roleId;
         }
-        return new FilterResult(trigger, getDisplay(), reason);
+        return new FilterResult(trigger, inverted, getDisplay(), reason);
     }
 }

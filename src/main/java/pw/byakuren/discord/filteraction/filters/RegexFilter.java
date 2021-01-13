@@ -46,6 +46,6 @@ public class RegexFilter extends MessageFilter {
     public FilterResult apply(Message obj) {
         boolean trigger = obj.getContentRaw().matches(pattern);
         String reason = trigger ? null : "the message does not match the regex `"+pattern+"`";
-        return new FilterResult(trigger, getDisplay(), reason);
+        return new FilterResult(trigger, inverted, getDisplay(), reason);
     }
 }

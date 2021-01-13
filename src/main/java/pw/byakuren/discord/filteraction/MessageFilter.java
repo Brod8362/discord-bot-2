@@ -11,8 +11,10 @@ import java.util.Arrays;
 
 public abstract class MessageFilter implements Filter<Message>, Serializable {
 
+    public boolean inverted = false;
+
     public String getDisplay() {
-        return String.format("%s(%s)", getName(), getArgumentsDisplay());
+        return String.format("%s%s(%s)", isInverted() ? "!":"", getName(), getArgumentsDisplay());
     }
 
     public String getArgumentsDisplay() {
@@ -31,4 +33,12 @@ public abstract class MessageFilter implements Filter<Message>, Serializable {
 
     abstract public Argument[] getExpectedArguments();
 
+    @Override
+    public boolean isInverted() {
+        return inverted;
+    }
+
+    public void setInverted(boolean inverted) {
+        this.inverted = inverted;
+    }
 }

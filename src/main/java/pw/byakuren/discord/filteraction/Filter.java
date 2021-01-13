@@ -10,4 +10,6 @@ public interface Filter<T> {
 
     public FilterResult apply(T obj);
 
+    boolean isInverted();
+
 }

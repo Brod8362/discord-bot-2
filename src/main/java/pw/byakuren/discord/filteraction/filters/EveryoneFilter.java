@@ -18,7 +18,7 @@ public class EveryoneFilter extends MessageFilter {
 
     @Override
     public FilterResult apply(Message obj) {
-        return new FilterResult(obj.mentionsEveryone(), getDisplay(), obj.mentionsEveryone() ? null : "the message does not mention everyone");
+        return new FilterResult(obj.mentionsEveryone(), inverted, getDisplay(), obj.mentionsEveryone() ? null : "the message does not mention everyone");
     }
 
     @Override

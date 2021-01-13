@@ -18,7 +18,7 @@ public class TrueFilter extends MessageFilter {
 
     @Override
     public FilterResult apply(Message obj) {
-        return new FilterResult(true, getDisplay(), null);
+        return new FilterResult(true, inverted, getDisplay(), null);
     }
 
     @Override
