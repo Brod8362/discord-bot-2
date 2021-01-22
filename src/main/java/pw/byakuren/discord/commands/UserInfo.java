@@ -32,7 +32,7 @@ public class UserInfo extends Command {
         }
         EmbedBuilder embed = BotEmbed.neutral(String.format("%s#%s", u.getUser().getName(), u.getUser().getDiscriminator()))
                 .setThumbnail(u.getUser().getAvatarUrl())
-                .addField("Nickname", u.getNickname(), true)
+                .addField("Nickname", u.getEffectiveName(), true)
                 .addField("ID", u.getUser().getId(), true)
                 .addField("Joined At", u.getTimeJoined().toString(), true)
                 .addField("Account Creation Date", u.getUser().getTimeCreated().toString(), true);
