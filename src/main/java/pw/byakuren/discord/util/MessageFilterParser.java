@@ -23,7 +23,8 @@ public abstract class MessageFilterParser {
             new RegexFilter(".*"),
             new MessageLengthFilter(100),
             new TrueFilter(),
-            new RolePingFilter(3)
+            new RolePingFilter(3),
+            new ChannelFilter(0)
     };
 
     private static final HashMap<String, MessageFilter> filterMap = new HashMap<>();
