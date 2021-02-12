@@ -18,7 +18,7 @@ public class Invite extends Command {
     @Override
     public void run(Message message, List<String> args) {
         JDA jda = message.getJDA();
-        String url = "https://discordapp.com/oauth2/authorize?&client_id="+jda.getSelfUser().getId()+"&scope=bot&permissions=0";
+        String url = "https://discordapp.com/oauth2/authorize?&client_id="+jda.getSelfUser().getId()+"&scope=bot&permissions=268445702";
         message.reply(url).mentionRepliedUser(false).queue();
     }
 }
