@@ -13,7 +13,7 @@ public class RegexFilter extends MessageFilter {
     private final Pattern pattern;
 
     public RegexFilter(String pattern) {
-        this.pattern = Pattern.compile(pattern);
+        this.pattern = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
     }
 
     @Override
