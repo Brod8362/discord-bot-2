@@ -1,28 +1,65 @@
 package pw.byakuren.discord.commands;
 
 
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
+import pw.byakuren.discord.commands.permissions.CommandPermission;
+import pw.byakuren.discord.commands.richcommands.RichCommand;
+import pw.byakuren.discord.commands.subcommands.Subcommand;
 
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class CommandHelper {
 
     private Map<String, Command> commands = new HashMap<>();
     private Set<Command> cmd_set = new HashSet<>();
+    private Map<String, Command> button_ids = new HashMap<>();
+    //todo
 
-    public void registerCommand(Command cmd) {
+    public void registerCommand(JDA jda, Command cmd) {
         for (String s : cmd.getNames()) {
             Command c = commands.get(s);
             if (c == null) {
                 commands.put(s, cmd);
+                if (cmd instanceof RichCommand) {
+                    registerSlashCommand(jda, (RichCommand) cmd);
+                }
             } else {
                 throw new RuntimeException(String.format("Command alias %s conflicts with alias for command %s", s, c.getNames()[0]));
             }
         }
         cmd_set.add(cmd);
+    }
+
+    private void registerSlashCommand(JDA jda, RichCommand cmd) {
+        //register all button IDs
+        for (String id : cmd.requestedButtonIDs) {
+            if (button_ids.containsKey(id)) {
+                throw new RuntimeException(
+                        String.format("Duplicate button id %s attempted to be registered by %s, already in use by %s",
+                                id, cmd.getPrimaryName(), button_ids.get(id).getPrimaryName()));
+            } else {
+                button_ids.put(id, cmd);
+            }
+        }
+
+        CommandData cmd_data = new CommandData(cmd.getPrimaryName(), cmd.getHelp());
+        List<SubcommandData> subcmd_data = new ArrayList<>();
+        for (Subcommand sc: cmd.getSubcommands()) {
+            subcmd_data.add(new SubcommandData(sc.getPrimaryName(), sc.getHelp()));
+            //TODO parameters for this
+        }
+        cmd_data.addSubcommands(subcmd_data);
+
+        if (cmd.isGlobal() && cmd.minimum_permission==CommandPermission.REGULAR_USER) {
+            jda.upsertCommand(cmd_data).queue();
+        } else {
+            for (Guild g: jda.getGuilds()) {
+                g.upsertCommand(cmd_data).queue();
+            }
+        }
     }
 
     public Command getCommand(String n) {
@@ -45,6 +82,10 @@ public class CommandHelper {
         } else {
             return "No syntax defined.";
         }
+    }
+
+    public Command resolveButtonID(String string) {
+        return button_ids.get(string);
     }
 
     public Map<String, Command> getCommands() {

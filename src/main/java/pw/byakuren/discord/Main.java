@@ -9,10 +9,14 @@ import net.dv8tion.jda.api.events.Event;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
+import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jetbrains.annotations.NotNull;
 import pw.byakuren.discord.commands.*;
 import pw.byakuren.discord.commands.CompatabilityCommand;
+import pw.byakuren.discord.commands.richcommands.RichCommand;
 import pw.byakuren.discord.modules.Module;
 import pw.byakuren.discord.modules.*;
 import pw.byakuren.discord.objects.cache.Cache;
@@ -85,24 +89,24 @@ public class Main extends ListenerAdapter {
         }
     }
 
-    private void loadCommands() {
-        cmdhelp.registerCommand(new Stop(dbmg, cache));
-        cmdhelp.registerCommand(new Invite());
-        cmdhelp.registerCommand(new Modules(mdhelp));
-        cmdhelp.registerCommand(new Help(cmdhelp, cache));
-        cmdhelp.registerCommand(new SetModeratorRole(cache));
-        cmdhelp.registerCommand(new UserInfo(cache));
-        cmdhelp.registerCommand(new ServerInfo());
-        cmdhelp.registerCommand(new RegexKeys(cache));
-        cmdhelp.registerCommand(new ExcludedChannels(cache));
-        cmdhelp.registerCommand(new WatchUser(cache));
-        cmdhelp.registerCommand(new WatchRole(cache));
-        cmdhelp.registerCommand(new SetLogChannel(cache));
-        cmdhelp.registerCommand(new VoiceBanCommand(cache));
-        cmdhelp.registerCommand(new EightBall());
-        cmdhelp.registerCommand(new CompatabilityCommand());
-        cmdhelp.registerCommand(new FilterActionCommand(cache));
-        System.out.println(String.format("Loaded %s commands.", cmdhelp.getCommandSet().size()));
+    private void loadCommands(JDA jda) {
+        cmdhelp.registerCommand(jda, new Stop(dbmg, cache));
+        cmdhelp.registerCommand(jda, new Invite());
+        cmdhelp.registerCommand(jda, new Modules(mdhelp));
+        cmdhelp.registerCommand(jda, new Help(cmdhelp, cache));
+        cmdhelp.registerCommand(jda, new SetModeratorRole(cache));
+        cmdhelp.registerCommand(jda, new UserInfo(cache));
+        cmdhelp.registerCommand(jda, new ServerInfo());
+        cmdhelp.registerCommand(jda, new RegexKeys(cache));
+        cmdhelp.registerCommand(jda, new ExcludedChannels(cache));
+        cmdhelp.registerCommand(jda, new WatchUser(cache));
+        cmdhelp.registerCommand(jda, new WatchRole(cache));
+        cmdhelp.registerCommand(jda, new SetLogChannel(cache));
+        cmdhelp.registerCommand(jda, new VoiceBanCommand(cache));
+        cmdhelp.registerCommand(jda, new EightBall());
+        cmdhelp.registerCommand(jda, new CompatabilityCommand());
+        cmdhelp.registerCommand(jda, new FilterActionCommand(cache));
+        System.out.printf("Loaded %d commands.\n", cmdhelp.getCommandSet().size());
     }
 
     private void loadModules() {
@@ -112,14 +116,14 @@ public class Main extends ListenerAdapter {
         mdhelp.registerModule(new RoleWatchReporter(cache));
         mdhelp.registerModule(new VoiceBanWatcher(cache));
         mdhelp.registerModule(new FilterActionHandler(cache));
-        System.out.println(String.format("Loaded %s modules.", mdhelp.getModules().size()));
+        System.out.printf("Loaded %s modules.\n", mdhelp.getModules().size());
     }
 
     @Override
     public void onReady(ReadyEvent event) {
         connectToDatabase(event.getJDA());
         cache = new Cache(dbmg, event.getJDA());
-        loadCommands();
+        loadCommands(event.getJDA());
         loadModules();
         for (Module md: mdhelp.getModules().keySet()) {
             if (md.getInfo().type==ModuleType.COMMAND_MODULE) {
@@ -136,8 +140,6 @@ public class Main extends ListenerAdapter {
             }
         }
     }
-
-
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
@@ -191,6 +193,41 @@ public class Main extends ListenerAdapter {
         cache.getServerCache(g);
         System.out.println("Loaded cache for "+g.getName());
     }
+
+    @Override
+    public void onSlashCommand(@NotNull SlashCommandEvent event) {
+        //super.onSlashCommand(event);
+        String cmd_name = event.getName();
+        Command cmd = cmdhelp.getCommand(cmd_name);
+        if (cmd instanceof RichCommand) {
+            if (cmd.canRun(event.getMember(), cache)) {
+                threadPool.execute(() -> {
+                    try {
+                        ((RichCommand) cmd).runSlash(event);
+                    } catch (Exception e) {
+                        //reportError(message, e);
+                    }
+                });
+
+            } else {
+                event.reply("You don't have permission to run that").setEphemeral(true).queue();
+            }
+        } else {
+            event.reply("If you see this message, please report a bug. :)").setEphemeral(true).queue();
+        }
+    }
+
+    @Override
+    public void onButtonClick(@NotNull ButtonClickEvent event) {
+        Command cmd = cmdhelp.resolveButtonID(event.getComponentId());
+        if (cmd == null) {
+            //unregistered button ID
+            System.out.printf("Unregistered button ID %s triggered", event.getComponentId());
+        } else {
+            ((RichCommand) cmd).onButtonClick(event);
+        }
+    }
+
 
     public static void reportError(Message m, Exception e) {
         m.reply(BotEmbed.error(e).build()).queue();

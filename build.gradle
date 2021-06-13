@@ -10,6 +10,10 @@ sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    maven {
+        name 'm2-dv8tion'
+        url 'https://m2.dv8tion.net/releases'
+    }
 }
 
 repositories {
@@ -27,6 +31,6 @@ dependencies {
 }
 
 dependencies {
-    compile 'net.dv8tion:JDA:4.2.0_220'
+    compile 'net.dv8tion:JDA:4.3.0_277'
     compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.25.2'
 }
