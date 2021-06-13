@@ -2,6 +2,8 @@ package pw.byakuren.discord.commands;
 
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import pw.byakuren.discord.commands.permissions.CommandPermission;
 import pw.byakuren.discord.commands.subcommands.Subcommand;
 import pw.byakuren.discord.objects.cache.Cache;
@@ -16,6 +18,7 @@ public abstract class Command {
     protected String syntax;
     protected String help;
     protected List<Subcommand> subcommands = new ArrayList<>();
+    protected OptionData[] parameters = new OptionData[]{};
 
     public Command() { }
 
@@ -64,8 +67,12 @@ public abstract class Command {
         return null;
     }
 
-    public final List<Subcommand> getSubcommands() {
+    public List<Subcommand> getSubcommands() {
         return subcommands;
+    }
+
+    public final OptionData[] getParameters() {
+        return parameters;
     }
 
     public void run(Message message, List<String> args) {

@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.components.Button;
 import org.jetbrains.annotations.NotNull;
 import pw.byakuren.discord.commands.*;
 import pw.byakuren.discord.commands.CompatabilityCommand;
@@ -196,7 +197,6 @@ public class Main extends ListenerAdapter {
 
     @Override
     public void onSlashCommand(@NotNull SlashCommandEvent event) {
-        //super.onSlashCommand(event);
         String cmd_name = event.getName();
         Command cmd = cmdhelp.getCommand(cmd_name);
         if (cmd instanceof RichCommand) {
@@ -205,7 +205,7 @@ public class Main extends ListenerAdapter {
                     try {
                         ((RichCommand) cmd).runSlash(event);
                     } catch (Exception e) {
-                        //reportError(message, e);
+                        reportErrorPrivate(event.getUser(), e);
                     }
                 });
 
@@ -230,6 +230,15 @@ public class Main extends ListenerAdapter {
 
 
     public static void reportError(Message m, Exception e) {
-        m.reply(BotEmbed.error(e).build()).queue();
+        m.reply(BotEmbed.error(e).build())
+                .setActionRow(Button.link("https://github.com/Brod8362/discord-bot-2/issues", "Report a bug"))
+                .queue();
+    }
+
+    public static void reportErrorPrivate(User u, Exception e) {
+        u.openPrivateChannel().complete().sendMessage("There was an exception while running your command.\n" +
+                "Please try again. If the problem persists, please report a bug.")
+                .embed(BotEmbed.error(e).build());
+
     }
 }
