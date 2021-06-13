@@ -2,6 +2,7 @@ package pw.byakuren.discord.commands.subcommands;
 
 import pw.byakuren.discord.commands.Command;
 import pw.byakuren.discord.commands.permissions.CommandPermission;
+import pw.byakuren.discord.commands.richcommands.CommandType;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,5 +22,10 @@ public abstract class Subcommand extends Command {
     @Override
     public final List<Subcommand> getSubcommands() {
         return Collections.emptyList();
+    }
+
+    @Override
+    public final CommandType getType() {
+        return CommandType.SUBCOMMAND;
     }
 }

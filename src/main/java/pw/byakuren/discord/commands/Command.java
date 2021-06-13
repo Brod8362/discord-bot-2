@@ -2,9 +2,9 @@ package pw.byakuren.discord.commands;
 
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import pw.byakuren.discord.commands.permissions.CommandPermission;
+import pw.byakuren.discord.commands.richcommands.CommandType;
 import pw.byakuren.discord.commands.subcommands.Subcommand;
 import pw.byakuren.discord.objects.cache.Cache;
 
@@ -37,6 +37,25 @@ public abstract class Command {
 
     public final String getHelp() {
         return help;
+    }
+
+    public final String getTypeAbbreviation() {
+        String abbrev = "?";
+        switch (getType()) {
+            case INTEGRATED:
+                abbrev = "T|S";
+                break;
+            case SLASH:
+                abbrev = "S";
+                break;
+            case TRADITIONAL:
+                abbrev = "T";
+                break;
+            case SUBCOMMAND:
+                abbrev = "-";
+                break;
+        }
+        return abbrev;
     }
 
     public final CommandPermission minimumPermission() {
@@ -91,6 +110,10 @@ public abstract class Command {
             return;
         }
         sc.run(message, nargs);
+    }
+
+    public CommandType getType() {
+        return CommandType.TRADITIONAL;
     }
 
 }

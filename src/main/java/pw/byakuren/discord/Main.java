@@ -17,6 +17,7 @@ import net.dv8tion.jda.api.interactions.components.Button;
 import org.jetbrains.annotations.NotNull;
 import pw.byakuren.discord.commands.*;
 import pw.byakuren.discord.commands.CompatabilityCommand;
+import pw.byakuren.discord.commands.richcommands.CommandType;
 import pw.byakuren.discord.commands.richcommands.RichCommand;
 import pw.byakuren.discord.modules.Module;
 import pw.byakuren.discord.modules.*;
@@ -33,6 +34,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 
 public class Main extends ListenerAdapter {
@@ -107,7 +109,9 @@ public class Main extends ListenerAdapter {
         cmdhelp.registerCommand(jda, new EightBall());
         cmdhelp.registerCommand(jda, new CompatabilityCommand());
         cmdhelp.registerCommand(jda, new FilterActionCommand(cache));
-        System.out.printf("Loaded %d commands.\n", cmdhelp.getCommandSet().size());
+
+        int slashsupport = cmdhelp.getCommandSet().stream().filter(command -> command.getType() != CommandType.TRADITIONAL).collect(Collectors.toSet()).size();
+        System.out.printf("Loaded %d commands, %d of which support slash commands.\n", cmdhelp.getCommandSet().size(), slashsupport);
     }
 
     private void loadModules() {
@@ -213,7 +217,9 @@ public class Main extends ListenerAdapter {
                 event.reply("You don't have permission to run that").setEphemeral(true).queue();
             }
         } else {
-            event.reply("If you see this message, please report a bug. :)").setEphemeral(true).queue();
+            event.reply("If you see this message, please report a bug. :)")
+                    .addActionRow(Button.link("https://github.com/Brod8362/discord-bot-2/issues", "Report a bug"))
+                    .setEphemeral(true).queue();
         }
     }
 
@@ -222,7 +228,7 @@ public class Main extends ListenerAdapter {
         Command cmd = cmdhelp.resolveButtonID(event.getComponentId());
         if (cmd == null) {
             //unregistered button ID
-            System.out.printf("Unregistered button ID %s triggered", event.getComponentId());
+            System.out.printf("Unregistered button ID %s triggered\n", event.getComponentId());
         } else {
             ((RichCommand) cmd).onButtonClick(event);
         }

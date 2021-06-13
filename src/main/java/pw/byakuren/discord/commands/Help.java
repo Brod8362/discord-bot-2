@@ -23,7 +23,9 @@ public class Help extends Command {
                 "`@Role` represents a role mention.\n" +
                 "`[]` represents a required argument.\n" +
                 "`<>` represents an optional argument.\n" +
-                "You can view help about subcommands like this: `help command.subcommand`";
+                "\n`T` means a command is traditional, and uses the chat prefix.\n`S` means the command supports slash commands.\n" +
+                "It possible for a command to support one or both.\n"+
+                "\nYou can view help about subcommands like this: `help command.subcommand`";
         minimum_permission=CommandPermission.REGULAR_USER;
 
         cmdhelp = cmd;
@@ -48,10 +50,10 @@ public class Help extends Command {
 
         for (Command cmd: cmdhelp.getCommandSet()) {
             if ( cmd.canRun(message.getMember(), c))
-                desc.append(String.format("**%s** - %s\n", cmd.getNames()[0], cmd.getHelp()));
+                desc.append(String.format("**%s** (%s) - %s\n", cmd.getNames()[0], cmd.getTypeAbbreviation(), cmd.getHelp()));
             else
                 if ( showall )
-                    desc.append(String.format("~~%s~~ - %s\n", cmd.getNames()[0], cmd.getHelp()));
+                    desc.append(String.format("~~%s~~ (%s) - %s\n", cmd.getNames()[0], cmd.getTypeAbbreviation(), cmd.getHelp()));
         }
         b.setDescription(desc);
         b.setFooter("Use the help command with a command name to see more information. " +
@@ -98,7 +100,7 @@ public class Help extends Command {
 
     private void sendHelpEmbed(Message message, String name, Command c) {
         EmbedBuilder b = new EmbedBuilder();
-        b.setTitle("**"+name+"** ("+c.minimumPermission().name+")");
+        b.setTitle(String.format("**%s** (%s, %s)", name, c.minimumPermission().name, c.getTypeAbbreviation()));
         String help = c.getHelp();
         String syntax = c.getSyntax();
         if (help == null) help = "No help defined.";

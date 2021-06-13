@@ -23,7 +23,7 @@ public class CommandHelper {
             Command c = commands.get(s);
             if (c == null) {
                 commands.put(s, cmd);
-                if (cmd instanceof RichCommand) {
+                if (cmd instanceof RichCommand && ((RichCommand) cmd).isSlash()) {
                     registerSlashCommand(jda, (RichCommand) cmd);
                 }
             } else {
@@ -47,24 +47,24 @@ public class CommandHelper {
 
         CommandData cmd_data = new CommandData(cmd.getPrimaryName(), cmd.getHelp());
         if (cmd.getParameters().length > 0 && cmd.getSubcommands().size() > 0) {
-            System.out.println("CONFLICT: command '"+cmd.getPrimaryName()+
-                    "'cannot have both subcommands and parameters to be compatible with the slash command system."+
+            System.out.println("CONFLICT: command '" + cmd.getPrimaryName() +
+                    "'cannot have both subcommands and parameters to be compatible with the slash command system." +
                     "This command will not be registered as a slash command.");
             return;
         } else if (cmd.getParameters().length > 0) {
             cmd_data.addOptions(cmd.getParameters());
         } else if (cmd.getSubcommands().size() > 0) {
             List<SubcommandData> subcmd_data = new ArrayList<>();
-            for (Subcommand sc: cmd.getSubcommands()) {
+            for (Subcommand sc : cmd.getSubcommands()) {
                 subcmd_data.add(new SubcommandData(sc.getPrimaryName(), sc.getHelp()).addOptions(sc.getParameters()));
             }
             cmd_data.addSubcommands(subcmd_data);
         }
 
-        if (cmd.isGlobal() && cmd.minimum_permission==CommandPermission.REGULAR_USER) {
+        if (cmd.isGlobal() && cmd.minimum_permission == CommandPermission.REGULAR_USER) {
             jda.upsertCommand(cmd_data).queue();
         } else {
-            for (Guild g: jda.getGuilds()) {
+            for (Guild g : jda.getGuilds()) {
                 g.upsertCommand(cmd_data).queue();
             }
         }

@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.interactions.components.Button;
 import pw.byakuren.discord.DatabaseManager;
 import pw.byakuren.discord.Main;
 import pw.byakuren.discord.commands.permissions.CommandPermission;
+import pw.byakuren.discord.commands.richcommands.CommandType;
 import pw.byakuren.discord.commands.richcommands.RichCommand;
 import pw.byakuren.discord.objects.cache.Cache;
 
@@ -19,12 +20,12 @@ public class Stop extends RichCommand {
     private DatabaseManager dbmg;
     private Cache c;
 
-
     public Stop(DatabaseManager dbmg, Cache c) {
-        names=new String[]{"stop"};
-        help="Stop the bot.";
-        minimum_permission=CommandPermission.BOT_OWNER;
+        names = new String[]{"stop"};
+        help = "Stop the bot.";
+        minimum_permission = CommandPermission.BOT_OWNER;
         requestedButtonIDs = new String[]{"stop:stop", "stop:cancel"};
+        type = CommandType.INTEGRATED;
 
         this.dbmg = dbmg;
         this.c = c;

@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import pw.byakuren.discord.commands.permissions.CommandPermission;
+import pw.byakuren.discord.commands.richcommands.CommandType;
 import pw.byakuren.discord.commands.richcommands.RichCommand;
 import pw.byakuren.discord.objects.Statistic;
 import pw.byakuren.discord.objects.cache.Cache;
@@ -25,7 +26,8 @@ public class UserInfo extends RichCommand {
         names = new String[]{"userinfo", "uinfo", "ui"};
         help = "Find info about a user.";
         minimum_permission = CommandPermission.REGULAR_USER;
-        parameters = new OptionData[]{new OptionData( OptionType.USER, "user", "The user to find information about", false)};
+        parameters = new OptionData[]{new OptionData(OptionType.USER, "user", "The user to find information about", false)};
+        type = CommandType.INTEGRATED;
         this.c = c;
     }
 
