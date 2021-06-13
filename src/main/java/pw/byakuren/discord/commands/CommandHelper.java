@@ -16,7 +16,6 @@ public class CommandHelper {
     private Map<String, Command> commands = new HashMap<>();
     private Set<Command> cmd_set = new HashSet<>();
     private Map<String, Command> button_ids = new HashMap<>();
-    //todo
 
     public void registerCommand(JDA jda, Command cmd) {
         for (String s : cmd.getNames()) {
@@ -103,4 +102,6 @@ public class CommandHelper {
     public Set<Command> getCommandSet() {
         return cmd_set;
     }
+
+    public Map<String, Command> getButtonIDs() { return button_ids; }
 }

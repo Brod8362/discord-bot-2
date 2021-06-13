@@ -16,7 +16,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.components.Button;
 import org.jetbrains.annotations.NotNull;
 import pw.byakuren.discord.commands.*;
-import pw.byakuren.discord.commands.CompatabilityCommand;
+import pw.byakuren.discord.commands.CompatibilityCommand;
 import pw.byakuren.discord.commands.richcommands.CommandType;
 import pw.byakuren.discord.commands.richcommands.RichCommand;
 import pw.byakuren.discord.modules.Module;
@@ -107,11 +107,12 @@ public class Main extends ListenerAdapter {
         cmdhelp.registerCommand(jda, new SetLogChannel(cache));
         cmdhelp.registerCommand(jda, new VoiceBanCommand(cache));
         cmdhelp.registerCommand(jda, new EightBall());
-        cmdhelp.registerCommand(jda, new CompatabilityCommand());
+        cmdhelp.registerCommand(jda, new CompatibilityCommand());
         cmdhelp.registerCommand(jda, new FilterActionCommand(cache));
 
         int slashsupport = cmdhelp.getCommandSet().stream().filter(command -> command.getType() != CommandType.TRADITIONAL).collect(Collectors.toSet()).size();
         System.out.printf("Loaded %d commands, %d of which support slash commands.\n", cmdhelp.getCommandSet().size(), slashsupport);
+        System.out.printf("Registered %d button IDs.\n", cmdhelp.getButtonIDs().size());
     }
 
     private void loadModules() {
