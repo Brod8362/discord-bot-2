@@ -75,14 +75,6 @@ public class CommandHelper {
         return commands.get(n);
     }
 
-    public @NotNull String getCommandHelp(@NotNull String string) {
-        return commands.get(string).getHelp();
-    }
-
-    public @NotNull String getCommandSyntax(@NotNull String string) {
-        return commands.get(string).getSyntax();
-    }
-
     public @Nullable Command resolveButtonID(@NotNull String string) {
         return button_ids.get(string);
     }
