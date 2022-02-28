@@ -6,12 +6,12 @@ public class ServerWriteThread {
 
     private static final long WAIT_TIME = 180000;
 
-    private final @NotNull CacheObject @NotNull [] objects;
+    private final @NotNull CacheObject<?> @NotNull [] objects;
     private final @NotNull Thread t;
 
     private boolean run;
 
-    public ServerWriteThread(long id, @NotNull CacheObject @NotNull [] objects) {
+    public ServerWriteThread(long id, @NotNull CacheObject<?> @NotNull [] objects) {
         this.objects = objects;
         t = new Thread(getRunnable(), String.format("ServerWriteThread[%d]", id));
         start();
@@ -45,7 +45,7 @@ public class ServerWriteThread {
 
     private int writeAll() {
         int t = 0;
-        for (CacheObject o: objects) {
+        for (CacheObject<?> o: objects) {
             t+=o.write();
         }
         return t;

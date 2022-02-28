@@ -17,7 +17,7 @@ public class Cache {
     private final @NotNull DatabaseManager dbmg;
     private final @NotNull JDA jda;
     public final @NotNull User owner;
-    private final @NotNull List<Triple> deleted_message_authors;
+    private final @NotNull List<Triple<Long, Long, Long>> deleted_message_authors;
 
     public Cache(@NotNull DatabaseManager dbmg, @NotNull JDA jda) {
         this.dbmg = dbmg;
@@ -73,8 +73,8 @@ public class Cache {
     }
 
     public @Nullable Triple<Long, Long, Long> seeDeletedMessageAuthor(long id) {
-        for (Triple t: deleted_message_authors)
-            if ((long)t.a==id)
+        for (Triple<Long, Long, Long> t: deleted_message_authors)
+            if (t.a == id)
                 return t;
         return null;
     }

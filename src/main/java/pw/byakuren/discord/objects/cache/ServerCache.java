@@ -33,7 +33,7 @@ public class ServerCache {
     private final @NotNull CacheObject<MessageFilterAction> message_filters;
 
     @NotNull ServerWriteThread write_thread;
-    private final @NotNull CacheObject @NotNull [] objects;
+    private final @NotNull CacheObject<?> @NotNull [] objects;
 
     ServerCache(long id, @NotNull DatabaseManager dbmg, @NotNull JDA jda) {
         this.id = id;
@@ -47,7 +47,7 @@ public class ServerCache {
         last_messages = new CacheObject<>(id, dbmg, new LastMessageFactory(id, dbmg));
         voice_bans = new CacheObject<>(id, dbmg, new VoiceBanFactory(id, dbmg));
         message_filters = new CacheObject<>(id, dbmg, new MessageFilterActionFactory(id, dbmg));
-        objects = new CacheObject[]{userdata, settings, regex_keys, watched_roles, watched_users, excluded_channels,
+        objects = (CacheObject<?>[]) new CacheObject[]{userdata, settings, regex_keys, watched_roles, watched_users, excluded_channels,
                 last_messages, voice_bans, message_filters};
         write_thread = new ServerWriteThread(id, objects);
     }

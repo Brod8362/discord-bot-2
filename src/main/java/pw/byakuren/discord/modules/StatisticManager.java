@@ -76,10 +76,10 @@ public class StatisticManager implements Module {
 
     private void messageDeleteEvent(Event e) {
         MessageDeleteEvent ev = (MessageDeleteEvent) e;
-        Triple t = c.seeDeletedMessageAuthor(ev.getMessageIdLong());
+        Triple<Long, Long, Long> t = c.seeDeletedMessageAuthor(ev.getMessageIdLong());
         if (t == null ) return;
-        ServerCache sc = c.getServerCache((long)t.b);
-        sc.getStatsForUser((long)t.b, (long)t.c).incrementStatistic(Statistic.MESSAGES_DELETED);
+        ServerCache sc = c.getServerCache(t.b);
+        sc.getStatsForUser(t.b, t.c).incrementStatistic(Statistic.MESSAGES_DELETED);
     }
 
     private void messageReactionAddEvent(Event e) {
