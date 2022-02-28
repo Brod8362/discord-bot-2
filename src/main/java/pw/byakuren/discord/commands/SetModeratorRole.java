@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import org.jetbrains.annotations.NotNull;
 import pw.byakuren.discord.commands.permissions.CommandPermission;
 import pw.byakuren.discord.commands.richcommands.CommandType;
 import pw.byakuren.discord.commands.richcommands.RichCommand;
@@ -20,9 +21,9 @@ import java.util.List;
 
 public class SetModeratorRole extends RichCommand {
 
-    Cache c;
+    private final @NotNull Cache c;
 
-    public SetModeratorRole(Cache c) {
+    public SetModeratorRole(@NotNull Cache c) {
         names=new String[]{"setmodrole", "modrole"};
         help="Sets the moderator role for the server. Role must be pingable.";
         minimum_permission=CommandPermission.SERVER_ADMIN;
@@ -32,7 +33,7 @@ public class SetModeratorRole extends RichCommand {
         this.c = c;
     }
 
-    private void setModRole(Guild g, Role r) {
+    private void setModRole(@NotNull Guild g, @NotNull Role r) {
         ServerCache sc = c.getServerCache(g);
         Role modr = sc.getModeratorRole(g.getJDA());
         ServerSettings setting = new ServerSettings(g, ServerParameter.SERVER_MODERATOR_ROLE, r.getIdLong());
@@ -46,7 +47,7 @@ public class SetModeratorRole extends RichCommand {
     }
 
     @Override
-    public void run(Message message, List<String> args) {
+    public void run(@NotNull Message message, @NotNull List<String> args) {
         if (message.getMentionedRoles().size() == 0) {
             Role r = c.getServerCache(message.getGuild()).getModeratorRole(message.getJDA());
             message.reply(r != null ? "Moderator role is currently set to "+r.getAsMention() :
@@ -58,12 +59,12 @@ public class SetModeratorRole extends RichCommand {
     }
 
     @Override
-    public void onButtonClick(ButtonClickEvent event) {
+    public void onButtonClick(@NotNull ButtonClickEvent event) {
         //no buttons supported
     }
 
     @Override
-    public void runSlash(SlashCommandEvent event) {
+    public void runSlash(@NotNull SlashCommandEvent event) {
         if (event.getOption("modrole") != null) {
             Role r = event.getOption("modrole").getAsRole();
             setModRole(event.getGuild(), r);

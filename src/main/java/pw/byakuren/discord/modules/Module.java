@@ -2,16 +2,17 @@ package pw.byakuren.discord.modules;
 
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.Event;
+import org.jetbrains.annotations.NotNull;
 import pw.byakuren.discord.commands.CommandHelper;
 
 public interface Module {
 
-    void run(Message message);
+    void run(@NotNull Message message);
 
-    void run(CommandHelper cmdhelp);
+    void run(@NotNull CommandHelper cmdhelp);
 
-    void run(Event event);
+    void run(@NotNull Event event);
 
-    ModuleInfo getInfo();
+    @NotNull ModuleInfo getInfo();
 
 }

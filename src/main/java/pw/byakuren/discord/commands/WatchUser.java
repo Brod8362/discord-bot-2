@@ -2,6 +2,7 @@ package pw.byakuren.discord.commands;
 
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import org.jetbrains.annotations.NotNull;
 import pw.byakuren.discord.DatabaseManager;
 import pw.byakuren.discord.commands.permissions.CommandPermission;
 import pw.byakuren.discord.commands.subcommands.Subcommand;
@@ -15,9 +16,9 @@ import java.util.stream.Collectors;
 
 public class WatchUser extends Command {
 
-    private Cache c;
+    private final @NotNull Cache c;
 
-    public WatchUser(Cache c) {
+    public WatchUser(@NotNull Cache c) {
         names = new String[]{"voicewatch", "vw"};
         help = "Add a user to voicewatch.";
         minimum_permission=CommandPermission.MOD_ROLE;
@@ -27,25 +28,25 @@ public class WatchUser extends Command {
         subcommands.add(new SubcommandList(this));
         subcommands.add(new Subcommand(new String[]{"add","a"}, "Add a new watched role.", "@Role", this) {
             @Override
-            public void run(Message message, List<String> args) {
+            public void run(@NotNull Message message, @NotNull List<String> args) {
                 cmd_add(message, args);
             }
         });
         subcommands.add(new Subcommand(new String[]{"del","d","remove","r"}, "Remove a watched role.", "@Role", this) {
             @Override
-            public void run(Message message, List<String> args) {
+            public void run(@NotNull Message message, @NotNull List<String> args) {
                 cmd_del(message, args);
             }
         });
         subcommands.add(new Subcommand(new String[]{"list", "l", "all"}, "See existing watched roles.", null, this) {
             @Override
-            public void run(Message message, List<String> args) {
+            public void run(@NotNull Message message, @NotNull List<String> args) {
                 cmd_list(message, args);
             }
         });
     }
 
-    private void cmd_add(Message message, List<String> args) {
+    private void cmd_add(@NotNull Message message, @NotNull List<String> args) {
         ServerCache sc = c.getServerCache(message.getGuild());
         for (Member m: message.getMentionedMembers()) {
             if (!sc.userIsWatched(m))
@@ -54,7 +55,7 @@ public class WatchUser extends Command {
         message.addReaction("\uD83D\uDC4D").queue();
     }
 
-    private void cmd_del(Message message, List<String> args) {
+    private void cmd_del(@NotNull Message message, @NotNull List<String> args) {
         ServerCache sc = c.getServerCache(message.getGuild());
         for (Member m: message.getMentionedMembers()) {
             if (sc.userIsWatched(m)) {
@@ -70,7 +71,7 @@ public class WatchUser extends Command {
         message.addReaction("\uD83D\uDC4D").queue();
     }
 
-    private void cmd_list(Message message, List<String> args) {
+    private void cmd_list(@NotNull Message message, @NotNull List<String> args) {
         ServerCache sc = c.getServerCache(message.getGuild());
         List<WatchedUser> list = sc.getAllValidWatchedUsers();
         StringBuilder s = new StringBuilder();

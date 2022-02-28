@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.events.Event;
 import net.dv8tion.jda.api.events.message.MessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
+import org.jetbrains.annotations.NotNull;
 import pw.byakuren.discord.commands.CommandHelper;
 import pw.byakuren.discord.objects.Statistic;
 import pw.byakuren.discord.objects.Triple;
@@ -26,15 +27,15 @@ public class StatisticManager implements Module {
     }
 
     @Override
-    public void run(Message message) {
+    public void run(@NotNull Message message) {
 
     }
 
     @Override
-    public void run(CommandHelper cmdhelp) {}
+    public void run(@NotNull CommandHelper cmdhelp) {}
 
     @Override
-    public void run(Event event) {
+    public void run(@NotNull Event event) {
         if (event instanceof MessageReceivedEvent) {
             messageEvent(event);
         } else if (event instanceof MessageDeleteEvent) {
@@ -44,7 +45,7 @@ public class StatisticManager implements Module {
         }
     }
 
-    private void messageEvent(Event e) {
+    private void messageEvent(@NotNull Event e) {
         MessageReceivedEvent ev = (MessageReceivedEvent) e;
         Message m = ev.getMessage();
         if (m.getAuthor().isBot()) return;
@@ -93,7 +94,7 @@ public class StatisticManager implements Module {
     }
 
     @Override
-    public ModuleInfo getInfo() {
+    public @NotNull ModuleInfo getInfo() {
         return new ModuleInfo("StatisticManager", "Brod8362", "d", ModuleType.EVENT_MODULE);
     }
 

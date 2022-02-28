@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import org.jetbrains.annotations.NotNull;
 import pw.byakuren.discord.commands.permissions.CommandPermission;
 import pw.byakuren.discord.commands.richcommands.CommandType;
 import pw.byakuren.discord.commands.richcommands.RichCommand;
@@ -31,7 +32,7 @@ public class UserInfo extends RichCommand {
         this.c = c;
     }
 
-    private MessageEmbed buildUserEmbed(Member u) {
+    private @NotNull MessageEmbed buildUserEmbed(@NotNull Member u) {
         EmbedBuilder embed = BotEmbed.neutral(String.format("%s#%s", u.getUser().getName(), u.getUser().getDiscriminator()))
                 .setThumbnail(u.getUser().getAvatarUrl())
                 .addField("Nickname", u.getEffectiveName(), true)
@@ -50,7 +51,7 @@ public class UserInfo extends RichCommand {
     }
 
     @Override
-    public void run(Message message, List<String> args) {
+    public void run(@NotNull Message message, @NotNull List<String> args) {
         Member u = message.getMember();
         if (message.getMentionedMembers().size() != 0) {
             u = message.getMentionedMembers().get(0);
@@ -60,12 +61,12 @@ public class UserInfo extends RichCommand {
     }
 
     @Override
-    public void onButtonClick(ButtonClickEvent event) {
+    public void onButtonClick(@NotNull ButtonClickEvent event) {
         //no buttons supported
     }
 
     @Override
-    public void runSlash(SlashCommandEvent event) {
+    public void runSlash(@NotNull SlashCommandEvent event) {
         Member m;
         try {
             m = event.getOption("user").getAsMember();

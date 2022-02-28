@@ -2,6 +2,8 @@ package pw.byakuren.discord.objects.cache.factories;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pw.byakuren.discord.DatabaseManager;
 import pw.byakuren.discord.objects.cache.datatypes.WatchedRole;
 import pw.byakuren.discord.objects.cache.datatypes.WatchedUser;
@@ -11,15 +13,15 @@ import java.util.List;
 
 public class WatchedUserFactory extends DatatypeFactory<WatchedUser> {
 
-    JDA jda;
+    @NotNull JDA jda;
 
-    public WatchedUserFactory(long serverid, DatabaseManager dbmg, JDA jda) {
+    public WatchedUserFactory(long serverid, @NotNull DatabaseManager dbmg, @NotNull JDA jda) {
         super(serverid, dbmg);
         this.jda = jda;
     }
 
     @Override
-    public List<WatchedUser> getAll() {
+    public @NotNull List<WatchedUser> getAll() {
         List<Long> l = dbmg.getWatchedUsers(serverid);
 
         ArrayList<WatchedUser> ul = new ArrayList<>();
@@ -30,7 +32,7 @@ public class WatchedUserFactory extends DatatypeFactory<WatchedUser> {
     }
 
     @Override
-    public WatchedUser get(Object... qualifiers) {
+    public @Nullable WatchedUser get(Object @NotNull ... qualifiers) {
         switch (qualifiers.length) {
             case 1:
                 if (qualifiers[0] instanceof Member) {

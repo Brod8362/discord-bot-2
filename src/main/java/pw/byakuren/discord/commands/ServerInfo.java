@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
+import org.jetbrains.annotations.NotNull;
 import pw.byakuren.discord.commands.permissions.CommandPermission;
 import pw.byakuren.discord.commands.richcommands.CommandType;
 import pw.byakuren.discord.commands.richcommands.RichCommand;
@@ -23,7 +24,7 @@ public class ServerInfo extends RichCommand {
         type= CommandType.INTEGRATED;
     }
 
-    private MessageEmbed buildEmbed(Guild s) {
+    private @NotNull MessageEmbed buildEmbed(@NotNull Guild s) {
         EmbedBuilder eb = BotEmbed.neutral(s.getName())
                 .setThumbnail(s.getIconUrl())
                 .addField("Members", Integer.toString(s.getMembers().size()), true) //todo deal with loading members for accurate counts
@@ -39,17 +40,17 @@ public class ServerInfo extends RichCommand {
     }
 
     @Override
-    public void run(Message message, List<String> args) {
+    public void run(@NotNull Message message, @NotNull List<String> args) {
         message.reply(buildEmbed(message.getGuild())).mentionRepliedUser(false).queue();
     }
 
     @Override
-    public void onButtonClick(ButtonClickEvent event) {
+    public void onButtonClick(@NotNull ButtonClickEvent event) {
         //no buttons
     }
 
     @Override
-    public void runSlash(SlashCommandEvent event) {
+    public void runSlash(@NotNull SlashCommandEvent event) {
         InteractionHook ih = event.deferReply().complete();
         ih.editOriginalEmbeds(buildEmbed(event.getGuild())).queue();
     }

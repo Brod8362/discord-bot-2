@@ -2,6 +2,7 @@ package pw.byakuren.discord.commands;
 
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
+import org.jetbrains.annotations.NotNull;
 import pw.byakuren.discord.DatabaseManager;
 import pw.byakuren.discord.commands.permissions.CommandPermission;
 import pw.byakuren.discord.commands.subcommands.Subcommand;
@@ -16,9 +17,9 @@ import java.util.stream.Collectors;
 
 public class WatchRole extends Command {
 
-    private Cache c;
+    private final @NotNull Cache c;
 
-    public WatchRole(Cache c) {
+    public WatchRole(@NotNull Cache c) {
         names=new String[]{"watchrole", "role", "rw"};
         help="Manage watched pingable roles";
         minimum_permission=CommandPermission.MOD_ROLE;
@@ -28,25 +29,25 @@ public class WatchRole extends Command {
         subcommands.add(new SubcommandList(this));
         subcommands.add(new Subcommand(new String[]{"add","a"}, "Add a new watched role.", "@Role", this) {
             @Override
-            public void run(Message message, List<String> args) {
+            public void run(@NotNull Message message, @NotNull List<String> args) {
                 cmd_add(message, args);
             }
         });
         subcommands.add(new Subcommand(new String[]{"del","d","remove","r"}, "Remove a watched role.", "@Role", this) {
             @Override
-            public void run(Message message, List<String> args) {
+            public void run(@NotNull Message message, @NotNull List<String> args) {
                 cmd_del(message, args);
             }
         });
         subcommands.add(new Subcommand(new String[]{"list", "l", "all"}, "See existing watched roles.", null, this) {
             @Override
-            public void run(Message message, List<String> args) {
+            public void run(@NotNull Message message, @NotNull List<String> args) {
                 cmd_list(message, args);
             }
         });
     }
 
-    private void cmd_add(Message message, List<String> args) {
+    private void cmd_add(@NotNull Message message, @NotNull List<String> args) {
         ServerCache sc = c.getServerCache(message.getGuild());
         for (Role r: message.getMentionedRoles()) {
             if (!sc.roleIsWatched(r)) {
@@ -58,7 +59,7 @@ public class WatchRole extends Command {
         message.addReaction("\uD83D\uDC4D").queue();
     }
 
-    private void cmd_del(Message message, List<String> args) {
+    private void cmd_del(@NotNull Message message, @NotNull List<String> args) {
         ServerCache sc = c.getServerCache(message.getGuild());
         for (Role r: message.getMentionedRoles()) {
             if (sc.roleIsWatched(r))
@@ -72,7 +73,7 @@ public class WatchRole extends Command {
         message.addReaction("\uD83D\uDC4D").queue();
     }
 
-    private void cmd_list(Message message, List<String> args) {
+    private void cmd_list(@NotNull Message message, @NotNull List<String> args) {
         ServerCache sc = c.getServerCache(message.getGuild());
         List<WatchedRole> list = sc.getAllValidWatchedRoles();
         StringBuilder s = new StringBuilder();

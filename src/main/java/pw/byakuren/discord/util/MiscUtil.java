@@ -1,5 +1,8 @@
 package pw.byakuren.discord.util;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,15 +10,15 @@ import java.util.stream.Collectors;
 
 public abstract class MiscUtil {
 
-    public static String booleanToYN(boolean b) {
+    public static @NotNull String booleanToYN(boolean b) {
         return b ? "y" : "n";
     }
 
-    public static String booleanToEmoji(boolean b) {
+    public static @NotNull String booleanToEmoji(boolean b) {
         return b ? "✅" : "❌";
     }
 
-    public static <T> byte[] serializeList(List<T> list) throws IOException {
+    public static <T> byte @NotNull [] serializeList(@NotNull List<T> list) throws IOException {
         ArrayList al = new ArrayList(list); //this is done to ensure the list is serializable
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(bos);
@@ -24,7 +27,7 @@ public abstract class MiscUtil {
         return bos.toByteArray();
     }
 
-    public static <T> List<T> deserializeList(byte[] arr) throws IOException, ClassNotFoundException {
+    public static <T> @NotNull List<T> deserializeList(byte @NotNull [] arr) throws IOException, ClassNotFoundException {
         ByteArrayInputStream bis = new ByteArrayInputStream(arr);
         ObjectInputStream ois = new ObjectInputStream(bis);
         ArrayList<T> ar = (ArrayList<T>) ois.readObject();
@@ -41,12 +44,12 @@ public abstract class MiscUtil {
      * @param <T> Type of objects
      * @return which object exists. null if neither exists.
      */
-    public static <T> T which(T a, T b) {
+    public static <T> @Nullable T which(@Nullable T a, T b) {
         if (a!=null) return a;
         return b; //this will return either null or b.
     }
 
-    public static <T> List<String> stringMap(List<T> t) {
+    public static <T> @NotNull List<String> stringMap(@NotNull List<T> t) {
         return t.stream().map(Object::toString).collect(Collectors.toList());
     }
 

@@ -5,6 +5,8 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pw.byakuren.discord.commands.permissions.CommandPermission;
 import pw.byakuren.discord.commands.richcommands.RichCommand;
 import pw.byakuren.discord.commands.subcommands.Subcommand;
@@ -13,11 +15,11 @@ import java.util.*;
 
 public class CommandHelper {
 
-    private Map<String, Command> commands = new HashMap<>();
-    private Set<Command> cmd_set = new HashSet<>();
-    private Map<String, Command> button_ids = new HashMap<>();
+    private final @NotNull Map<String, Command> commands = new HashMap<>();
+    private final @NotNull Set<Command> cmd_set = new HashSet<>();
+    private final @NotNull Map<String, Command> button_ids = new HashMap<>();
 
-    public void registerCommand(JDA jda, Command cmd) {
+    public void registerCommand(@NotNull JDA jda, @NotNull Command cmd) {
         for (String s : cmd.getNames()) {
             Command c = commands.get(s);
             if (c == null) {
@@ -32,7 +34,7 @@ public class CommandHelper {
         cmd_set.add(cmd);
     }
 
-    private void registerSlashCommand(JDA jda, RichCommand cmd) {
+    private void registerSlashCommand(@NotNull JDA jda, @NotNull RichCommand cmd) {
         //register all button IDs
         for (String id : cmd.requestedButtonIDs) {
             if (button_ids.containsKey(id)) {
@@ -69,11 +71,11 @@ public class CommandHelper {
         }
     }
 
-    public Command getCommand(String n) {
+    public @Nullable Command getCommand(@NotNull String n) {
         return commands.get(n);
     }
 
-    public String getCommandHelp(String string) {
+    public @NotNull String getCommandHelp(@NotNull String string) {
         String help = commands.get(string).getHelp();
         if (help != null) {
             return help;
@@ -82,7 +84,7 @@ public class CommandHelper {
         }
     }
 
-    public String getCommandSyntax(String string) {
+    public @NotNull String getCommandSyntax(@NotNull String string) {
         String syntax = commands.get(string).getSyntax();
         if (syntax != null) {
             return syntax;
@@ -91,17 +93,17 @@ public class CommandHelper {
         }
     }
 
-    public Command resolveButtonID(String string) {
+    public @Nullable Command resolveButtonID(@NotNull String string) {
         return button_ids.get(string);
     }
 
-    public Map<String, Command> getCommands() {
+    public @NotNull Map<String, Command> getCommands() {
         return commands;
     }
 
-    public Set<Command> getCommandSet() {
+    public @NotNull Set<Command> getCommandSet() {
         return cmd_set;
     }
 
-    public Map<String, Command> getButtonIDs() { return button_ids; }
+    public @NotNull Map<String, Command> getButtonIDs() { return button_ids; }
 }

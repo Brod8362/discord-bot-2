@@ -3,6 +3,7 @@ package pw.byakuren.discord.filteraction.filters;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
+import org.jetbrains.annotations.NotNull;
 import pw.byakuren.discord.filteraction.MessageFilter;
 import pw.byakuren.discord.filteraction.arguments.Argument;
 import pw.byakuren.discord.filteraction.arguments.ArgumentType;
@@ -19,32 +20,32 @@ public class PositiveRoleFilter extends MessageFilter {
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "hasRole";
     }
 
     @Override
-    public String[] getArguments() {
+    public @NotNull String @NotNull [] getArguments() {
         return new String[]{""+ roleId};
     }
 
     @Override
-    public String getArgumentsDisplay() {
+    public @NotNull String getArgumentsDisplay() {
         return roleId+"";
     }
 
     @Override
-    protected MessageFilter parseFromString(String s) {
+    protected @NotNull MessageFilter parseFromString(@NotNull String s) {
         return new PositiveRoleFilter(Long.parseLong(s));
     }
 
     @Override
-    public Argument[] getExpectedArguments() {
+    public @NotNull Argument @NotNull [] getExpectedArguments() {
         return new Argument[]{new Argument("role", ArgumentType.ROLE_ID, "role needed to trigger this filter")};
     }
 
     @Override
-    public FilterResult apply(Message msg) {
+    public @NotNull FilterResult apply(@NotNull Message msg) {
         boolean trigger = false;
         String reason = null;
         Member m = msg.getMember();

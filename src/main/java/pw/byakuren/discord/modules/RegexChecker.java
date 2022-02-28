@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.Event;
+import org.jetbrains.annotations.NotNull;
 import pw.byakuren.discord.commands.CommandHelper;
 import pw.byakuren.discord.objects.cache.Cache;
 import pw.byakuren.discord.objects.cache.ServerCache;
@@ -17,14 +18,14 @@ import java.util.regex.Matcher;
 
 public class RegexChecker implements Module {
 
-    Cache c;
+    private @NotNull Cache c;
 
-    public RegexChecker(Cache c) {
+    public RegexChecker(@NotNull Cache c) {
         this.c = c;
     }
 
     @Override
-    public void run(Message message) {
+    public void run(@NotNull Message message) {
         if (message.getAuthor().isBot()) return;
         ServerCache sc = c.getServerCache(message.getGuild());
         if (sc.channelIsExcluded(message.getTextChannel())) return;
@@ -61,17 +62,17 @@ public class RegexChecker implements Module {
 
 
     @Override
-    public void run(CommandHelper cmdhelp) {
+    public void run(@NotNull CommandHelper cmdhelp) {
 
     }
 
     @Override
-    public void run(Event event) {
+    public void run(@NotNull Event event) {
 
     }
 
     @Override
-    public ModuleInfo getInfo() {
+    public @NotNull ModuleInfo getInfo() {
         return new ModuleInfo("RegexChecker", "Brod8362", "d", ModuleType.MESSAGE_MODULE);
     }
 }

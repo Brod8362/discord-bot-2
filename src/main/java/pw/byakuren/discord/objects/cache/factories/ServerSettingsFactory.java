@@ -1,5 +1,7 @@
 package pw.byakuren.discord.objects.cache.factories;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pw.byakuren.discord.DatabaseManager;
 import pw.byakuren.discord.objects.cache.datatypes.ServerSettings;
 
@@ -7,17 +9,17 @@ import java.util.List;
 
 public class ServerSettingsFactory extends DatatypeFactory<ServerSettings> {
 
-    public ServerSettingsFactory(long serverid, DatabaseManager dbmg) {
+    public ServerSettingsFactory(long serverid, @NotNull DatabaseManager dbmg) {
         super(serverid, dbmg);
     }
 
     @Override
-    public List<ServerSettings> getAll() {
+    public @NotNull List<ServerSettings> getAll() {
         return dbmg.getServerSettings(serverid);
     }
 
     @Override
-    public ServerSettings get(Object... qualifiers) {
+    public @NotNull ServerSettings get(Object... qualifiers) {
         throw new UnsupportedOperationException("unimplemented");
     }
 }

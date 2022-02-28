@@ -1,6 +1,7 @@
 package pw.byakuren.discord.filteraction.filters;
 
 import net.dv8tion.jda.api.entities.Message;
+import org.jetbrains.annotations.NotNull;
 import pw.byakuren.discord.filteraction.Filter;
 import pw.byakuren.discord.filteraction.MessageFilter;
 import pw.byakuren.discord.filteraction.arguments.Argument;
@@ -16,29 +17,29 @@ public class ChannelFilter extends MessageFilter {
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "inChannel";
     }
 
     @Override
-    public String[] getArguments() {
+    public String @NotNull [] getArguments() {
         return new String[]{""+channelId};
     }
 
     @Override
-    public FilterResult apply(Message obj) {
+    public @NotNull FilterResult apply(@NotNull Message obj) {
         boolean res = obj.getTextChannel().getIdLong()==channelId;
         String reason = res ? null : "The message was not in channel <#"+channelId+">";
         return new FilterResult(res, inverted, getDisplay(), reason);
     }
 
     @Override
-    protected MessageFilter parseFromString(String s) {
+    protected @NotNull MessageFilter parseFromString(@NotNull String s) {
         return new ChannelFilter(Long.parseLong(s));
     }
 
     @Override
-    public Argument[] getExpectedArguments() {
+    public Argument @NotNull [] getExpectedArguments() {
         return new Argument[]{new Argument("channelId", ArgumentType.CHANNEL_ID, "ID of channel the message must be in")};
     }
 }

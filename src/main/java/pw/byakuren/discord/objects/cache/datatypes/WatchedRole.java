@@ -2,19 +2,21 @@ package pw.byakuren.discord.objects.cache.datatypes;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Role;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pw.byakuren.discord.DatabaseManager;
 
 public class WatchedRole extends CacheEntry {
 
     private long serverid;
-    private Role role;
+    private @NotNull Role role;
 
-    public WatchedRole(long roleid, JDA jda) {
+    public WatchedRole(long roleid, @NotNull JDA jda) {
         this.role = jda.getRoleById(roleid);
         this.serverid = this.role.getGuild().getIdLong();
     }
 
-    public WatchedRole(Role role) {
+    public WatchedRole(@NotNull Role role) {
         this.role = role;
         this.serverid = role.getGuild().getIdLong();
     }
@@ -23,21 +25,21 @@ public class WatchedRole extends CacheEntry {
         return serverid;
     }
 
-    public Role getRole() {
+    public @NotNull Role getRole() {
         return role;
     }
 
-    public String getRoleMention() {
+    public @NotNull String getRoleMention() {
         return role.getAsMention();
     }
 
     @Override
-    protected void write(DatabaseManager dbmg) {
+    protected void write(@NotNull DatabaseManager dbmg) {
         dbmg.addWatchedRole(role);
     }
 
     @Override
-    protected void delete(DatabaseManager dbmg) {
+    protected void delete(@NotNull DatabaseManager dbmg) {
         dbmg.removeWatchedRole(role);
     }
 }

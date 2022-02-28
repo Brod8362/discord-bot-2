@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.Button;
+import org.jetbrains.annotations.NotNull;
 import pw.byakuren.discord.DatabaseManager;
 import pw.byakuren.discord.Main;
 import pw.byakuren.discord.commands.permissions.CommandPermission;
@@ -17,10 +18,10 @@ import java.util.List;
 
 public class Stop extends RichCommand {
 
-    private DatabaseManager dbmg;
-    private Cache c;
+    private final @NotNull DatabaseManager dbmg;
+    private final @NotNull Cache c;
 
-    public Stop(DatabaseManager dbmg, Cache c) {
+    public Stop(@NotNull DatabaseManager dbmg, @NotNull Cache c) {
         names = new String[]{"stop"};
         help = "Stop the bot.";
         minimum_permission = CommandPermission.BOT_OWNER;
@@ -32,7 +33,7 @@ public class Stop extends RichCommand {
     }
 
     @Override
-    public void run(Message message, List<String> args) {
+    public void run(@NotNull Message message, @NotNull List<String> args) {
         JDA jda = message.getJDA();
         Message m = message.reply("Waiting for write threads...").mentionRepliedUser(false).complete();
         try {
@@ -46,7 +47,7 @@ public class Stop extends RichCommand {
         System.exit(0);
     }
 
-    public void onButtonClick(ButtonClickEvent ev) {
+    public void onButtonClick(@NotNull ButtonClickEvent ev) {
         switch (ev.getComponentId()) {
             case "stop:stop":
                 ev.editMessage("Shutting down. You will get a message when shutdown is complete.")
@@ -68,7 +69,7 @@ public class Stop extends RichCommand {
     }
 
     @Override
-    public void runSlash(SlashCommandEvent event) {
+    public void runSlash(@NotNull SlashCommandEvent event) {
         event.reply("Are you sure you want to shut down?")
                 .addActionRow(Button.danger("stop:stop", "Shut Down"), Button.secondary("stop:cancel", "Cancel"))
                 .setEphemeral(true).queue();

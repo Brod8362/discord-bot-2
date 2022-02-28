@@ -1,6 +1,7 @@
 package pw.byakuren.discord.commands;
 
 import net.dv8tion.jda.api.entities.Message;
+import org.jetbrains.annotations.NotNull;
 import pw.byakuren.discord.DatabaseManager;
 import pw.byakuren.discord.commands.permissions.CommandPermission;
 import pw.byakuren.discord.commands.subcommands.Subcommand;
@@ -17,9 +18,9 @@ import static pw.byakuren.discord.objects.cache.WriteState.PENDING_WRITE;
 
 public class RegexKeys extends Command {
 
-    private Cache c;
+    private final @NotNull Cache c;
 
-    public RegexKeys(Cache c) {
+    public RegexKeys(@NotNull Cache c) {
         names = new String[]{"regex", "keys"};
         help = "Manage regex keys.";
         minimum_permission = CommandPermission.MOD_ROLE;
@@ -28,32 +29,32 @@ public class RegexKeys extends Command {
         subcommands.add(new SubcommandList(this));
         subcommands.add(new Subcommand(new String[]{"add", "a"}, "Add a regex key.", "[regex key]", this) {
             @Override
-            public void run(Message message, List<String> args) {
+            public void run(@NotNull Message message, @NotNull List<String> args) {
                 cmd_add(message, args);
             }
         });
         subcommands.add(new Subcommand(new String[]{"del", "d"}, "Delete a regex key.", "[regex key]", this) {
             @Override
-            public void run(Message message, List<String> args) {
+            public void run(@NotNull Message message, @NotNull List<String> args) {
                 cmd_del(message, args);
             }
         });
         subcommands.add(new Subcommand(new String[]{"list", "l"}, "View all existing regex keys.", null, this) {
             @Override
-            public void run(Message message, List<String> args) {
+            public void run(@NotNull Message message, @NotNull List<String> args) {
                 cmd_list(message, args);
             }
         });
         subcommands.add(new Subcommand(new String[]{"update"}, "Update existing regex keys to the new format." +
                 " (Removes (?i) and adds \\b to word boundaries) This cannot be undone.", null, this) {
             @Override
-            public void run(Message message, List<String> args) {
+            public void run(@NotNull Message message, @NotNull List<String> args) {
                 cmd_update(message, args);
             }
         });
     }
 
-    private void cmd_add(Message message, List<String> args) {
+    private void cmd_add(@NotNull Message message, @NotNull List<String> args) {
         if (args.size() == 0) return;
         StringBuilder s = new StringBuilder();
         for (int i = 1; i < args.size() - 1; i++) {
@@ -66,7 +67,7 @@ public class RegexKeys extends Command {
         message.addReaction("\uD83D\uDC4D").queue();
     }
 
-    private void cmd_del(Message message, List<String> args) {
+    private void cmd_del(@NotNull Message message, @NotNull List<String> args) {
         List<RegexKey> list = c.getServerCache(message.getGuild()).getRegexKeys().getData();
         StringBuilder s = new StringBuilder();
         if (args.size() == 0) return;
@@ -87,7 +88,7 @@ public class RegexKeys extends Command {
         message.addReaction("\uD83D\uDC4D").queue();
     }
 
-    private void cmd_list(Message message, List<String> args) {
+    private void cmd_list(@NotNull Message message, @NotNull List<String> args) {
         List<RegexKey> list = c.getServerCache(message.getGuild()).getAllValidRegexKeys();
         StringBuilder s = new StringBuilder();
         if (list.size() == 0) {
@@ -102,7 +103,7 @@ public class RegexKeys extends Command {
         message.reply(s.toString()).mentionRepliedUser(false).queue();
     }
 
-    private void cmd_update(Message message, List<String> args) {
+    private void cmd_update(@NotNull Message message, @NotNull List<String> args) {
         ServerCache sc = c.getServerCache(message.getGuild());
         List<RegexKey> keys = sc.getAllValidRegexKeys();
         List<RegexKey> new_keys = new ArrayList<>();
@@ -119,14 +120,14 @@ public class RegexKeys extends Command {
         message.reply("Updated " + new_keys.size() + " keys.").mentionRepliedUser(false).queue();
     }
 
-    private boolean needsUpdating(RegexKey p) {
+    private boolean needsUpdating(@NotNull RegexKey p) {
         return p.getKey().contains("(?i)") ||
                 !p.getKey().startsWith("\\b") ||
                 !p.getKey().endsWith("\\b") ||
                 p.getKey().contains(".");
     }
 
-    private RegexKey update(RegexKey p) {
+    private @NotNull RegexKey update(@NotNull RegexKey p) {
         String source = p.getKey();
         source = source.replaceAll("\\(\\?i\\)", "");
         source = source.replaceAll("\\.", "\\S");

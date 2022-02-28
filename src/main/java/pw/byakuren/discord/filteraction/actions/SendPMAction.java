@@ -1,6 +1,7 @@
 package pw.byakuren.discord.filteraction.actions;
 
 import net.dv8tion.jda.api.entities.Message;
+import org.jetbrains.annotations.NotNull;
 import pw.byakuren.discord.filteraction.MessageAction;
 import pw.byakuren.discord.filteraction.arguments.Argument;
 import pw.byakuren.discord.filteraction.arguments.ArgumentType;
@@ -8,14 +9,14 @@ import pw.byakuren.discord.filteraction.result.ActionResult;
 
 public class SendPMAction extends MessageAction {
 
-    private final String msgContent;
+    private final @NotNull String msgContent;
 
-    public SendPMAction(String msgContent) {
+    public SendPMAction(@NotNull String msgContent) {
         this.msgContent = msgContent;
     }
 
     @Override
-    public ActionResult execute(Message obj) {
+    public @NotNull ActionResult execute(@NotNull Message obj) {
         boolean success = false;
         Exception ex = null;
         try {
@@ -28,22 +29,22 @@ public class SendPMAction extends MessageAction {
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "sendPM";
     }
 
     @Override
-    public Argument[] getExpectedArguments() {
+    public @NotNull Argument @NotNull [] getExpectedArguments() {
         return new Argument[]{new Argument("message", ArgumentType.STRING, "the content of the message to PM")};
     }
 
     @Override
-    protected String[] getArguments() {
+    protected @NotNull String @NotNull [] getArguments() {
         return new String[]{msgContent};
     }
 
     @Override
-    protected MessageAction parseFromString(String s) {
+    protected @NotNull MessageAction parseFromString(@NotNull String s) {
         return new SendPMAction(s);
     }
 }

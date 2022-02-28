@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.dv8tion.jda.api.events.Event;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
+import org.jetbrains.annotations.NotNull;
 import pw.byakuren.discord.commands.CommandHelper;
 import pw.byakuren.discord.objects.cache.Cache;
 import pw.byakuren.discord.objects.cache.datatypes.VoiceBan;
@@ -21,26 +22,26 @@ public class VoiceBanWatcher implements Module {
     }
 
     @Override
-    public void run(Message message) {
+    public void run(@NotNull Message message) {
     }
 
     @Override
-    public void run(CommandHelper cmdhelp) {
+    public void run(@NotNull CommandHelper cmdhelp) {
     }
 
     @Override
-    public void run(Event event) {
+    public void run(@NotNull Event event) {
         if (event instanceof GuildVoiceJoinEvent) {
             join_event((GuildVoiceJoinEvent) event);
         }
     }
 
     @Override
-    public ModuleInfo getInfo() {
+    public @NotNull ModuleInfo getInfo() {
         return new ModuleInfo("VoiceBanWatcher", "Brod8362", "d", ModuleType.EVENT_MODULE);
     }
 
-    private void join_event(GuildVoiceJoinEvent ev) {
+    private void join_event(@NotNull GuildVoiceJoinEvent ev) {
         Member m = ev.getMember();
         if (m.getUser().isBot() || !check_banned(m)) return;
         try {
@@ -64,7 +65,7 @@ public class VoiceBanWatcher implements Module {
         ch.sendMessage(b.build()).queue();
     }
 
-    private boolean check_banned(Member m) {
+    private boolean check_banned(@NotNull Member m) {
         return c.getServerCache(m.getGuild()).userIsVoiceBanned(m);
     }
 }

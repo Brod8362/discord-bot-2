@@ -1,6 +1,7 @@
 package pw.byakuren.discord.filteraction.filters;
 
 import net.dv8tion.jda.api.entities.Message;
+import org.jetbrains.annotations.NotNull;
 import pw.byakuren.discord.filteraction.MessageFilter;
 import pw.byakuren.discord.filteraction.arguments.Argument;
 import pw.byakuren.discord.filteraction.arguments.ArgumentType;
@@ -15,29 +16,29 @@ public class RolePingFilter extends MessageFilter {
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "hasRolePings";
     }
 
     @Override
-    public String[] getArguments() {
+    public @NotNull String @NotNull [] getArguments() {
         return new String[]{count+""};
     }
 
     @Override
-    public FilterResult apply(Message obj) {
+    public @NotNull FilterResult apply(@NotNull Message obj) {
         boolean trigger = obj.getMentionedRoles().size()>=count;
         String reason = trigger ? null : String.format("the user did not ping %d or more roles", count);
         return new FilterResult(trigger, inverted, getDisplay(), reason);
     }
 
     @Override
-    protected MessageFilter parseFromString(String s) {
+    protected @NotNull MessageFilter parseFromString(@NotNull String s) {
         return new RolePingFilter(Integer.parseInt(s));
     }
 
     @Override
-    public Argument[] getExpectedArguments() {
+    public @NotNull Argument @NotNull [] getExpectedArguments() {
         return new Argument[]{new Argument("pings", ArgumentType.NUMBER, "how many role pings the message must have to trigger this filter")};
     }
 }

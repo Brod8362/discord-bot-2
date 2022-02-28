@@ -1,6 +1,7 @@
 package pw.byakuren.discord.filteraction.filters;
 
 import net.dv8tion.jda.api.entities.Message;
+import org.jetbrains.annotations.NotNull;
 import pw.byakuren.discord.filteraction.MessageFilter;
 import pw.byakuren.discord.filteraction.arguments.Argument;
 import pw.byakuren.discord.filteraction.arguments.ArgumentType;
@@ -10,40 +11,40 @@ import java.util.regex.Pattern;
 
 public class RegexFilter extends MessageFilter {
 
-    private final Pattern pattern;
+    private final @NotNull Pattern pattern;
 
-    public RegexFilter(String pattern) {
+    public RegexFilter(@NotNull String pattern) {
         this.pattern = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "matchesRegex";
     }
 
     @Override
-    public String[] getArguments() {
+    public @NotNull String @NotNull [] getArguments() {
         return new String[]{pattern.pattern()};
     }
 
     @Override
-    public String getArgumentsDisplay() {
+    public @NotNull String getArgumentsDisplay() {
         return pattern.pattern();
     }
 
     @Override
-    protected MessageFilter parseFromString(String s) {
+    protected @NotNull MessageFilter parseFromString(@NotNull String s) {
         Pattern.compile(s); //this will throw an exception that will be caught if the regex is invalid
         return new RegexFilter(s);
     }
 
     @Override
-    public Argument[] getExpectedArguments() {
+    public @NotNull Argument @NotNull [] getExpectedArguments() {
         return new Argument[]{new Argument("regex",  ArgumentType.STRING, "regex to match against")};
     }
 
     @Override
-    public FilterResult apply(Message obj) {
+    public @NotNull FilterResult apply(@NotNull Message obj) {
         boolean trigger = pattern.matcher(obj.getContentRaw()).find();
         String reason = trigger ? null : "the message does not match the regex `"+pattern.pattern()+"`";
         return new FilterResult(trigger, inverted, getDisplay(), reason);

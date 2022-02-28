@@ -1,6 +1,8 @@
 package pw.byakuren.discord.objects.cache.factories;
 
 import net.dv8tion.jda.api.entities.Member;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pw.byakuren.discord.DatabaseManager;
 import pw.byakuren.discord.objects.cache.datatypes.UserStats;
 
@@ -8,17 +10,17 @@ import java.util.List;
 
 public class UserStatsFactory extends DatatypeFactory<UserStats> {
 
-    public UserStatsFactory(long serverid, DatabaseManager dbmg) {
+    public UserStatsFactory(long serverid, @NotNull DatabaseManager dbmg) {
         super(serverid, dbmg);
     }
 
     @Override
-    public List<UserStats> getAll() {
+    public @NotNull List<UserStats> getAll() {
         return dbmg.getAllChatDataForServer(serverid);
     }
 
     @Override
-    public UserStats get(Object... qualifiers) {
+    public @Nullable UserStats get(Object @NotNull ... qualifiers) {
         switch (qualifiers.length) {
             case 1:
                 if (qualifiers[0] instanceof Member) {

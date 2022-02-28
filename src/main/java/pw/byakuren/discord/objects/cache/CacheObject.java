@@ -1,5 +1,7 @@
 package pw.byakuren.discord.objects.cache;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pw.byakuren.discord.DatabaseManager;
 import pw.byakuren.discord.objects.cache.datatypes.CacheEntry;
 import pw.byakuren.discord.objects.cache.factories.DatatypeFactory;
@@ -8,22 +10,22 @@ import java.util.List;
 
 public class CacheObject<E extends CacheEntry> {
 
-    private DatabaseManager dbmg;
-    private DatatypeFactory<E> factory;
+    private final @NotNull DatabaseManager dbmg;
+    private final @NotNull DatatypeFactory<E> factory;
 
     private final long id;
 
-    private List<E> data;
+    private final @NotNull List<E> data;
 
 
-    public CacheObject(long serverid, DatabaseManager dbmg, DatatypeFactory<E> factory) {
+    public CacheObject(long serverid, @NotNull DatabaseManager dbmg, @NotNull DatatypeFactory<E> factory) {
         data = factory.getAll();
         this.dbmg=dbmg;
         id = serverid;
         this.factory=factory;
     }
 
-    public List<E> getData() {
+    public @NotNull List<E> getData() {
         return data;
     }
 

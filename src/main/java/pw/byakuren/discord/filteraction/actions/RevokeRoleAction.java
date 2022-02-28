@@ -2,6 +2,7 @@ package pw.byakuren.discord.filteraction.actions;
 
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
+import org.jetbrains.annotations.NotNull;
 import pw.byakuren.discord.filteraction.MessageAction;
 import pw.byakuren.discord.filteraction.arguments.Argument;
 import pw.byakuren.discord.filteraction.arguments.ArgumentType;
@@ -16,7 +17,7 @@ public class RevokeRoleAction extends MessageAction {
     }
 
     @Override
-    public ActionResult execute(Message obj) {
+    public @NotNull ActionResult execute(@NotNull Message obj) {
         boolean success = false;
         Exception ex = null;
         try {
@@ -30,22 +31,22 @@ public class RevokeRoleAction extends MessageAction {
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "removeRole";
     }
 
     @Override
-    public Argument[] getExpectedArguments() {
+    public @NotNull Argument @NotNull [] getExpectedArguments() {
         return new Argument[]{new Argument("roleId", ArgumentType.ROLE_ID, "ID of role to remove")};
     }
 
     @Override
-    protected String[] getArguments() {
+    protected @NotNull String @NotNull [] getArguments() {
         return new String[]{roleId+""};
     }
 
     @Override
-    protected MessageAction parseFromString(String s) {
+    protected @NotNull MessageAction parseFromString(@NotNull String s) {
         return new RevokeRoleAction(Long.parseLong(s));
     }
 }

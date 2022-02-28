@@ -3,6 +3,7 @@ package pw.byakuren.discord.filteraction.result;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import org.jetbrains.annotations.NotNull;
 import pw.byakuren.discord.objects.cache.datatypes.MessageFilterAction;
 import pw.byakuren.discord.util.BotEmbed;
 import pw.byakuren.discord.util.ScalaReplacements;
@@ -12,15 +13,15 @@ import java.util.List;
 
 public class FilterActionResult {
 
-    public final MessageFilterAction mfa;
-    public final OffsetDateTime time = OffsetDateTime.now();
-    public final Message message;
+    public final @NotNull MessageFilterAction mfa;
+    public final @NotNull OffsetDateTime time = OffsetDateTime.now();
+    public final @NotNull Message message;
     public final boolean activated;
-    public final List<FilterResult> filterResults;
-    public final List<ActionResult> actionResults;
+    public final @NotNull List<FilterResult> filterResults;
+    public final @NotNull List<ActionResult> actionResults;
 
-    public FilterActionResult(MessageFilterAction messageFilterAction, Message message, boolean activated,
-                              List<FilterResult> filterResults, List<ActionResult> actionResults) {
+    public FilterActionResult(@NotNull MessageFilterAction messageFilterAction, @NotNull Message message, boolean activated,
+                              @NotNull List<FilterResult> filterResults, @NotNull List<ActionResult> actionResults) {
         this.mfa = messageFilterAction;
         this.message = message;
         this.activated = activated;
@@ -44,7 +45,7 @@ public class FilterActionResult {
         return c;
     }
 
-    public MessageEmbed embedReport() {
+    public @NotNull MessageEmbed embedReport() {
         EmbedBuilder eb = BotEmbed.information(mfa.getName());
         if (filterResults.size()==0) {
             eb.addField("NOTICE",

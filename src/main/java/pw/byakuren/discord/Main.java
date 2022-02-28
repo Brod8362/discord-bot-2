@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.components.Button;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pw.byakuren.discord.commands.*;
 import pw.byakuren.discord.commands.CompatibilityCommand;
 import pw.byakuren.discord.commands.richcommands.CommandType;
@@ -38,12 +39,12 @@ import java.util.stream.Collectors;
 
 
 public class Main extends ListenerAdapter {
-    private static String prefix = getPrefix();
+    private static final @NotNull String prefix = getPrefix();
 
-    private CommandHelper cmdhelp = new CommandHelper();
-    private ModuleHelper mdhelp = new ModuleHelper();
-    private DatabaseManager dbmg;
-    private ExecutorService threadPool = Executors.newFixedThreadPool(32);
+    private @NotNull CommandHelper cmdhelp = new CommandHelper();
+    private @NotNull ModuleHelper mdhelp = new ModuleHelper();
+    private @Nullable DatabaseManager dbmg;
+    private @NotNull ExecutorService threadPool = Executors.newFixedThreadPool(32);
 
     private Cache cache;
 
@@ -84,7 +85,7 @@ public class Main extends ListenerAdapter {
         return next;
     }
 
-    private void connectToDatabase(JDA jda) {
+    private void connectToDatabase(@NotNull JDA jda) {
         try {
             dbmg = new DatabaseManager(new SQLConnection(), jda);
         } catch (SQLException e) {
@@ -92,7 +93,7 @@ public class Main extends ListenerAdapter {
         }
     }
 
-    private void loadCommands(JDA jda) {
+    private void loadCommands(@NotNull JDA jda) {
         cmdhelp.registerCommand(jda, new Stop(dbmg, cache));
         cmdhelp.registerCommand(jda, new Invite());
         cmdhelp.registerCommand(jda, new Modules(mdhelp));
@@ -126,7 +127,7 @@ public class Main extends ListenerAdapter {
     }
 
     @Override
-    public void onReady(ReadyEvent event) {
+    public void onReady(@NotNull ReadyEvent event) {
         connectToDatabase(event.getJDA());
         cache = new Cache(dbmg, event.getJDA());
         loadCommands(event.getJDA());
@@ -139,7 +140,7 @@ public class Main extends ListenerAdapter {
     }
 
     @Override
-    public void onGenericEvent(GenericEvent event) {
+    public void onGenericEvent(@NotNull GenericEvent event) {
         for (Module md: mdhelp.getModules().keySet()) {
             if (md.getInfo().type== ModuleType.EVENT_MODULE && mdhelp.isEnabled(md)) {
                 threadPool.execute(() -> md.run((Event)event));
@@ -148,7 +149,7 @@ public class Main extends ListenerAdapter {
     }
 
     @Override
-    public void onMessageReceived(MessageReceivedEvent event) {
+    public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         User author = event.getAuthor(); //get message author
         Message message = event.getMessage(); //get message object
         String msg = message.getContentDisplay(); //get message content
@@ -193,7 +194,7 @@ public class Main extends ListenerAdapter {
     }
 
     @Override
-    public void onGuildJoin(GuildJoinEvent event) {
+    public void onGuildJoin(@NotNull GuildJoinEvent event) {
         Guild g =event.getGuild();
         System.out.println("Joined new server "+g.getName());
         cache.getServerCache(g);
@@ -236,13 +237,13 @@ public class Main extends ListenerAdapter {
     }
 
 
-    public static void reportError(Message m, Exception e) {
+    public static void reportError(@NotNull Message m, @NotNull Exception e) {
         m.reply(BotEmbed.error(e).build())
                 .setActionRow(Button.link("https://github.com/Brod8362/discord-bot-2/issues", "Report a bug"))
                 .queue();
     }
 
-    public static void reportErrorPrivate(User u, Exception e) {
+    public static void reportErrorPrivate(@NotNull User u, @NotNull Exception e) {
         u.openPrivateChannel().complete().sendMessage("There was an exception while running your command.\n" +
                 "Please try again. If the problem persists, please report a bug.")
                 .embed(BotEmbed.error(e).build());

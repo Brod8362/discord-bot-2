@@ -1,6 +1,8 @@
 package pw.byakuren.discord.util;
 
 import net.dv8tion.jda.api.entities.Message;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pw.byakuren.discord.filteraction.Action;
 import pw.byakuren.discord.filteraction.Filter;
 import pw.byakuren.discord.filteraction.MessageAction;
@@ -12,7 +14,7 @@ import java.util.stream.Collectors;
 
 public abstract class MessageActionParser {
 
-    public static MessageAction[] exampleActions = new MessageAction[]{
+    public static final @NotNull MessageAction[] exampleActions = new MessageAction[]{
             new BanAction(0),
             new DeleteAction(),
             new KickAction(),
@@ -33,7 +35,7 @@ public abstract class MessageActionParser {
         }
     }
 
-    public static Action<Message> fromString(String s) {
+    public static @Nullable Action<Message> fromString(@NotNull String s) {
         if (!s.contains("<")) return null;
         String name = s.substring(0, s.indexOf("<"));
         if (actionMap.containsKey(name)) {
@@ -42,11 +44,11 @@ public abstract class MessageActionParser {
         return null; //the filter does not exist
     }
 
-    public static MessageAction[] getExamples() {
+    public static @NotNull MessageAction @NotNull [] getExamples() {
         return exampleActions;
     }
 
-    public static List<Action<Message>> parseMany(List<String> strs) {
+    public static List<Action<Message>> parseMany(@NotNull List<String> strs) {
         return strs.stream().map(MessageActionParser::fromString).collect(Collectors.toList());
     }
 }

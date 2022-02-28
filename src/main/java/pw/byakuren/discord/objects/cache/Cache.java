@@ -4,23 +4,22 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pw.byakuren.discord.DatabaseManager;
 import pw.byakuren.discord.objects.Triple;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Cache {
 
-    private Map<Long, ServerCache> servers = new HashMap<>();
-    private DatabaseManager dbmg;
-    private JDA jda;
-    public final User owner;
-    private List<Triple> deleted_message_authors;
+    private final @NotNull Map<Long, ServerCache> servers = new HashMap<>();
+    private final @NotNull DatabaseManager dbmg;
+    private final @NotNull JDA jda;
+    public final @NotNull User owner;
+    private final @NotNull List<Triple> deleted_message_authors;
 
-    public Cache(DatabaseManager dbmg, JDA jda) {
+    public Cache(@NotNull DatabaseManager dbmg, @NotNull JDA jda) {
         this.dbmg = dbmg;
         this.jda = jda;
         owner = jda.retrieveApplicationInfo().complete().getOwner();
@@ -36,11 +35,11 @@ public class Cache {
         }
     }
 
-    public ServerCache getServerCache(Guild g) {
+    public @NotNull ServerCache getServerCache(@NotNull Guild g) {
         return getServerCache(g.getIdLong());
     }
 
-    public ServerCache getServerCache(long serverid) {
+    public @NotNull ServerCache getServerCache(long serverid) {
         if (servers.get(serverid) == null) {
             loadServerCache(serverid);
         }
@@ -52,7 +51,7 @@ public class Cache {
         servers.put(serverid, sc);
     }
 
-    private void loadServerCache(Guild g) {
+    private void loadServerCache(@NotNull Guild g) {
         loadServerCache(g.getIdLong());
     }
 
@@ -65,7 +64,7 @@ public class Cache {
         }
     }
 
-    public void addMessageReference(Message m) {
+    public void addMessageReference(@NotNull Message m) {
         if (deleted_message_authors.size() > m.getJDA().getGuilds().size()*1000) {
             System.out.printf("Trimming message cache from %d to %d\n", deleted_message_authors.size(), deleted_message_authors.size() - 500);
             deleted_message_authors.subList(0, 500).clear();
@@ -73,7 +72,7 @@ public class Cache {
         deleted_message_authors.add(new Triple<>(m.getIdLong(), m.getGuild().getIdLong(), m.getAuthor().getIdLong()));
     }
 
-    public Triple<Long, Long, Long> seeDeletedMessageAuthor(long id) {
+    public @Nullable Triple<Long, Long, Long> seeDeletedMessageAuthor(long id) {
         for (Triple t: deleted_message_authors)
             if ((long)t.a==id)
                 return t;

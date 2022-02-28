@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import org.jetbrains.annotations.NotNull;
 import pw.byakuren.discord.commands.permissions.CommandPermission;
 import pw.byakuren.discord.commands.richcommands.CommandType;
 import pw.byakuren.discord.commands.richcommands.RichCommand;
@@ -24,7 +25,7 @@ public class CompatibilityCommand extends RichCommand {
         parameters = new OptionData[]{new OptionData(OptionType.STRING, "thing", "What you want to check compatibility with", true)};
     }
 
-    private MessageEmbed logic(User u, String other) {
+    private @NotNull MessageEmbed logic(@NotNull User u, @NotNull String other) {
         int compat = (other.toLowerCase().hashCode() + u.getId().hashCode()) % 101;
         return BotEmbed.information("Compatibility")
                 .setDescription(String.format("%s and %s\n**%d%%** Compatible", u.getAsMention(), other, compat))
@@ -32,7 +33,7 @@ public class CompatibilityCommand extends RichCommand {
     }
 
     @Override
-    public void run(Message message, List<String> args) {
+    public void run(@NotNull Message message, @NotNull List<String> args) {
         if (args.isEmpty())
             return;
         String obj = String.join(" ", args);
@@ -40,12 +41,12 @@ public class CompatibilityCommand extends RichCommand {
     }
 
     @Override
-    public void onButtonClick(ButtonClickEvent event) {
+    public void onButtonClick(@NotNull ButtonClickEvent event) {
         //as usual, its not used
     }
 
     @Override
-    public void runSlash(SlashCommandEvent event) {
+    public void runSlash(@NotNull SlashCommandEvent event) {
         event.replyEmbeds(logic(event.getUser(), event.getOption("thing").getAsString())).queue();
     }
 }

@@ -2,13 +2,14 @@ package pw.byakuren.discord.commands.richcommands;
 
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import org.jetbrains.annotations.NotNull;
 import pw.byakuren.discord.commands.Command;
 
 public abstract class RichCommand extends Command {
 
     protected boolean global = false;
-    protected CommandType type = CommandType.TRADITIONAL;
-    public String[] requestedButtonIDs = new String[]{};
+    protected @NotNull CommandType type = CommandType.TRADITIONAL;
+    public @NotNull String @NotNull [] requestedButtonIDs = new String[]{};
 
     public abstract void onButtonClick(ButtonClickEvent event);
 
@@ -23,7 +24,7 @@ public abstract class RichCommand extends Command {
     }
 
     @Override
-    public final CommandType getType() {
+    public final @NotNull CommandType getType() {
         return type;
     }
 }

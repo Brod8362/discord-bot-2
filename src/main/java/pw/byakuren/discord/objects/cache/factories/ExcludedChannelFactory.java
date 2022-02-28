@@ -1,6 +1,8 @@
 package pw.byakuren.discord.objects.cache.factories;
 
 import net.dv8tion.jda.api.entities.TextChannel;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pw.byakuren.discord.DatabaseManager;
 import pw.byakuren.discord.objects.cache.datatypes.CacheEntry;
 import pw.byakuren.discord.objects.cache.datatypes.ExcludedChannel;
@@ -11,12 +13,12 @@ import java.util.stream.Collectors;
 
 public class ExcludedChannelFactory extends DatatypeFactory<ExcludedChannel> {
 
-    public ExcludedChannelFactory(long serverid, DatabaseManager dbmg) {
+    public ExcludedChannelFactory(long serverid, @NotNull DatabaseManager dbmg) {
         super(serverid, dbmg);
     }
 
     @Override
-    public List<ExcludedChannel> getAll() {
+    public @NotNull List<ExcludedChannel> getAll() {
         return dbmg.getExcludedChannels(serverid)
                 .stream()
                 .map(ExcludedChannel::new)
@@ -24,7 +26,7 @@ public class ExcludedChannelFactory extends DatatypeFactory<ExcludedChannel> {
     }
 
     @Override
-    public ExcludedChannel get(Object... qualifiers) {
+    public @Nullable ExcludedChannel get(Object @NotNull ... qualifiers) {
         if (qualifiers.length != 1) return null;
         if (qualifiers[0] instanceof Long) {
             return dbmg.getExcludedChannel((long)qualifiers[0]);

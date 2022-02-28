@@ -1,14 +1,16 @@
 package pw.byakuren.discord.filteraction;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pw.byakuren.discord.filteraction.result.FilterResult;
 
 public interface Filter<T> {
 
-    public String getName();
+    public @NotNull String getName();
 
-    public String[] getArguments();
+    public @NotNull String @NotNull [] getArguments();
 
-    public FilterResult apply(T obj);
+    public @NotNull FilterResult apply(@NotNull T obj);
 
     boolean isInverted();
 

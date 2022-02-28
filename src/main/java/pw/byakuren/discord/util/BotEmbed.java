@@ -2,6 +2,8 @@ package pw.byakuren.discord.util;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -15,23 +17,23 @@ public abstract class BotEmbed {
     public static final Color INFORMATION_COLOR = new Color(32,196,196);
     public static final Color NEUTRAL_COLOR = new Color(128, 128, 196);
 
-    public static EmbedBuilder neutral(String msg) {
+    public static @NotNull EmbedBuilder neutral(@Nullable String msg) {
         return new EmbedBuilder().setTitle(msg).setColor(NEUTRAL_COLOR);
     }
 
-    public static EmbedBuilder ok(String msg) {
+    public static @NotNull EmbedBuilder ok(@Nullable String msg) {
         return neutral(msg).setColor(OK_COLOR);
     }
 
-    public static EmbedBuilder bad(String msg) {
+    public static @NotNull EmbedBuilder bad(@Nullable String msg) {
         return neutral(msg).setColor(BAD_COLOR);
     }
 
-    public static EmbedBuilder information(String msg) {
+    public static @NotNull EmbedBuilder information(@Nullable String msg) {
         return neutral(msg).setColor(INFORMATION_COLOR);
     }
 
-    public static EmbedBuilder error(Exception e) {
+    public static @NotNull EmbedBuilder error(@NotNull Exception e) {
         return neutral(String.format("big ouchie! - ```%s```", e.getLocalizedMessage()))
                 .setColor(ERROR_COLOR)
                 .setDescription(Arrays.stream(e.getStackTrace())
@@ -39,27 +41,27 @@ public abstract class BotEmbed {
                         .collect(Collectors.joining("\n")));
     }
 
-    public static EmbedBuilder footerAuthor(String msg, User u) {
+    public static @NotNull EmbedBuilder footerAuthor(@Nullable String msg, @NotNull User u) {
         return neutral(msg).setFooter(u.getName()+"#"+u.getDiscriminator(), u.getEffectiveAvatarUrl());
     }
 
-    public static EmbedBuilder footerAuthor(String msg, User u, Color c) {
+    public static @NotNull EmbedBuilder footerAuthor(@Nullable String msg, @NotNull User u, @Nullable Color c) {
         return footerAuthor(msg, u).setColor(c);
     }
 
-    public static EmbedBuilder headerAuthor(String msg, String url, User u) {
+    public static @NotNull EmbedBuilder headerAuthor(@Nullable String msg, @Nullable String url, @NotNull User u) {
         return neutral(msg).setAuthor(String.format("%s (%d)", u.getName(), u.getIdLong()), url, u.getEffectiveAvatarUrl());
     }
 
-    public static EmbedBuilder headerAuthor(String msg, User u) {
+    public static @NotNull EmbedBuilder headerAuthor(@Nullable String msg, @NotNull User u) {
         return headerAuthor(msg, null, u);
     }
 
-    public static EmbedBuilder headerAuthor(String msg, String url, User u, Color c) {
+    public static @NotNull EmbedBuilder headerAuthor(@Nullable String msg, @Nullable String url, @NotNull User u, @Nullable Color c) {
         return headerAuthor(msg,url,u).setColor(c);
     }
 
-    public static EmbedBuilder headerAuthor(String msg, User u, Color c) {
+    public static @NotNull EmbedBuilder headerAuthor(@Nullable String msg, @NotNull User u, @Nullable Color c) {
         return headerAuthor(msg, null, u , c);
     }
 

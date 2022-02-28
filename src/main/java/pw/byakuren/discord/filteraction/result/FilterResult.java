@@ -1,5 +1,7 @@
 package pw.byakuren.discord.filteraction.result;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pw.byakuren.discord.filteraction.MessageFilter;
 import pw.byakuren.discord.util.MiscUtil;
 
@@ -7,10 +9,10 @@ public class FilterResult {
 
     public final boolean triggered;
     public final boolean inverted;
-    private final String name;
-    public final String reason;
+    private final @NotNull String name;
+    public final @Nullable String reason;
 
-    public FilterResult(boolean triggered, boolean inverted, String filter, String reason) {
+    public FilterResult(boolean triggered, boolean inverted, @NotNull String filter, @Nullable String reason) {
         this.triggered = triggered;
         this.inverted = inverted;
         this.name = filter;

@@ -2,6 +2,8 @@ package pw.byakuren.discord;
 
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.internal.utils.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pw.byakuren.discord.filteraction.Action;
 import pw.byakuren.discord.filteraction.Filter;
 import pw.byakuren.discord.objects.Triple;
@@ -18,8 +20,8 @@ import java.util.List;
 
 public class SQLConnection {
 
-    private Connection connection = null;
-    private Statement statement = null;
+    private @Nullable Connection connection = null;
+    private @Nullable Statement statement = null;
 
     private PreparedStatement incrementDatapoint;
     private PreparedStatement createDatapoint;
@@ -139,7 +141,7 @@ public class SQLConnection {
     }
 
 
-    public ResultSet runQuery(String query)  {
+    public @Nullable ResultSet runQuery(String query)  {
         try {
             return statement.executeQuery(query);
         } catch (SQLException e) {
@@ -148,7 +150,7 @@ public class SQLConnection {
         return null;
     }
 
-    public ArrayList<String> getTables() {
+    public @Nullable ArrayList<String> getTables() {
         try {
             ResultSet results = statement.executeQuery("SELECT name FROM sqlite_master WHERE type='table'");
             ArrayList<String> list = new ArrayList<>();
@@ -225,7 +227,7 @@ public class SQLConnection {
         return set.getLong("id");
     }
 
-    public LastMessage executeGetLastMessage(long server, long user) throws SQLException {
+    public @NotNull LastMessage executeGetLastMessage(long server, long user) throws SQLException {
         getLastMessage.setLong(1, server);
         getLastMessage.setLong(2, user);
         ResultSet set = getLastMessage.executeQuery();
@@ -233,7 +235,7 @@ public class SQLConnection {
         return setToLastMessage(set);
     }
 
-    public List<LastMessage> executeGetLastMessages(long server) throws SQLException {
+    public @NotNull List<LastMessage> executeGetLastMessages(long server) throws SQLException {
         getLastMessages.setLong(1, server);
         ResultSet set = getLastMessages.executeQuery();
         List<LastMessage> l = new ArrayList<>();
@@ -243,7 +245,7 @@ public class SQLConnection {
         return l;
     }
 
-    private LastMessage setToLastMessage(ResultSet set) throws SQLException {
+    private @NotNull LastMessage setToLastMessage(@NotNull ResultSet set) throws SQLException {
         long serverid = set.getLong(1);
         long userid =set.getLong(2);
         long messageid = set.getLong(3);
@@ -266,7 +268,7 @@ public class SQLConnection {
         removeRegexKey.clearParameters();
     }
 
-    public List<String> executeGetRegexKeys(long server) throws SQLException {
+    public @NotNull List<String> executeGetRegexKeys(long server) throws SQLException {
         getRegexKeys.setLong(1, server);
         ResultSet set =  getRegexKeys.executeQuery();
         getRegexKeys.clearParameters();
@@ -310,7 +312,7 @@ public class SQLConnection {
         return checkExcludedChannel.executeQuery().next();
     }
 
-    public List<Long> executeGetExcludedChannels(long server) throws SQLException {
+    public @NotNull List<Long> executeGetExcludedChannels(long server) throws SQLException {
         getExcludedChannels.setLong(1, server);
         ResultSet set = getExcludedChannels.executeQuery();
         getExcludedChannels.clearParameters();
@@ -336,7 +338,7 @@ public class SQLConnection {
         removeWatchedUser.clearParameters();
     }
 
-    public List<Long> getWatchedUsers(long server) throws SQLException {
+    public @NotNull List<Long> getWatchedUsers(long server) throws SQLException {
         getWatchedUsers.setLong(1, server);
         ResultSet set = getWatchedUsers.executeQuery();
         getWatchedUsers.clearParameters();
@@ -368,7 +370,7 @@ public class SQLConnection {
         removeWatchedRole.clearParameters();
     }
 
-    public List<Long> getWatchedRoles(long server) throws SQLException {
+    public @NotNull List<Long> getWatchedRoles(long server) throws SQLException {
         getWatchedRoles.setLong(1, server);
         ResultSet set = getWatchedRoles.executeQuery();
         getWatchedRoles.clearParameters();
@@ -425,7 +427,7 @@ public class SQLConnection {
         return r.getInt(1);
     }
 
-    public List<Pair<String,Integer>> getAllDatapoints(long server, long user) throws SQLException {
+    public @NotNull List<Pair<String,Integer>> getAllDatapoints(long server, long user) throws SQLException {
         getAllDatapoints.setLong(1, server);
         getAllDatapoints.setLong(2, user);
         ResultSet r = getAllDatapoints.executeQuery();
@@ -436,7 +438,7 @@ public class SQLConnection {
         return ps;
     }
 
-    public List<Triple<Long, String, Integer>> getAllDatapointsServer(long server) throws SQLException {
+    public @NotNull List<Triple<Long, String, Integer>> getAllDatapointsServer(long server) throws SQLException {
         getAllDatapointsServer.setLong(1, server);
         ResultSet r = getAllDatapointsServer.executeQuery();
         List<Triple<Long,String,Integer>> ts = new ArrayList<>();
@@ -491,7 +493,7 @@ public class SQLConnection {
         addServerSetting.clearParameters();
     }
 
-    public List<ServerSettings> getAllServerSettings(long server) throws SQLException {
+    public @NotNull List<ServerSettings> getAllServerSettings(long server) throws SQLException {
         getAllServerSettings.setLong(1, server);
         ResultSet r = getAllServerSettings.executeQuery();
         getAllServerSettings.clearParameters();
@@ -502,7 +504,7 @@ public class SQLConnection {
         return l;
     }
 
-    public void addVoiceBan(VoiceBan vb) throws SQLException {
+    public void addVoiceBan(@NotNull VoiceBan vb) throws SQLException {
         addVoiceBan.setLong(1, vb.getGuildId());
         addVoiceBan.setLong(2, vb.getMemberId());
         addVoiceBan.setLong(3, vb.getModId());
@@ -513,7 +515,7 @@ public class SQLConnection {
         addVoiceBan.clearParameters();
     }
 
-    public List<VoiceBan> getAllVoiceBans(long serverid) throws SQLException {
+    public @NotNull List<VoiceBan> getAllVoiceBans(long serverid) throws SQLException {
         getVoiceBans.setLong(1, serverid);
         ResultSet r = getVoiceBans.executeQuery();
         List<VoiceBan> l = new ArrayList<>();
@@ -527,7 +529,7 @@ public class SQLConnection {
         return l;
     }
 
-    public void updateVoiceBan(VoiceBan vb) throws SQLException {
+    public void updateVoiceBan(@NotNull VoiceBan vb) throws SQLException {
         updateVoiceBan.setLong(1, vb.getGuildId());
         updateVoiceBan.setLong(2, vb.getMemberId());
         updateVoiceBan.setLong(3, vb.getModId());
@@ -536,7 +538,7 @@ public class SQLConnection {
         updateVoiceBan.clearParameters();
     }
 
-    public void executeAddFilterAction(long guild, MessageFilterAction messageFilterAction) throws SQLException, IOException {
+    public void executeAddFilterAction(long guild, @NotNull MessageFilterAction messageFilterAction) throws SQLException, IOException {
         if (checkFilterActionExists(guild, messageFilterAction.getName())) {
             executeUpdateFilterAction(guild, messageFilterAction);
             return;
@@ -549,14 +551,14 @@ public class SQLConnection {
         addFilterAction.clearParameters();
     }
 
-    public void executeRemoveFilterAction(long guild, MessageFilterAction messageFilterAction) throws SQLException {
+    public void executeRemoveFilterAction(long guild, @NotNull MessageFilterAction messageFilterAction) throws SQLException {
         removeFilterAction.setLong(1, guild);
         removeFilterAction.setString(2, messageFilterAction.getName());
         removeFilterAction.executeUpdate();
         removeFilterAction.clearParameters();
     }
 
-    public MessageFilterAction getFilterAction(long guild, String name) throws SQLException, IOException, ClassNotFoundException {
+    public @NotNull MessageFilterAction getFilterAction(long guild, @NotNull String name) throws SQLException, IOException, ClassNotFoundException {
         getFilterAction.setLong(1, guild);
         getFilterAction.setString(2, name);
         ResultSet r = getFilterAction.executeQuery();
@@ -565,7 +567,7 @@ public class SQLConnection {
         return mfa;
     }
 
-    public List<MessageFilterAction> getAllFilterActions(long guild) throws SQLException, IOException, ClassNotFoundException {
+    public @NotNull List<MessageFilterAction> getAllFilterActions(long guild) throws SQLException, IOException, ClassNotFoundException {
         getAllFilterActions.setLong(1, guild);
         ResultSet r = getAllFilterActions.executeQuery();
         ArrayList<MessageFilterAction> ar = new ArrayList<>();
@@ -586,7 +588,7 @@ public class SQLConnection {
         return sto;
     }
 
-    private void executeUpdateFilterAction(long guild, MessageFilterAction mfa) throws SQLException, IOException {
+    private void executeUpdateFilterAction(long guild, @NotNull MessageFilterAction mfa) throws SQLException, IOException {
         replaceFilterAction.setBytes(1, MiscUtil.serializeList(MiscUtil.stringMap(mfa.getFilters())));
         replaceFilterAction.setBytes(2, MiscUtil.serializeList(MiscUtil.stringMap(mfa.getActions())));
         replaceFilterAction.setLong(3, guild);

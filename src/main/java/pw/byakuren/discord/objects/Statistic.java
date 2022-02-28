@@ -1,5 +1,7 @@
 package pw.byakuren.discord.objects;
 
+import org.jetbrains.annotations.Nullable;
+
 public enum Statistic {
 
     REACTIONS_SENT("reactions_tx", "Reactions Sent"),
@@ -16,7 +18,7 @@ public enum Statistic {
         nice_name = n;
     }
 
-    public static Statistic datapointToStatistic(String str) {
+    public static @Nullable Statistic datapointToStatistic(String str) {
         for (Statistic s: Statistic.values()) {
             if (s.datapoint_name.equals(str)) return s;
         }

@@ -1,5 +1,6 @@
 package pw.byakuren.discord.objects.cache.datatypes;
 
+import org.jetbrains.annotations.NotNull;
 import pw.byakuren.discord.DatabaseManager;
 import pw.byakuren.discord.objects.Statistic;
 
@@ -7,8 +8,8 @@ import static pw.byakuren.discord.objects.cache.WriteState.PENDING_WRITE;
 
 public class UserStats extends CacheEntry {
 
-    private long server;
-    private long user;
+    private final long server;
+    private final long user;
     private int reactions_sent = 0;
     private int reactions_received = 0;
     private int messages_sent = 0;
@@ -38,7 +39,7 @@ public class UserStats extends CacheEntry {
         return user;
     }
 
-    public int getStatistic(Statistic e) {
+    public int getStatistic(@NotNull Statistic e) {
         switch (e) {
             case REACTIONS_SENT:
                 return reactions_sent;
@@ -55,7 +56,7 @@ public class UserStats extends CacheEntry {
         }
     }
 
-    public boolean incrementStatistic(Statistic e) {
+    public boolean incrementStatistic(@NotNull Statistic e) {
         switch (e) {
             case REACTIONS_SENT:
                 reactions_sent++;
@@ -79,7 +80,7 @@ public class UserStats extends CacheEntry {
         return true;
     }
 
-    public boolean decrementStatistic(Statistic e) {
+    public boolean decrementStatistic(@NotNull Statistic e) {
         switch (e) {
             case REACTIONS_SENT:
                 reactions_sent--;
@@ -103,7 +104,7 @@ public class UserStats extends CacheEntry {
         return true;
     }
 
-    public boolean setStatistic(Statistic e, int v) {
+    public boolean setStatistic(@NotNull Statistic e, int v) {
         switch (e) {
             case REACTIONS_SENT:
                 reactions_sent=v;
@@ -128,7 +129,7 @@ public class UserStats extends CacheEntry {
     }
 
     @Override
-    protected void write(DatabaseManager dbmg) {
+    protected void write(@NotNull DatabaseManager dbmg) {
         dbmg.editUserChatData(server, user, Statistic.REACTIONS_SENT.datapoint_name, reactions_sent);
         dbmg.editUserChatData(server, user, Statistic.REACTIONS_RECEIVED.datapoint_name, reactions_received);
         dbmg.editUserChatData(server, user, Statistic.MESSAGES_SENT.datapoint_name, messages_sent);
@@ -137,7 +138,7 @@ public class UserStats extends CacheEntry {
     }
 
     @Override
-    protected void delete(DatabaseManager dbmg) {
+    protected void delete(@NotNull DatabaseManager dbmg) {
         //todo delete chat data option
     }
 }

@@ -1,5 +1,7 @@
 package pw.byakuren.discord.objects.cache.factories;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pw.byakuren.discord.DatabaseManager;
 
 import java.util.List;
@@ -7,15 +9,15 @@ import java.util.List;
 public abstract class DatatypeFactory<E> {
 
     protected long serverid;
-    protected DatabaseManager dbmg;
+    protected @NotNull DatabaseManager dbmg;
 
-    public DatatypeFactory(long serverid, DatabaseManager dbmg) {
+    public DatatypeFactory(long serverid, @NotNull DatabaseManager dbmg) {
         this.serverid = serverid;
         this.dbmg = dbmg;
     }
 
-    public abstract List<E> getAll();
+    public abstract @NotNull List<E> getAll();
 
-    public abstract E get(Object... qualifiers);
+    public abstract @Nullable E get(Object... qualifiers);
 
 }

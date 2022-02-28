@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
+import org.jetbrains.annotations.NotNull;
 import pw.byakuren.discord.commands.permissions.CommandPermission;
 import pw.byakuren.discord.commands.subcommands.Subcommand;
 import pw.byakuren.discord.commands.subcommands.SubcommandList;
@@ -20,9 +21,9 @@ import static pw.byakuren.discord.objects.cache.WriteState.PENDING_WRITE;
 
 public class VoiceBanCommand extends Command {
 
-    private Cache c;
+    private final @NotNull Cache c;
 
-    public VoiceBanCommand(Cache c) {
+    public VoiceBanCommand(@NotNull Cache c) {
         this.c = c;
         names = new String[]{"voiceban", "vb"};
         help = "Ban a user from voice for a specified time.";
@@ -31,14 +32,14 @@ public class VoiceBanCommand extends Command {
         subcommands.add(new SubcommandList(this));
         subcommands.add(new Subcommand(new String[]{"view", "v"}, null, null, this) {
             @Override
-            public void run(Message message, List<String> args) {
+            public void run(@NotNull Message message, @NotNull List<String> args) {
                 cmd_view(message, args);
             }
         });
 
         subcommands.add(new Subcommand(new String[]{"add", "a", "ban"}, null, null, this) {
             @Override
-            public void run(Message message, List<String> args) {
+            public void run(@NotNull Message message, @NotNull List<String> args) {
                 cmd_add(message, args);
             }
         });
@@ -46,27 +47,27 @@ public class VoiceBanCommand extends Command {
         subcommands.add(new Subcommand(new String[]{"current", "c"}, null,
                 "@User [duration] {reason}", this) {
             @Override
-            public void run(Message message, List<String> args) {
+            public void run(@NotNull Message message, @NotNull List<String> args) {
                 cmd_current(message, args);
             }
         });
 
         subcommands.add(new Subcommand(new String[]{"all"}, null, null, this) {
             @Override
-            public void run(Message message, List<String> args) {
+            public void run(@NotNull Message message, @NotNull List<String> args) {
                 cmd_all(message, args);
             }
         });
 
         subcommands.add(new Subcommand(new String[]{"cancel", "c"}, null, null, this) {
             @Override
-            public void run(Message message, List<String> args) {
+            public void run(@NotNull Message message, @NotNull List<String> args) {
                 cmd_cancel(message, args);
             }
         });
     }
 
-    private void cmd_all(Message message, List<String> args) {
+    private void cmd_all(@NotNull Message message, @NotNull List<String> args) {
         ServerCache sc = c.getServerCache(message.getGuild());
         StringBuilder s = new StringBuilder();
         for (VoiceBan vb : sc.getPrevVoiceBans(10)) {
@@ -76,7 +77,7 @@ public class VoiceBanCommand extends Command {
         message.reply(b.build()).mentionRepliedUser(false).queue();
     }
 
-    private void cmd_view(Message message, List<String> args) {
+    private void cmd_view(@NotNull Message message, @NotNull List<String> args) {
         ServerCache sc = c.getServerCache(message.getGuild());
         if (message.getMentionedMembers().isEmpty()) {
             message.reply("You must mention a user.").mentionRepliedUser(false).queue();
@@ -90,7 +91,7 @@ public class VoiceBanCommand extends Command {
         sendVoiceBanInfo(message.getTextChannel(), vb);
     }
 
-    private void cmd_add(Message message, List<String> args) {
+    private void cmd_add(@NotNull Message message, @NotNull List<String> args) {
         if (args.size() < 2) return; //when user & time not provided
         Member banned = message.getMentionedMembers().get(0);
         long gid = message.getGuild().getIdLong();
@@ -120,7 +121,7 @@ public class VoiceBanCommand extends Command {
         }
     }
 
-    private void cmd_current(Message message, List<String> args) {
+    private void cmd_current(@NotNull Message message, @NotNull List<String> args) {
         ServerCache sc = c.getServerCache(message.getGuild());
         StringBuilder s = new StringBuilder();
         for (int i = 0; i < sc.getValidVoiceBans().size() && i < 10; i++) {
@@ -130,7 +131,7 @@ public class VoiceBanCommand extends Command {
         message.reply(b.build()).mentionRepliedUser(false).queue();
     }
 
-    private void cmd_cancel(Message message, List<String> args) {
+    private void cmd_cancel(@NotNull Message message, @NotNull List<String> args) {
         ServerCache sc = c.getServerCache(message.getGuild());
         if (message.getMentionedMembers().isEmpty()) {
             message.reply("You must mention a user.").mentionRepliedUser(false).queue();
@@ -145,7 +146,7 @@ public class VoiceBanCommand extends Command {
         message.reply("Canceled voice ban for user <@" + vb.getMemberId() + ">").mentionRepliedUser(false).queue();
     }
 
-    private LocalDateTime parseTime(String t) {
+    private @NotNull LocalDateTime parseTime(@NotNull String t) {
         LocalDateTime n = LocalDateTime.now();
         while (!t.isEmpty()) {
             String f = null;
@@ -176,7 +177,7 @@ public class VoiceBanCommand extends Command {
         return n;
     }
 
-    private void sendVoiceBanInfo(TextChannel c, VoiceBan vb) {
+    private void sendVoiceBanInfo(@NotNull TextChannel c, @NotNull VoiceBan vb) {
         EmbedBuilder b = BotEmbed.neutral("Voice ban").setDescription(String.format(
                 "Banned member: <@%d>\n" +
                         "Banned by:<@%d>\n" +

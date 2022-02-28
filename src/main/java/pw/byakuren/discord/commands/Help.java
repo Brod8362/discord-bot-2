@@ -2,6 +2,7 @@ package pw.byakuren.discord.commands;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
+import org.jetbrains.annotations.NotNull;
 import pw.byakuren.discord.commands.permissions.CommandPermission;
 import pw.byakuren.discord.commands.subcommands.Subcommand;
 import pw.byakuren.discord.objects.cache.Cache;
@@ -12,10 +13,10 @@ import java.util.stream.Collectors;
 
 public class Help extends Command {
 
-    CommandHelper cmdhelp;
-    private Cache c;
+    private final @NotNull CommandHelper cmdhelp;
+    private final @NotNull Cache c;
 
-    public Help(CommandHelper cmd, Cache c) {
+    public Help(@NotNull CommandHelper cmd, @NotNull Cache c) {
         names=new String[]{"help", "h"};
         help="See command listing.";
         syntax="`@User` represents a user mention.\n" +
@@ -33,7 +34,7 @@ public class Help extends Command {
     }
 
     @Override
-    public void run(Message message, List<String> args) {
+    public void run(@NotNull Message message, @NotNull List<String> args) {
         if (args.size() == 0) {
             cmd_list(message, args, false);
         } else if (args.size() == 1 && args.get(0).equals("-a")) {
@@ -43,7 +44,7 @@ public class Help extends Command {
         }
     }
 
-    private void cmd_list(Message message, List<String> args, boolean showall) {
+    private void cmd_list(@NotNull Message message, @NotNull List<String> args, boolean showall) {
         EmbedBuilder b = new EmbedBuilder();
         b.setTitle("Help listing");
         StringBuilder desc = new StringBuilder();
@@ -61,7 +62,7 @@ public class Help extends Command {
         message.reply(b.build()).mentionRepliedUser(false).queue();
     }
 
-    private void cmd_details(Message message, List<String> args) {
+    private void cmd_details(@NotNull Message message, @NotNull List<String> args) {
         String[] cmds = args.get(0).split("\\.");
         EmbedBuilder b = new EmbedBuilder();
         if (cmds.length == 1) {
@@ -90,7 +91,7 @@ public class Help extends Command {
         sendHelpEmbed(message, name, d);
     }
 
-    private void cmd_not_found(Message message, String t) {
+    private void cmd_not_found(@NotNull Message message, @NotNull String t) {
         /* Command not found */
         EmbedBuilder b = new EmbedBuilder();
         b.setDescription("Unknown command '"+t+"'");
@@ -98,7 +99,7 @@ public class Help extends Command {
         message.reply(b.build()).mentionRepliedUser(false).queue();
     }
 
-    private void sendHelpEmbed(Message message, String name, Command c) {
+    private void sendHelpEmbed(@NotNull Message message, @NotNull String name, @NotNull Command c) {
         EmbedBuilder b = new EmbedBuilder();
         b.setTitle(String.format("**%s** (%s, %s)", name, c.minimumPermission().name, c.getTypeAbbreviation()));
         String help = c.getHelp();

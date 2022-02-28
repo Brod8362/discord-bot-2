@@ -1,5 +1,7 @@
 package pw.byakuren.discord.filteraction;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pw.byakuren.discord.filteraction.result.ActionResult;
 
 /**
@@ -8,8 +10,8 @@ import pw.byakuren.discord.filteraction.result.ActionResult;
  */
 public interface Action<T> {
 
-    public ActionResult execute(T obj);
+    public @NotNull ActionResult execute(@NotNull T obj);
 
-    public String getName();
+    public @NotNull String getName();
 
 }

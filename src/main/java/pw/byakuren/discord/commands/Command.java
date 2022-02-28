@@ -3,6 +3,8 @@ package pw.byakuren.discord.commands;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pw.byakuren.discord.commands.permissions.CommandPermission;
 import pw.byakuren.discord.commands.richcommands.CommandType;
 import pw.byakuren.discord.commands.subcommands.Subcommand;
@@ -13,12 +15,12 @@ import java.util.List;
 
 public abstract class Command {
 
-    protected String[] names;
-    protected CommandPermission minimum_permission;
-    protected String syntax;
-    protected String help;
-    protected List<Subcommand> subcommands = new ArrayList<>();
-    protected OptionData[] parameters = new OptionData[]{};
+    protected @NotNull String @NotNull [] names;
+    protected @NotNull CommandPermission minimum_permission;
+    protected @NotNull String syntax;
+    protected @NotNull String help;
+    protected @NotNull List<Subcommand> subcommands = new ArrayList<>();
+    protected @NotNull OptionData @NotNull [] parameters = new OptionData[]{};
 
     public Command() { }
 
@@ -31,15 +33,15 @@ public abstract class Command {
         return names[0];
     }
 
-    public final String getSyntax() {
+    public final @NotNull String getSyntax() {
         return syntax;
     }
 
-    public final String getHelp() {
+    public final @NotNull String getHelp() {
         return help;
     }
 
-    public final String getTypeAbbreviation() {
+    public final @NotNull String getTypeAbbreviation() {
         String abbrev = "?";
         switch (getType()) {
             case INTEGRATED:
@@ -62,11 +64,11 @@ public abstract class Command {
         return minimum_permission;
     }
 
-    public final boolean canRun(Member m, Cache c) {
+    public final boolean canRun(@NotNull Member m, @NotNull Cache c) {
          return CommandPermission.getPermission(m, c).ordinal() >= minimumPermission().ordinal();
     }
 
-    private Subcommand getDefaultCommand() {
+    private @NotNull Subcommand getDefaultCommand() {
         assert subcommands != null;
         if (subcommands.size() == 0) {
             throw new UnsupportedOperationException("Command has no subcommands.");
@@ -74,7 +76,7 @@ public abstract class Command {
         return subcommands.get(0);
     }
 
-    public final Subcommand getSubcommand(String s) {
+    public final @Nullable Subcommand getSubcommand(@NotNull String s) {
         assert subcommands != null;
         for (Subcommand c : subcommands) {
             for (String n : c.getNames()) {
@@ -86,15 +88,15 @@ public abstract class Command {
         return null;
     }
 
-    public List<Subcommand> getSubcommands() {
+    public @NotNull List<Subcommand> getSubcommands() {
         return subcommands;
     }
 
-    public final OptionData[] getParameters() {
+    public final @NotNull OptionData @NotNull [] getParameters() {
         return parameters;
     }
 
-    public void run(Message message, List<String> args) {
+    public void run(@NotNull Message message, @NotNull List<String> args) {
         if (subcommands.size() == 0) {
             message.reply("big ouchie: this command cannot be run, it's not implemented yet.").mentionRepliedUser(false).queue();
             return;
@@ -112,7 +114,7 @@ public abstract class Command {
         sc.run(message, nargs);
     }
 
-    public CommandType getType() {
+    public @NotNull CommandType getType() {
         return CommandType.TRADITIONAL;
     }
 

@@ -1,5 +1,7 @@
 package pw.byakuren.discord.util;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
@@ -11,7 +13,7 @@ import java.util.function.Predicate;
  */
 public abstract class ScalaReplacements {
 
-    public static String mkString(List<?> l, String sep) {
+    public static @NotNull String mkString(@NotNull List<?> l, @NotNull String sep) {
         if (l.isEmpty()) { return ""; }
         StringBuilder f = new StringBuilder();
         for (int i = 0; i < l.size()-1; i++) {
@@ -20,7 +22,7 @@ public abstract class ScalaReplacements {
         return f+l.get(l.size()-1).toString();
     }
 
-    public static String mkString(List<?> l) {
+    public static @NotNull String mkString(@NotNull List<?> l) {
         return mkString(l, " ");
     }
 }

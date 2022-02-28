@@ -1,6 +1,7 @@
 package pw.byakuren.discord.objects.cache.datatypes;
 
 import net.dv8tion.jda.api.entities.Message;
+import org.jetbrains.annotations.NotNull;
 import pw.byakuren.discord.DatabaseManager;
 import pw.byakuren.discord.filteraction.Action;
 import pw.byakuren.discord.filteraction.Filter;
@@ -16,15 +17,15 @@ import java.util.List;
 public class MessageFilterAction extends CacheEntry {
 
     private final long guild;
-    private final String name;
-    private final List<Filter<Message>> filters;
-    private final List<Action<Message>> actions;
+    private final @NotNull String name;
+    private final @NotNull List<Filter<Message>> filters;
+    private final @NotNull List<Action<Message>> actions;
 
-    public MessageFilterAction(long guild, String name) {
+    public MessageFilterAction(long guild, @NotNull String name) {
         this(guild, name, new ArrayList<>(), new ArrayList<>());
     }
 
-    public MessageFilterAction(long guild, String name, List<Filter<Message>> filters, List<Action<Message>> actions) {
+    public MessageFilterAction(long guild, @NotNull String name, @NotNull List<Filter<Message>> filters, @NotNull List<Action<Message>> actions) {
         this.guild = guild;
         this.name = name;
         this.filters = filters;
@@ -39,7 +40,7 @@ public class MessageFilterAction extends CacheEntry {
         actions.add(action);
     }
 
-    public FilterActionResult check(Message msg) {
+    public @NotNull FilterActionResult check(@NotNull Message msg) {
         List<FilterResult> filterResults = new ArrayList<>();
         List<ActionResult> actionResults = new ArrayList<>();
         int applied_count = 0;
@@ -65,12 +66,12 @@ public class MessageFilterAction extends CacheEntry {
     }
 
     @Override
-    protected void write(DatabaseManager dbmg) {
+    protected void write(@NotNull DatabaseManager dbmg) {
         dbmg.addFilterAction(guild, this);
     }
 
     @Override
-    protected void delete(DatabaseManager dbmg) {
+    protected void delete(@NotNull DatabaseManager dbmg) {
         dbmg.removeFilterAction(guild, this);
     }
 
@@ -78,29 +79,29 @@ public class MessageFilterAction extends CacheEntry {
         return guild;
     }
 
-    public String getName() {
+    public @NotNull String getName() {
         return name;
     }
 
-    public String prettyPrint() {
+    public @NotNull String prettyPrint() {
         return String.format("%s: filters [%s], actions [%s]", name, ScalaReplacements.mkString(filters, ","),
                 ScalaReplacements.mkString(actions, ","));
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return prettyPrint();
     }
 
-    public List<Action<Message>> getActions() {
+    public @NotNull List<Action<Message>> getActions() {
         return actions;
     }
 
-    public List<Filter<Message>> getFilters() {
+    public @NotNull List<Filter<Message>> getFilters() {
         return filters;
     }
 
-    public boolean removeFilter(String name) {
+    public boolean removeFilter(@NotNull String name) {
         for (int i = 0; i < filters.size(); i++) {
             if (filters.get(i).getName().equals(name)) {
                 filters.remove(i);
@@ -111,7 +112,7 @@ public class MessageFilterAction extends CacheEntry {
         return false;
     }
 
-    public boolean removeAction(String name) {
+    public boolean removeAction(@NotNull String name) {
         for (int i = 0; i < actions.size(); i++) {
             if (actions.get(i).getName().equals(name)) {
                 actions.remove(i);

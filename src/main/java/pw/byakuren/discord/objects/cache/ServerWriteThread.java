@@ -1,15 +1,17 @@
 package pw.byakuren.discord.objects.cache;
 
+import org.jetbrains.annotations.NotNull;
+
 public class ServerWriteThread {
 
     private static final long WAIT_TIME = 180000;
 
-    private CacheObject[] objects;
-    private Thread t;
+    private final @NotNull CacheObject @NotNull [] objects;
+    private final @NotNull Thread t;
 
     private boolean run;
 
-    public ServerWriteThread(long id, CacheObject[] objects) {
+    public ServerWriteThread(long id, @NotNull CacheObject @NotNull [] objects) {
         this.objects = objects;
         t = new Thread(getRunnable(), String.format("ServerWriteThread[%d]", id));
         start();
@@ -57,7 +59,7 @@ public class ServerWriteThread {
         stop(time);
     }
 
-    private Runnable getRunnable() {
+    private @NotNull Runnable getRunnable() {
         return () -> {
             try {
                 Thread.sleep(WAIT_TIME); //wait 3 minutes

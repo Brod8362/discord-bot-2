@@ -1,6 +1,8 @@
 package pw.byakuren.discord.util;
 
 import net.dv8tion.jda.api.entities.Message;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pw.byakuren.discord.filteraction.Filter;
 import pw.byakuren.discord.filteraction.MessageFilter;
 import pw.byakuren.discord.filteraction.filters.*;
@@ -11,7 +13,7 @@ import java.util.stream.Collectors;
 
 public abstract class MessageFilterParser {
 
-    private static final MessageFilter[] exampleFilters = new MessageFilter[]{
+    private static final @NotNull MessageFilter[] exampleFilters = new MessageFilter[]{
             new AdminFilter(),
             new ContainsFilter("stuff"),
             new EveryoneFilter(),
@@ -35,7 +37,7 @@ public abstract class MessageFilterParser {
         }
     }
 
-    public static Filter<Message> fromString(String s) {
+    public static @Nullable Filter<Message> fromString(@NotNull String s) {
         if (!s.contains("(")) return null;
         String name = s.substring(0, s.indexOf("("));
         boolean not = s.startsWith("!");
@@ -51,11 +53,11 @@ public abstract class MessageFilterParser {
         return null; //the filter does not exist
     }
 
-    public static MessageFilter[] getExamples() {
+    public static @NotNull MessageFilter @NotNull [] getExamples() {
         return exampleFilters;
     }
 
-    public static List<Filter<Message>> parseMany(List<String> strs) {
+    public static List<Filter<Message>> parseMany(@NotNull List<String> strs) {
         return strs.stream().map(MessageFilterParser::fromString).collect(Collectors.toList());
     }
 }

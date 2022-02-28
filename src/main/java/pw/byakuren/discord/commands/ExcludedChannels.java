@@ -2,6 +2,7 @@ package pw.byakuren.discord.commands;
 
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
+import org.jetbrains.annotations.NotNull;
 import pw.byakuren.discord.DatabaseManager;
 import pw.byakuren.discord.commands.permissions.CommandPermission;
 import pw.byakuren.discord.commands.subcommands.Subcommand;
@@ -18,9 +19,9 @@ import static pw.byakuren.discord.commands.permissions.CommandPermission.MOD_ROL
 
 public class ExcludedChannels extends Command {
 
-    private Cache c;
+    private final @NotNull Cache c;
 
-    public ExcludedChannels(Cache c) {
+    public ExcludedChannels(@NotNull Cache c) {
         names=new String[]{"exclude"};
         minimum_permission=MOD_ROLE;
         help="Exclude a channel from being flagged for regex keywords.";
@@ -28,20 +29,20 @@ public class ExcludedChannels extends Command {
         subcommands.add(new SubcommandList(this));
         subcommands.add(new Subcommand(new String[]{"list","l"}, null, null, this) {
             @Override
-            public void run(Message message, List<String> args) {
+            public void run(@NotNull Message message, @NotNull List<String> args) {
                 list_cmd(message, args);
             }
         });
         subcommands.add(new Subcommand(new String[]{"here", "h"}, null, null, this) {
             @Override
-            public void run(Message message, List<String> args) {
+            public void run(@NotNull Message message, @NotNull List<String> args) {
                 add_cmd(message, args);
             }
         });
 
     }
 
-    private void list_cmd(Message message, List<String> args) {
+    private void list_cmd(@NotNull Message message, @NotNull List<String> args) {
         ServerCache sc = c.getServerCache(message.getGuild());
         List<ExcludedChannel> list = sc.getAllValidExcludedChannels();
         if (list.size() == 0) {
@@ -54,7 +55,7 @@ public class ExcludedChannels extends Command {
         message.reply(s).mentionRepliedUser(false).queue();
     }
 
-    private void add_cmd(Message message, List<String> args) {
+    private void add_cmd(@NotNull Message message, @NotNull List<String> args) {
         ServerCache sc = c.getServerCache(message.getGuild());
         if (sc.channelIsExcluded(message.getTextChannel())) {
             sc.removeExcludedChannel(message.getTextChannel());
