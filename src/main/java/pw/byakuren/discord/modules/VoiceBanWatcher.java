@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.PrivateChannel;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.Event;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
@@ -43,18 +44,21 @@ public class VoiceBanWatcher implements Module {
 
     private void join_event(@NotNull GuildVoiceJoinEvent ev) {
         Member m = ev.getMember();
-        if (m.getUser().isBot() || !check_banned(m)) return;
+        VoiceBan vb = c.getServerCache(ev.getGuild()).getValidVoiceBan(m);
+        if (m.getUser().isBot() || vb == null) return;
         try {
             ev.getGuild().kickVoiceMember(m).queue();
         } catch (InsufficientPermissionException e) {
-            c.getServerCache(ev.getGuild()).getLogChannel(ev.getJDA()).sendMessage(
+            final TextChannel logChannel = c.getServerCache(ev.getGuild()).getLogChannel(ev.getJDA());
+            if (logChannel == null) return;
+
+            logChannel.sendMessage(
                     "Tried to disconnect banned voice user " + m.getAsMention() + ", but missing permission " + e.getPermission())
                     .queue();
             return;
         }
 
         PrivateChannel ch = m.getUser().openPrivateChannel().complete();
-        VoiceBan vb = c.getServerCache(ev.getGuild()).getValidVoiceBan(m);
         EmbedBuilder b = BotEmbed.neutral("Voice banned")
                 .setDescription(String.format("You were removed from #%s because you were voice banned by <@%d>.\nReason: `%s`",
                         ev.getChannelJoined().getName(), vb.getModId(),
@@ -63,9 +67,5 @@ public class VoiceBanWatcher implements Module {
                 .setFooter("Voice ban will expire at")
                 .setTimestamp(vb.getExpireTime());
         ch.sendMessage(b.build()).queue();
-    }
-
-    private boolean check_banned(@NotNull Member m) {
-        return c.getServerCache(m.getGuild()).userIsVoiceBanned(m);
     }
 }

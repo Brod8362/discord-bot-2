@@ -43,7 +43,8 @@ public class Cache {
         if (servers.get(serverid) == null) {
             loadServerCache(serverid);
         }
-        return servers.get(serverid);
+        // Should not be null at this point; loadServerCache() should have created it.
+        return Objects.requireNonNull(servers.get(serverid));
     }
 
     private void loadServerCache(long serverid) {

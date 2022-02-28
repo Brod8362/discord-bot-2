@@ -1,6 +1,7 @@
 package pw.byakuren.discord.modules;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.Event;
@@ -14,6 +15,7 @@ import pw.byakuren.discord.util.BotEmbed;
 import java.awt.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 
 public class RegexChecker implements Module {
@@ -47,17 +49,18 @@ public class RegexChecker implements Module {
 
         TextChannel log = sc.getLogChannel(message.getJDA());
         if (log == null) {
-            message.getGuild().getOwner().getUser().openPrivateChannel().complete()
+            final Member owner = Objects.requireNonNull(message.getGuild().getOwner());
+            owner.getUser().openPrivateChannel().complete()
                     .sendMessageFormat("Tried to log a naughty user but you didn't set your log channel in %s!",
                             message.getGuild().getName()).queue();
+            return;
         }
         EmbedBuilder b = BotEmbed.headerAuthor("Message matched regex keys", message.getJumpUrl(),
                 message.getAuthor(), BotEmbed.BAD_COLOR)
                 .setDescription(String.format("[Jump](%s)\n%s", message.getJumpUrl(), highlighted))
                 .setTimestamp(LocalDateTime.now())
                 .setFooter("#" + message.getTextChannel().getName(), null);
-        TextChannel lc = sc.getLogChannel(message.getJDA());
-        lc.sendMessage(b.build()).queue();
+        log.sendMessage(b.build()).queue();
     }
 
 

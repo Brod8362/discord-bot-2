@@ -36,7 +36,7 @@ public class CommandHelper {
 
     private void registerSlashCommand(@NotNull JDA jda, @NotNull RichCommand cmd) {
         //register all button IDs
-        for (String id : cmd.requestedButtonIDs) {
+        for (String id : cmd.getRequestedButtonIDs()) {
             if (button_ids.containsKey(id)) {
                 throw new RuntimeException(
                         String.format("Duplicate button id %s attempted to be registered by %s, already in use by %s",
@@ -62,7 +62,7 @@ public class CommandHelper {
             cmd_data.addSubcommands(subcmd_data);
         }
 
-        if (cmd.isGlobal() && cmd.minimum_permission == CommandPermission.REGULAR_USER) {
+        if (cmd.isGlobal() && cmd.minimumPermission() == CommandPermission.REGULAR_USER) {
             jda.upsertCommand(cmd_data).queue();
         } else {
             for (Guild g : jda.getGuilds()) {
@@ -76,21 +76,11 @@ public class CommandHelper {
     }
 
     public @NotNull String getCommandHelp(@NotNull String string) {
-        String help = commands.get(string).getHelp();
-        if (help != null) {
-            return help;
-        } else {
-            return "No help defined.";
-        }
+        return commands.get(string).getHelp();
     }
 
     public @NotNull String getCommandSyntax(@NotNull String string) {
-        String syntax = commands.get(string).getSyntax();
-        if (syntax != null) {
-            return syntax;
-        } else {
-            return "No syntax defined.";
-        }
+        return commands.get(string).getSyntax();
     }
 
     public @Nullable Command resolveButtonID(@NotNull String string) {

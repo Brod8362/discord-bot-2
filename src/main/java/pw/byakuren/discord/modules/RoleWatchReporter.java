@@ -53,7 +53,7 @@ public class RoleWatchReporter implements Module {
         TextChannel lc = c.getServerCache(m.getGuild()).getLogChannel(m.getJDA());
         if (lc == null) return;
         EmbedBuilder b = BotEmbed.headerAuthor("Watched role" + (rs.size() > 1 ? "s" : "") + " pinged",
-                m.getMember().getUser())
+                m.getAuthor())
                 .setDescription(m.getContentRaw())
                 .setTimestamp(LocalDateTime.now())
                 .setFooter("#" + m.getChannel().getName(), null);

@@ -9,15 +9,13 @@ import pw.byakuren.discord.filteraction.result.ActionResult;
 public class DeleteAction extends MessageAction {
     @Override
     public @NotNull ActionResult execute(@NotNull Message obj) {
-        boolean success = false;
         Exception ex = null;
         try {
             obj.delete().queue();
-            success = true;
         } catch (Exception e) {
             ex = e;
         }
-        return new ActionResult(success, getDisplay(), ex);
+        return new ActionResult(getDisplay(), ex);
     }
 
     @Override

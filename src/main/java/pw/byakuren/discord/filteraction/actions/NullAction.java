@@ -10,7 +10,7 @@ import pw.byakuren.discord.filteraction.result.ActionResult;
 public class NullAction extends MessageAction {
     @Override
     public @NotNull ActionResult execute(@NotNull Message obj) {
-        return new ActionResult(true, getDisplay(), null);
+        return new ActionResult(getDisplay(), null);
     }
 
     @Override

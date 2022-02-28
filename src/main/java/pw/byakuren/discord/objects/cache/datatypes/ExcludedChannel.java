@@ -1,55 +1,42 @@
 package pw.byakuren.discord.objects.cache.datatypes;
 
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.TextChannel;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import pw.byakuren.discord.DatabaseManager;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ExcludedChannel extends CacheEntry {
 
-    private long serverid;
-    private @NotNull TextChannel channel;
+    private final long serverId;
+    private final long channelId;
 
     public ExcludedChannel(@NotNull TextChannel channel) {
-        this.channel = channel;
-        this.serverid = channel.getGuild().getIdLong();
+        this(channel.getGuild().getIdLong(), channel.getIdLong());
     }
 
-    public ExcludedChannel(long channelid, @NotNull JDA jda) {
-        this.channel = jda.getTextChannelById(channelid);
-        this.serverid = channel.getGuild().getIdLong();
-    }
-
-    public static @Nullable CacheEntry get(Object qualifier, @NotNull DatabaseManager dbmg) {
-        if (qualifier instanceof Long) {
-            return dbmg.getExcludedChannel((long)qualifier);
-        }
-        return null;
+    public ExcludedChannel(long guildId, long channelId) {
+        this.serverId = guildId;
+        this.channelId = channelId;
     }
 
     public long getServerid() {
-        return serverid;
+        return serverId;
     }
 
-    public @NotNull TextChannel getChannel() {
-        return channel;
+    public long getChannelId() {
+        return channelId;
     }
 
     public @NotNull String getChannelMention() {
-        return channel.getAsMention();
+        return "<#" + channelId + ">";
     }
 
     @Override
     protected void write(@NotNull DatabaseManager dbmg) {
-        dbmg.addExcludedChannel(channel);
+        dbmg.addExcludedChannel(serverId, channelId);
     }
 
     @Override
     protected void delete(@NotNull DatabaseManager dbmg) {
-        dbmg.removeExcludedChannel(channel);
+        dbmg.removeExcludedChannel(serverId, channelId);
     }
 }

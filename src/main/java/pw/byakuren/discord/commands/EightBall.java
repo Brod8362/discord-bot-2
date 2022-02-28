@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.jetbrains.annotations.NotNull;
@@ -15,6 +16,7 @@ import pw.byakuren.discord.util.BotEmbed;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 public class EightBall extends RichCommand {
@@ -26,12 +28,29 @@ public class EightBall extends RichCommand {
             "Outlook not so good.", "Very doubtful."};
     private static final @NotNull Random r = new Random();
 
-    public EightBall() {
-        names = new String[]{"8ball", "8b"};
-        help = "Ask the magic 8ball a question";
-        minimum_permission = CommandPermission.REGULAR_USER;
-        type = CommandType.INTEGRATED;
-        parameters = new OptionData[]{new OptionData(OptionType.STRING, "question", "The question you want to ask the mighty 8ball", true)};
+    @Override
+    public @NotNull String @NotNull [] getNames() {
+        return new String[]{"8ball", "8b"};
+    }
+
+    @Override
+    public @NotNull CommandPermission minimumPermission() {
+        return CommandPermission.REGULAR_USER;
+    }
+
+    @Override
+    public @NotNull OptionData @NotNull [] getParameters() {
+        return new OptionData[]{new OptionData(OptionType.STRING, "question", "The question you want to ask the mighty 8ball", true)};
+    }
+
+    @Override
+    public @NotNull String getHelp() {
+        return "Ask the magic 8ball a question";
+    }
+
+    @Override
+    public @NotNull CommandType getType() {
+        return CommandType.INTEGRATED;
     }
 
     @Override
@@ -54,6 +73,7 @@ public class EightBall extends RichCommand {
 
     @Override
     public void runSlash(@NotNull SlashCommandEvent event) {
-        event.replyEmbeds(buildEmbed(event.getOption("question").getAsString())).queue();
+        final OptionMapping question = Objects.requireNonNull(event.getOption("question"));
+        event.replyEmbeds(buildEmbed(question.getAsString())).queue();
     }
 }

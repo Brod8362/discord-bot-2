@@ -6,6 +6,7 @@ import pw.byakuren.discord.DatabaseManager;
 import pw.byakuren.discord.objects.cache.datatypes.CacheEntry;
 import pw.byakuren.discord.objects.cache.factories.DatatypeFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CacheObject<E extends CacheEntry> {
@@ -19,7 +20,8 @@ public class CacheObject<E extends CacheEntry> {
 
 
     public CacheObject(long serverid, @NotNull DatabaseManager dbmg, @NotNull DatatypeFactory<E> factory) {
-        data = factory.getAll();
+        // Create defensive copy (source may be unmodifiable & our list is mutable)
+        data = new ArrayList<>(factory.getAll());
         this.dbmg=dbmg;
         id = serverid;
         this.factory=factory;

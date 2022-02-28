@@ -16,6 +16,10 @@ public class ActionResult {
         this.exception = exception;
     }
 
+    public ActionResult(@NotNull String name, @Nullable Exception exception) {
+        this(exception == null, name, exception);
+    }
+
     @Override
     public @NotNull String toString() {
         return String.format("%s %s : %s", MiscUtil.booleanToEmoji(success), name, exception == null ? "OK" : exception.getMessage());

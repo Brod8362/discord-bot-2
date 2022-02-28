@@ -20,6 +20,7 @@ public class SendPMAction extends MessageAction {
         boolean success = false;
         Exception ex = null;
         try {
+            // TODO: blocking operation in a thread pool might exhaust threads
             obj.getAuthor().openPrivateChannel().complete().sendMessage(msgContent).complete();
             success = true;
         } catch (Exception e) {

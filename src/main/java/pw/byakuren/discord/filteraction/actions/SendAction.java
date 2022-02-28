@@ -20,20 +20,17 @@ public class SendAction extends MessageAction {
 
     @Override
     public @NotNull ActionResult execute(@NotNull Message obj) {
-        boolean success = false;
         Exception ex = null;
         try {
             TextChannel tc = obj.getGuild().getTextChannelById(channelId);
             if (tc == null) {
                 throw new RuntimeException("channel not found");
-            } else {
-                tc.sendMessage(content).queue();
-                success=true;
             }
+            tc.sendMessage(content).queue();
         } catch (Exception e) {
             ex = e;
         }
-        return new ActionResult(success, getDisplay(), ex);
+        return new ActionResult(getDisplay(), ex);
     }
 
     @Override

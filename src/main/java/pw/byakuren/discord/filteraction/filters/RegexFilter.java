@@ -34,7 +34,6 @@ public class RegexFilter extends MessageFilter {
 
     @Override
     protected @NotNull MessageFilter parseFromString(@NotNull String s) {
-        Pattern.compile(s); //this will throw an exception that will be caught if the regex is invalid
         return new RegexFilter(s);
     }
 

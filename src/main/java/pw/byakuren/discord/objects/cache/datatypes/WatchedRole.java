@@ -1,45 +1,42 @@
 package pw.byakuren.discord.objects.cache.datatypes;
 
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Role;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import pw.byakuren.discord.DatabaseManager;
 
 public class WatchedRole extends CacheEntry {
 
-    private long serverid;
-    private @NotNull Role role;
+    private final long serverId;
+    private final long roleId;
 
-    public WatchedRole(long roleid, @NotNull JDA jda) {
-        this.role = jda.getRoleById(roleid);
-        this.serverid = this.role.getGuild().getIdLong();
+    public WatchedRole(long serverId, long roleId) {
+        this.serverId = serverId;
+        this.roleId = roleId;
     }
 
     public WatchedRole(@NotNull Role role) {
-        this.role = role;
-        this.serverid = role.getGuild().getIdLong();
+        this(role.getGuild().getIdLong(), role.getIdLong());
     }
 
     public long getServerId() {
-        return serverid;
+        return serverId;
     }
 
-    public @NotNull Role getRole() {
-        return role;
+    public long getRoleId() {
+        return roleId;
     }
 
     public @NotNull String getRoleMention() {
-        return role.getAsMention();
+        return "<@&" + roleId + ">";
     }
 
     @Override
     protected void write(@NotNull DatabaseManager dbmg) {
-        dbmg.addWatchedRole(role);
+        dbmg.addWatchedRole(serverId, roleId);
     }
 
     @Override
     protected void delete(@NotNull DatabaseManager dbmg) {
-        dbmg.removeWatchedRole(role);
+        dbmg.removeWatchedRole(serverId, roleId);
     }
 }

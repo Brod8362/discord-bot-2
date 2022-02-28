@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.jetbrains.annotations.NotNull;
@@ -21,15 +22,35 @@ import java.util.List;
 
 public class UserInfo extends RichCommand {
 
-    Cache c;
+    private final @NotNull Cache c;
 
-    public UserInfo(Cache c) {
-        names = new String[]{"userinfo", "uinfo", "ui"};
-        help = "Find info about a user.";
-        minimum_permission = CommandPermission.REGULAR_USER;
-        parameters = new OptionData[]{new OptionData(OptionType.USER, "user", "The user to find information about", false)};
-        type = CommandType.INTEGRATED;
+    public UserInfo(@NotNull Cache c) {
         this.c = c;
+    }
+
+    @Override
+    public @NotNull String @NotNull [] getNames() {
+        return new String[]{"userinfo", "uinfo", "ui"};
+    }
+
+    @Override
+    public @NotNull String getHelp() {
+        return "Find info about a user.";
+    }
+
+    @Override
+    public @NotNull CommandPermission minimumPermission() {
+        return CommandPermission.REGULAR_USER;
+    }
+
+    @Override
+    public @NotNull OptionData @NotNull [] getParameters() {
+        return new OptionData[]{new OptionData(OptionType.USER, "user", "The user to find information about", false)};
+    }
+
+    @Override
+    public @NotNull CommandType getType() {
+        return CommandType.INTEGRATED;
     }
 
     private @NotNull MessageEmbed buildUserEmbed(@NotNull Member u) {
@@ -40,12 +61,8 @@ public class UserInfo extends RichCommand {
                 .addField("Joined At", u.getTimeJoined().toString(), true)
                 .addField("Account Creation Date", u.getUser().getTimeCreated().toString(), true);
         UserStats stats = c.getServerCache(u.getGuild()).getStatsForUser(u);
-        if (stats != null) {
-            for (Statistic s : Statistic.values()) {
-                embed.addField(s.nice_name, stats.getStatistic(s) + "", true);
-            }
-        } else {
-            embed.setFooter("User Statistics not available.", null);
+        for (Statistic s : Statistic.values()) {
+            embed.addField(s.nice_name, stats.getStatistic(s) + "", true);
         }
         return embed.build();
     }
@@ -57,7 +74,11 @@ public class UserInfo extends RichCommand {
             u = message.getMentionedMembers().get(0);
         }
 
-        message.reply(buildUserEmbed(u)).mentionRepliedUser(false).queue();
+        if (u == null) {
+            message.reply(BotEmbed.bad("Could not find the requested user.").build()).mentionRepliedUser(false).queue();
+        } else {
+            message.reply(buildUserEmbed(u)).mentionRepliedUser(false).queue();
+        }
     }
 
     @Override
@@ -67,15 +88,15 @@ public class UserInfo extends RichCommand {
 
     @Override
     public void runSlash(@NotNull SlashCommandEvent event) {
-        Member m;
-        try {
-            m = event.getOption("user").getAsMember();
-        } catch (Exception e) {
-            m = null;
-        }
+        final OptionMapping userOpt = event.getOption("user");
+        Member m = userOpt == null ? null : userOpt.getAsMember();
         if (m == null) {
             m = event.getMember();
         }
-        event.replyEmbeds(buildUserEmbed(m)).queue();
+        if (m == null) {
+            event.replyEmbeds(BotEmbed.bad("This command must be run from within a server.").build()).queue();
+        } else {
+            event.replyEmbeds(buildUserEmbed(m)).queue();
+        }
     }
 }

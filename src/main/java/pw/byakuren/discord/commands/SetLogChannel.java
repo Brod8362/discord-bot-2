@@ -20,10 +20,6 @@ public class SetLogChannel extends Command {
     private final @NotNull Cache c;
 
     public SetLogChannel(@NotNull Cache c) {
-        names=new String[]{"logchannel","setlogchannel","slc"};
-        help="Manage the server log channel.";
-        minimum_permission=CommandPermission.SERVER_ADMIN;
-
         this.c = c;
 
         subcommands.add(new SubcommandList(this));
@@ -39,6 +35,21 @@ public class SetLogChannel extends Command {
                 view(message, args);
             }
         });
+    }
+
+    @Override
+    public @NotNull String @NotNull [] getNames() {
+        return new String[]{"logchannel","setlogchannel","slc"};
+    }
+
+    @Override
+    public @NotNull String getHelp() {
+        return "Manage the server log channel.";
+    }
+
+    @Override
+    public @NotNull CommandPermission minimumPermission() {
+        return CommandPermission.SERVER_ADMIN;
     }
 
     private void set(@NotNull Message message, List<String> args) {

@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class SQLConnection {
@@ -150,7 +151,7 @@ public class SQLConnection {
         return null;
     }
 
-    public @Nullable ArrayList<String> getTables() {
+    public @NotNull List<String> getTables() {
         try {
             ResultSet results = statement.executeQuery("SELECT name FROM sqlite_master WHERE type='table'");
             ArrayList<String> list = new ArrayList<>();
@@ -161,7 +162,7 @@ public class SQLConnection {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return Collections.emptyList();
     }
 
     public void disconnect() {
@@ -499,7 +500,10 @@ public class SQLConnection {
         getAllServerSettings.clearParameters();
         List<ServerSettings> l = new ArrayList<>();
         while (r.next()) {
-            l.add(new ServerSettings(server, ServerParameter.stringToSetting(r.getString(1)), r.getLong(2)));
+            final ServerParameter setting = ServerParameter.stringToSetting(r.getString(1));
+            if (setting != null) {
+                l.add(new ServerSettings(server, setting, r.getLong(2)));
+            }
         }
         return l;
     }

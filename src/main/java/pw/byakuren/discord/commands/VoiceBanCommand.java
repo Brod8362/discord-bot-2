@@ -25,9 +25,6 @@ public class VoiceBanCommand extends Command {
 
     public VoiceBanCommand(@NotNull Cache c) {
         this.c = c;
-        names = new String[]{"voiceban", "vb"};
-        help = "Ban a user from voice for a specified time.";
-        minimum_permission = CommandPermission.MOD_ROLE;
 
         subcommands.add(new SubcommandList(this));
         subcommands.add(new Subcommand(new String[]{"view", "v"}, null, null, this) {
@@ -65,6 +62,21 @@ public class VoiceBanCommand extends Command {
                 cmd_cancel(message, args);
             }
         });
+    }
+
+    @Override
+    public @NotNull String @NotNull [] getNames() {
+        return new String[]{"voiceban", "vb"};
+    }
+
+    @Override
+    public @NotNull String getHelp() {
+        return "Ban a user from voice for a specified time.";
+    }
+
+    @Override
+    public @NotNull CommandPermission minimumPermission() {
+        return CommandPermission.MOD_ROLE;
     }
 
     private void cmd_all(@NotNull Message message, @NotNull List<String> args) {

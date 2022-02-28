@@ -1,6 +1,7 @@
 package pw.byakuren.discord.modules;
 
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.Event;
 import net.dv8tion.jda.api.events.message.MessageDeleteEvent;
@@ -48,8 +49,10 @@ public class StatisticManager implements Module {
     private void messageEvent(@NotNull Event e) {
         MessageReceivedEvent ev = (MessageReceivedEvent) e;
         Message m = ev.getMessage();
+        final Member member = m.getMember();
+        if (member == null) return;
         if (m.getAuthor().isBot()) return;
-        Guild g = m.getGuild();
+        Guild g = member.getGuild();
         ServerCache sc = c.getServerCache(g);
         List<LastMessage> msgs = sc.getLastMessages().getData();
 
@@ -66,10 +69,10 @@ public class StatisticManager implements Module {
             }
         }
         //increment sent msg count
-        sc.getStatsForUser(m.getMember()).incrementStatistic(Statistic.MESSAGES_SENT);
+        sc.getStatsForUser(member).incrementStatistic(Statistic.MESSAGES_SENT);
         int c = m.getAttachments().size();
         for (int i =0; i < c; i++) {
-            sc.getStatsForUser(m.getMember()).incrementStatistic(Statistic.ATTACHMENTS_SENT);
+            sc.getStatsForUser(member).incrementStatistic(Statistic.ATTACHMENTS_SENT);
         }
 
     }
@@ -85,12 +88,15 @@ public class StatisticManager implements Module {
     private void messageReactionAddEvent(Event e) {
         MessageReactionAddEvent ev = (MessageReactionAddEvent) e;
         Message m = ev.getTextChannel().retrieveMessageById(ev.getMessageId()).complete();
-        if (ev.getMember().getUser().isBot() || m.getAuthor().isBot()) return;
-        Guild g = m.getGuild();
+        final Member reactingUser = ev.getMember();
+        if (reactingUser == null || reactingUser.getUser().isBot() || m.getAuthor().isBot()) return;
+        Guild g = reactingUser.getGuild();
         ServerCache sc = c.getServerCache(g);
         //increment reaction recv
-        sc.getStatsForUser(m.getMember()).incrementStatistic(Statistic.REACTIONS_RECEIVED);
-        sc.getStatsForUser(ev.getMember()).incrementStatistic(Statistic.REACTIONS_SENT);
+        final Member reactedUser = m.getMember();
+        if (reactedUser != null)
+            sc.getStatsForUser(reactedUser).incrementStatistic(Statistic.REACTIONS_RECEIVED);
+        sc.getStatsForUser(reactingUser).incrementStatistic(Statistic.REACTIONS_SENT);
     }
 
     @Override

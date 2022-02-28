@@ -14,13 +14,9 @@ import java.util.Map;
 
 public class Modules extends Command {
 
-    private @NotNull ModuleHelper mdhelp;
+    private final @NotNull ModuleHelper mdhelp;
 
     public Modules(@NotNull ModuleHelper mdhelp) {
-        names=new String[]{"modules"};
-        minimum_permission=CommandPermission.BOT_OWNER;
-        help="View and manage active modules.";
-
         this.mdhelp = mdhelp;
         subcommands.add(new SubcommandList(this));
         subcommands.add(new Subcommand(new String[]{"enable", "on", "e"}, "Enable a module.", "[module_name]", this) {
@@ -43,14 +39,39 @@ public class Modules extends Command {
         });
     }
 
+    @Override
+    public @NotNull String @NotNull [] getNames() {
+        return new String[]{"modules"};
+    }
+
+    @Override
+    public @NotNull String getHelp() {
+        return "View and manage active modules.";
+    }
+
+    @Override
+    public @NotNull CommandPermission minimumPermission() {
+        return CommandPermission.BOT_OWNER;
+    }
+
     private void cmd_enable(@NotNull Message message, @NotNull List<String> args) {
-        mdhelp.enable(mdhelp.getModule(args.get(0)));
-        message.addReaction("✅").queue();
+        final Module module = mdhelp.getModule(args.get(0));
+        if (module == null) {
+            message.addReaction("❌").queue();
+        } else {
+            mdhelp.enable(module);
+            message.addReaction("✅").queue();
+        }
     }
 
     private void cmd_disable(@NotNull Message message, @NotNull List<String> args) {
-        mdhelp.disable(mdhelp.getModule(args.get(0)));
-        message.addReaction("✅").queue();
+        final Module module = mdhelp.getModule(args.get(0));
+        if (module == null) {
+            message.addReaction("❌").queue();
+        } else {
+            mdhelp.disable(module);
+            message.addReaction("✅").queue();
+        }
     }
 
     private void cmd_list(@NotNull Message message, @NotNull List<String> args) {

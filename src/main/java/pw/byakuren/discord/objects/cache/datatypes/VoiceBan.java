@@ -65,7 +65,7 @@ public class VoiceBan extends CacheEntry {
     }
 
     public boolean isValid() {
-        return (!canceled && (expires == null || LocalDateTime.now().isBefore(expires)));
+        return !canceled && LocalDateTime.now().isBefore(expires);
     }
 
     public long getGuildId() {

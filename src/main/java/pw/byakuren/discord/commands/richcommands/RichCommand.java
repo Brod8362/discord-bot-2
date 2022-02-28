@@ -8,9 +8,6 @@ import pw.byakuren.discord.commands.Command;
 public abstract class RichCommand extends Command {
 
     protected boolean global = false;
-    protected @NotNull CommandType type = CommandType.TRADITIONAL;
-    public @NotNull String @NotNull [] requestedButtonIDs = new String[]{};
-
     public abstract void onButtonClick(ButtonClickEvent event);
 
     public abstract void runSlash(SlashCommandEvent event);
@@ -20,11 +17,10 @@ public abstract class RichCommand extends Command {
     }
 
     public final boolean isSlash() {
-        return type == CommandType.SLASH || type == CommandType.INTEGRATED;
+        return getType() == CommandType.SLASH || getType() == CommandType.INTEGRATED;
     }
 
-    @Override
-    public final @NotNull CommandType getType() {
-        return type;
+    public @NotNull String @NotNull [] getRequestedButtonIDs() {
+        return new String[0];
     }
 }

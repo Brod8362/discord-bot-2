@@ -3,6 +3,7 @@ package pw.byakuren.discord;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.Event;
@@ -29,10 +30,7 @@ import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
@@ -94,6 +92,7 @@ public class Main extends ListenerAdapter {
     }
 
     private void loadCommands(@NotNull JDA jda) {
+        assert(dbmg != null);  // Must be called after DB connection is established
         cmdhelp.registerCommand(jda, new Stop(dbmg, cache));
         cmdhelp.registerCommand(jda, new Invite());
         cmdhelp.registerCommand(jda, new Modules(mdhelp));
@@ -129,6 +128,7 @@ public class Main extends ListenerAdapter {
     @Override
     public void onReady(@NotNull ReadyEvent event) {
         connectToDatabase(event.getJDA());
+        assert(dbmg != null);  // connectToDatabase() should have set this
         cache = new Cache(dbmg, event.getJDA());
         loadCommands(event.getJDA());
         loadModules();
@@ -150,6 +150,8 @@ public class Main extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+        assert(dbmg != null);  // Must be called after DB connection is established
+
         User author = event.getAuthor(); //get message author
         Message message = event.getMessage(); //get message object
         String msg = message.getContentDisplay(); //get message content
@@ -175,7 +177,8 @@ public class Main extends ListenerAdapter {
                 return;
             }
             /* Command permission checking */
-            if (cmd.canRun(message.getMember(), cache)) {
+            final Member member = message.getMember();
+            if (member != null && cmd.canRun(member, cache)) {
                 try {
                     threadPool.execute(() -> {
                         try {
@@ -206,7 +209,8 @@ public class Main extends ListenerAdapter {
         String cmd_name = event.getName();
         Command cmd = cmdhelp.getCommand(cmd_name);
         if (cmd instanceof RichCommand) {
-            if (cmd.canRun(event.getMember(), cache)) {
+            final Member member = event.getMember();
+            if (member != null && cmd.canRun(member, cache)) {
                 threadPool.execute(() -> {
                     try {
                         ((RichCommand) cmd).runSlash(event);
@@ -246,7 +250,8 @@ public class Main extends ListenerAdapter {
     public static void reportErrorPrivate(@NotNull User u, @NotNull Exception e) {
         u.openPrivateChannel().complete().sendMessage("There was an exception while running your command.\n" +
                 "Please try again. If the problem persists, please report a bug.")
-                .embed(BotEmbed.error(e).build());
+                .embed(BotEmbed.error(e).build())
+                .queue();
 
     }
 }

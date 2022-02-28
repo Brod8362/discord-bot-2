@@ -19,10 +19,6 @@ public class WatchUser extends Command {
     private final @NotNull Cache c;
 
     public WatchUser(@NotNull Cache c) {
-        names = new String[]{"voicewatch", "vw"};
-        help = "Add a user to voicewatch.";
-        minimum_permission=CommandPermission.MOD_ROLE;
-
         this.c = c;
 
         subcommands.add(new SubcommandList(this));
@@ -46,6 +42,21 @@ public class WatchUser extends Command {
         });
     }
 
+    @Override
+    public @NotNull String @NotNull [] getNames() {
+        return new String[]{"voicewatch", "vw"};
+    }
+
+    @Override
+    public @NotNull String getHelp() {
+        return "Add a user to voicewatch.";
+    }
+
+    @Override
+    public @NotNull CommandPermission minimumPermission() {
+        return CommandPermission.MOD_ROLE;
+    }
+
     private void cmd_add(@NotNull Message message, @NotNull List<String> args) {
         ServerCache sc = c.getServerCache(message.getGuild());
         for (Member m: message.getMentionedMembers()) {
@@ -59,10 +70,11 @@ public class WatchUser extends Command {
         ServerCache sc = c.getServerCache(message.getGuild());
         for (Member m: message.getMentionedMembers()) {
             if (sc.userIsWatched(m)) {
-                for (int i = 0; i < sc.getWatchedUsers().getData().size(); i++) {
-                    if (sc.getWatchedUsers().getData().get(i).getUser().getUser().getIdLong()==
+                final List<WatchedUser> watchedUsers = sc.getWatchedUsers().getData();
+                for (int i = 0; i < watchedUsers.size(); i++) {
+                    if (watchedUsers.get(i).getUserId() ==
                             m.getUser().getIdLong()) {
-                        sc.getWatchedUsers().getData().remove(i);
+                        watchedUsers.remove(i);
                         i--;
                     }
                 }

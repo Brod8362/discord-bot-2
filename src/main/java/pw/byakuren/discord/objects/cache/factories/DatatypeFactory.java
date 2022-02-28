@@ -18,6 +18,4 @@ public abstract class DatatypeFactory<E> {
 
     public abstract @NotNull List<E> getAll();
 
-    public abstract @Nullable E get(Object... qualifiers);
-
 }

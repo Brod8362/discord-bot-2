@@ -24,13 +24,4 @@ public class ExcludedChannelFactory extends DatatypeFactory<ExcludedChannel> {
                 .map(ExcludedChannel::new)
                 .collect(Collectors.toList());
     }
-
-    @Override
-    public @Nullable ExcludedChannel get(Object @NotNull ... qualifiers) {
-        if (qualifiers.length != 1) return null;
-        if (qualifiers[0] instanceof Long) {
-            return dbmg.getExcludedChannel((long)qualifiers[0]);
-        }
-        return null;
-    }
 }

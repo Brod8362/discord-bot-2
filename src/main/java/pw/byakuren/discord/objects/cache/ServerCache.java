@@ -139,7 +139,7 @@ public class ServerCache {
 
     public boolean roleIsWatched(@NotNull Role r) {
         for (WatchedRole wr: getAllValidWatchedRoles()) {
-            if (wr.getRole().getIdLong()==r.getIdLong()) {
+            if (wr.getRoleId()==r.getIdLong()) {
                 return true;
             }
         }
@@ -159,7 +159,7 @@ public class ServerCache {
 
     public boolean userIsWatched(@NotNull Member m) {
         for (WatchedUser wu: getAllValidWatchedUsers()) {
-            if (wu.getUser().getUser().getIdLong()==m.getUser().getIdLong()) {
+            if (wu.getUserId() == m.getUser().getIdLong()) {
                 return true;
             }
         }
@@ -196,7 +196,7 @@ public class ServerCache {
 
     public boolean channelIsExcluded(@NotNull TextChannel c) {
         for (ExcludedChannel ex: getAllValidExcludedChannels()) {
-            if (ex.getChannel().getIdLong()==c.getIdLong()) {
+            if (ex.getChannelId()==c.getIdLong()) {
                 return true;
             }
         }
@@ -205,7 +205,7 @@ public class ServerCache {
 
     public void removeExcludedChannel(@NotNull TextChannel c) {
         for (ExcludedChannel ex: excluded_channels.getData()) {
-            if (ex.getChannel().getIdLong()==c.getIdLong()) {
+            if (ex.getChannelId()==c.getIdLong()) {
                 ex.write_state=PENDING_DELETE;
             }
         }
@@ -220,13 +220,6 @@ public class ServerCache {
             }
         }
         return a;
-    }
-
-    public boolean userIsVoiceBanned(@NotNull Member m) {
-        for (VoiceBan vb: voice_bans.getData()) {
-            if ((vb.getMemberId()==m.getIdLong()) && vb.isValid()) return true;
-        }
-        return false;
     }
 
     public @Nullable VoiceBan getValidVoiceBan(@NotNull Member m) {

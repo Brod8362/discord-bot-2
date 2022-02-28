@@ -59,17 +59,17 @@ public class DatabaseManager {
         }
     }
 
-    public @Nullable List<ServerSettings> getServerSettings(@NotNull Guild server) {
+    public @NotNull List<ServerSettings> getServerSettings(@NotNull Guild server) {
         return getServerSettings(server.getIdLong());
     }
 
-    public @Nullable List<ServerSettings> getServerSettings(long serverid) {
+    public @NotNull List<ServerSettings> getServerSettings(long serverid) {
         try {
             return sql.getAllServerSettings(serverid);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return Collections.emptyList();
     }
 
     /* Methods for modifying user chat data/statistics.
@@ -147,6 +147,7 @@ public class DatabaseManager {
             raw = sql.getAllDatapointsServer(serverid);
         } catch (SQLException e) {
             e.printStackTrace();
+            return Collections.emptyList();
         }
         Map<Long, UserStats> users = new HashMap<>();
         for (Triple<Long, String, Integer> t: raw) {
@@ -183,17 +184,17 @@ public class DatabaseManager {
         }
     }
     
-    public @Nullable List<Long> getWatchedRoles(@NotNull Guild server) {
+    public @NotNull List<Long> getWatchedRoles(@NotNull Guild server) {
         return getWatchedRoles(server.getIdLong());
     }
     
-    public @Nullable List<Long> getWatchedRoles(long serverid) {
+    public @NotNull List<Long> getWatchedRoles(long serverid) {
         try {
             return sql.getWatchedRoles(serverid);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return Collections.emptyList();
     }
 
     public boolean checkWatchedRole(@NotNull Role role) {
@@ -235,17 +236,17 @@ public class DatabaseManager {
         }
     }
 
-    public @Nullable List<Long> getWatchedUsers(@NotNull Guild server) {
+    public @NotNull List<Long> getWatchedUsers(@NotNull Guild server) {
         return getWatchedUsers(server.getIdLong());
     }
 
-    public @Nullable List<Long> getWatchedUsers(long serverid) {
+    public @NotNull List<Long> getWatchedUsers(long serverid) {
         try {
             return sql.getWatchedUsers(serverid);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return Collections.emptyList();
     }
 
     public boolean checkWatchedUser(@NotNull Member user) {
@@ -263,27 +264,27 @@ public class DatabaseManager {
 
     /* Methods for handling excluded channels */ 
     
-    public void addExcludedChannel(@NotNull TextChannel channel) {
+    public void addExcludedChannel(long guildId, long channelId) {
         try {
-            sql.executeAddExcludedChannel(channel.getGuild().getIdLong(), channel.getIdLong());
+            sql.executeAddExcludedChannel(guildId, channelId);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void removeExcludedChannel(@NotNull TextChannel channel) {
+    public void removeExcludedChannel(long guildId, long channelId) {
         try {
-            sql.executeRemoveExcludedChannel(channel.getGuild().getIdLong(), channel.getIdLong());
+            sql.executeRemoveExcludedChannel(guildId, channelId);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
     
-    public @Nullable List<TextChannel> getExcludedChannels(@NotNull Guild server) {
+    public @NotNull List<TextChannel> getExcludedChannels(@NotNull Guild server) {
         return getExcludedChannels(server.getIdLong());
     }
     
-    public @Nullable List<TextChannel> getExcludedChannels(long serverid) {
+    public @NotNull List<TextChannel> getExcludedChannels(long serverid) {
         try {
             ArrayList<TextChannel> gs = new ArrayList<>();
             List<Long> s = sql.executeGetExcludedChannels(serverid);
@@ -294,35 +295,10 @@ public class DatabaseManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
-    }
-
-    public @Nullable ExcludedChannel getExcludedChannel(long channelid) {
-        try {
-            if (sql.executeCheckExcludedChannel(channelid)) {
-                return new ExcludedChannel(channelid, jda);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public boolean checkExcludedChannel(@NotNull TextChannel channel) {
-        return checkExcludedChannel(channel.getGuild().getIdLong(), channel.getIdLong());
-    }
-
-    public boolean checkExcludedChannel(long serverid, long channel) {
-        try {
-            return sql.executeCheckExcludedChannel(serverid, channel);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+        return Collections.emptyList();
     }
 
     /* Methods for handling server regex keys */
-    
     public void addRegexKey(@NotNull Guild server, @NotNull String key) {
         addRegexKey(server.getIdLong(), key);
     }
@@ -347,15 +323,16 @@ public class DatabaseManager {
         }
     }
 
-    public @Nullable List<RegexKey> getRegexKeys(@NotNull Guild guild) {
+    public @NotNull List<RegexKey> getRegexKeys(@NotNull Guild guild) {
         return getRegexKeys(guild.getIdLong());
     }
 
-    public @Nullable List<RegexKey> getRegexKeys(long serverid) {
+    public @NotNull List<RegexKey> getRegexKeys(long serverid) {
         try {
             Guild g = jda.getGuildById(serverid);
             if (g == null) {
                 //todo handle null case
+                return Collections.emptyList();
             }
             List<String> keys_raw = sql.executeGetRegexKeys(serverid);
             List<RegexKey> keys = new ArrayList<>();
@@ -366,7 +343,7 @@ public class DatabaseManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return Collections.emptyList();
     }
 
     public boolean checkRegexKey(long serverid, @NotNull String key) {
@@ -393,7 +370,7 @@ public class DatabaseManager {
     }
 
     public void updateLastMessage(@NotNull Message m) {
-       updateLastMessage(m.getGuild().getIdLong(), m.getMember().getUser().getIdLong(),
+       updateLastMessage(m.getGuild().getIdLong(), m.getAuthor().getIdLong(),
                m.getContentDisplay(), m.getIdLong());
     }
 
@@ -418,36 +395,36 @@ public class DatabaseManager {
         return null;
     }
 
-    public @Nullable List<LastMessage> getLastMessages(@NotNull Guild g) {
+    public @NotNull List<LastMessage> getLastMessages(@NotNull Guild g) {
         return getLastMessages(g.getIdLong());
     }
 
-    public @Nullable List<LastMessage> getLastMessages(long serverid) {
+    public @NotNull List<LastMessage> getLastMessages(long serverid) {
         try {
             return sql.executeGetLastMessages(serverid);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return Collections.emptyList();
     }
 
     public @Nullable WatchedUser getWatchedUser(long serverid, long userid) {
         try {
             if (sql.checkWatchedUser(serverid, userid))
-                return new WatchedUser(serverid, userid, jda);
+                return new WatchedUser(serverid, userid);
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public @Nullable List<VoiceBan> getAllVoiceBans(long serverid) {
+    public @NotNull List<VoiceBan> getAllVoiceBans(long serverid) {
         try {
             return sql.getAllVoiceBans(serverid);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return Collections.emptyList();
     }
 
     public void addVoiceBan(@NotNull VoiceBan voiceBan) {
@@ -482,21 +459,12 @@ public class DatabaseManager {
         }
     }
 
-    public @Nullable MessageFilterAction getFilterAction(long guild, @NotNull String name) {
-        try {
-            return sql.getFilterAction(guild, name);
-        } catch (SQLException | IOException | ClassNotFoundException throwables) {
-            throwables.printStackTrace();
-        }
-        return null;
-    }
-
-    public @Nullable List<MessageFilterAction> getAllFilterActions(long guild) {
+    public @NotNull List<MessageFilterAction> getAllFilterActions(long guild) {
         try {
             return sql.getAllFilterActions(guild);
         } catch (SQLException | ClassNotFoundException | IOException throwables) {
             throwables.printStackTrace();
         }
-        return null;
+        return Collections.emptyList();
     }
 }

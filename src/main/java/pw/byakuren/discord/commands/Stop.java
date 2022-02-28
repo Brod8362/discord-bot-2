@@ -22,14 +22,33 @@ public class Stop extends RichCommand {
     private final @NotNull Cache c;
 
     public Stop(@NotNull DatabaseManager dbmg, @NotNull Cache c) {
-        names = new String[]{"stop"};
-        help = "Stop the bot.";
-        minimum_permission = CommandPermission.BOT_OWNER;
-        requestedButtonIDs = new String[]{"stop:stop", "stop:cancel"};
-        type = CommandType.INTEGRATED;
-
         this.dbmg = dbmg;
         this.c = c;
+    }
+
+    @Override
+    public @NotNull String @NotNull [] getNames() {
+        return new String[]{"stop"};
+    }
+
+    @Override
+    public @NotNull String getHelp() {
+        return "Stop the bot.";
+    }
+
+    @Override
+    public @NotNull CommandPermission minimumPermission() {
+        return CommandPermission.BOT_OWNER;
+    }
+
+    @Override
+    public @NotNull CommandType getType() {
+        return CommandType.INTEGRATED;
+    }
+
+    @Override
+    public @NotNull String @NotNull [] getRequestedButtonIDs() {
+        return new String[]{"stop:stop", "stop:cancel"};
     }
 
     @Override

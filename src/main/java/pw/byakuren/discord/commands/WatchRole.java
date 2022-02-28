@@ -20,10 +20,6 @@ public class WatchRole extends Command {
     private final @NotNull Cache c;
 
     public WatchRole(@NotNull Cache c) {
-        names=new String[]{"watchrole", "role", "rw"};
-        help="Manage watched pingable roles";
-        minimum_permission=CommandPermission.MOD_ROLE;
-
         this.c = c;
 
         subcommands.add(new SubcommandList(this));
@@ -47,6 +43,21 @@ public class WatchRole extends Command {
         });
     }
 
+    @Override
+    public @NotNull String @NotNull [] getNames() {
+        return new String[]{"watchrole", "role", "rw"};
+    }
+
+    @Override
+    public @NotNull String getHelp() {
+        return "Manage watched pingable roles";
+    }
+
+    @Override
+    public @NotNull CommandPermission minimumPermission() {
+        return CommandPermission.MOD_ROLE;
+    }
+
     private void cmd_add(@NotNull Message message, @NotNull List<String> args) {
         ServerCache sc = c.getServerCache(message.getGuild());
         for (Role r: message.getMentionedRoles()) {
@@ -62,13 +73,16 @@ public class WatchRole extends Command {
     private void cmd_del(@NotNull Message message, @NotNull List<String> args) {
         ServerCache sc = c.getServerCache(message.getGuild());
         for (Role r: message.getMentionedRoles()) {
-            if (sc.roleIsWatched(r))
-                for (int i = 0; i < sc.getWatchedRoles().getData().size(); i++) {
-                    if (sc.getWatchedRoles().getData().get(i).getRole().equals(r)) {
-                        sc.getWatchedRoles().getData().remove(i);
+            long roleId = r.getIdLong();
+            if (sc.roleIsWatched(r)) {
+                final List<WatchedRole> watchedRoles = sc.getWatchedRoles().getData();
+                for (int i = 0; i < watchedRoles.size(); i++) {
+                    if (watchedRoles.get(i).getRoleId() == roleId) {
+                        watchedRoles.remove(i);
                         break;
                     }
                 }
+            }
         }
         message.addReaction("\uD83D\uDC4D").queue();
     }

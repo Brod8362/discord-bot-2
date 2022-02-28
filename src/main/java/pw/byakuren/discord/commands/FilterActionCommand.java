@@ -28,8 +28,6 @@ public class FilterActionCommand extends Command {
 
     public FilterActionCommand(@NotNull Cache c) {
         this.c = c;
-        names = new String[]{"filteraction", "fa"};
-        minimum_permission = CommandPermission.MOD_ROLE;
         subcommands.add(new SubcommandList(this));
         subcommands.add(new Subcommand(new String[]{"test"}, "Test a given FA on your message, with verbose results.",
                 "<faName> [more message content to test]", this) {
@@ -95,6 +93,16 @@ public class FilterActionCommand extends Command {
         });
     }
 
+    @Override
+    public @NotNull String @NotNull [] getNames() {
+        return new String[]{"filteraction", "fa"};
+    }
+
+    @Override
+    public @NotNull CommandPermission minimumPermission() {
+        return CommandPermission.MOD_ROLE;
+    }
+
     private void cmd_trash(@NotNull Message message, @NotNull List<String> args) {
         ServerCache sc = c.getServerCache(message.getGuild());
         if (args.size() == 1) {
@@ -156,8 +164,8 @@ public class FilterActionCommand extends Command {
         String mfaName = args.get(0);
         ServerCache sc = c.getServerCache(msg.getGuild());
         String qString = ScalaReplacements.mkString(args.subList(1, args.size()));
-        Filter<Message> filter = null;
-        Action<Message> action = null;
+        Filter<Message> filter;
+        Action<Message> action;
         String errorDetail = "filter";
         try {
             filter = MessageFilterParser.fromString(qString);

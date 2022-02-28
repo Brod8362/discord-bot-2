@@ -21,10 +21,6 @@ public class RegexKeys extends Command {
     private final @NotNull Cache c;
 
     public RegexKeys(@NotNull Cache c) {
-        names = new String[]{"regex", "keys"};
-        help = "Manage regex keys.";
-        minimum_permission = CommandPermission.MOD_ROLE;
-
         this.c = c;
         subcommands.add(new SubcommandList(this));
         subcommands.add(new Subcommand(new String[]{"add", "a"}, "Add a regex key.", "[regex key]", this) {
@@ -52,6 +48,21 @@ public class RegexKeys extends Command {
                 cmd_update(message, args);
             }
         });
+    }
+
+    @Override
+    public @NotNull String @NotNull [] getNames() {
+        return new String[]{"regex", "keys"};
+    }
+
+    @Override
+    public @NotNull String getHelp() {
+        return "Manage regex keys.";
+    }
+
+    @Override
+    public @NotNull CommandPermission minimumPermission() {
+        return CommandPermission.MOD_ROLE;
     }
 
     private void cmd_add(@NotNull Message message, @NotNull List<String> args) {

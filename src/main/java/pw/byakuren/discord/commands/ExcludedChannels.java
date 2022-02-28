@@ -22,9 +22,6 @@ public class ExcludedChannels extends Command {
     private final @NotNull Cache c;
 
     public ExcludedChannels(@NotNull Cache c) {
-        names=new String[]{"exclude"};
-        minimum_permission=MOD_ROLE;
-        help="Exclude a channel from being flagged for regex keywords.";
         this.c=c;
         subcommands.add(new SubcommandList(this));
         subcommands.add(new Subcommand(new String[]{"list","l"}, null, null, this) {
@@ -40,6 +37,21 @@ public class ExcludedChannels extends Command {
             }
         });
 
+    }
+
+    @Override
+    public @NotNull String @NotNull [] getNames() {
+        return new String[]{"exclude"};
+    }
+
+    @Override
+    public @NotNull String getHelp() {
+        return "Exclude a channel from being flagged for regex keywords.";
+    }
+
+    @Override
+    public @NotNull CommandPermission minimumPermission() {
+        return MOD_ROLE;
     }
 
     private void list_cmd(@NotNull Message message, @NotNull List<String> args) {

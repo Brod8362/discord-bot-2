@@ -64,6 +64,8 @@ public class VoiceWatchReporter implements Module {
 
     private void reportUser(@NotNull Member m, @NotNull VoiceChannel chan, boolean joined) {
         TextChannel lc = c.getServerCache(m.getGuild()).getLogChannel(m.getJDA());
+        if (lc == null) return;
+
         EmbedBuilder b = BotEmbed.headerAuthor("Watched user voice activity", m.getUser())
                 .setColor(joined ? BotEmbed.BAD_COLOR : BotEmbed.OK_COLOR)
                 .setDescription("User " + (joined ? "joined" : "left") + " voice channel #" + chan.getName())
@@ -73,6 +75,8 @@ public class VoiceWatchReporter implements Module {
 
     private void reportUserMoved(@NotNull Member m, @NotNull VoiceChannel f, @NotNull VoiceChannel t) {
         TextChannel lc = c.getServerCache(m.getGuild()).getLogChannel(m.getJDA());
+        if (lc == null) return;
+
         EmbedBuilder b = BotEmbed.headerAuthor("Watched user voice activity", m.getUser())
                 .setColor(BotEmbed.BAD_COLOR)
                 .setDescription("User moved from #" + f.getName() + " to #" + t.getName())

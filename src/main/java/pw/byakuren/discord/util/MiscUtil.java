@@ -19,10 +19,10 @@ public abstract class MiscUtil {
     }
 
     public static <T> byte @NotNull [] serializeList(@NotNull List<T> list) throws IOException {
-        ArrayList al = new ArrayList(list); //this is done to ensure the list is serializable
+        ArrayList<T> al = new ArrayList<>(list); //this is done to ensure the list is serializable
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(bos);
-        oos.writeObject(list);
+        oos.writeObject(al);
         oos.flush();
         return bos.toByteArray();
     }

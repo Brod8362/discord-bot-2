@@ -1,5 +1,6 @@
 package pw.byakuren.discord.filteraction.actions;
 
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
 import org.jetbrains.annotations.NotNull;
@@ -7,6 +8,8 @@ import pw.byakuren.discord.filteraction.MessageAction;
 import pw.byakuren.discord.filteraction.arguments.Argument;
 import pw.byakuren.discord.filteraction.arguments.ArgumentType;
 import pw.byakuren.discord.filteraction.result.ActionResult;
+
+import java.util.Objects;
 
 public class RevokeRoleAction extends MessageAction {
 
@@ -18,16 +21,17 @@ public class RevokeRoleAction extends MessageAction {
 
     @Override
     public @NotNull ActionResult execute(@NotNull Message obj) {
-        boolean success = false;
         Exception ex = null;
         try {
             Role r = obj.getJDA().getRoleById(roleId);
-            obj.getGuild().removeRoleFromMember(obj.getMember(), r).complete();
-            success = true;
+            final Member member = obj.getMember();
+            if (r == null) throw new RuntimeException("Role not found");
+            if (member == null) throw new RuntimeException("Member not found");
+            obj.getGuild().removeRoleFromMember(member, r).complete();
         } catch (Exception e) {
             ex=e;
         }
-        return new ActionResult(success, getDisplay(), ex);
+        return new ActionResult(getDisplay(), ex);
     }
 
     @Override
